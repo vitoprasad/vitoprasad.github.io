@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vito Prasad, GTM builds</title>
+<meta name="description" content="Go-to-market tools Vito Prasad built in October 2026 by directing AI coding agents.">
+<style>
+  :root {
+    --ink: #1c1b19; --muted: #5f5b54; --faint: #8b867d; --line: #e4dfd6;
+    --paper: #faf8f4; --card: #ffffff; --accent: #b4532a; --accent-soft: #f4e6dc;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 17px/1.6 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  }
+  .sans { font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 72px 28px 96px; }
+  header { border-bottom: 1px solid var(--line); padding-bottom: 40px; margin-bottom: 56px; }
+  .kicker { font: 600 12px/1 -apple-system, "Segoe UI", Arial, sans-serif; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--accent); margin: 0 0 18px; }
+  h1 { font-size: 46px; line-height: 1.1; margin: 0 0 18px; font-weight: 600; letter-spacing: -.01em; }
+  .lede { font-size: 20px; color: var(--muted); max-width: 720px; margin: 0 0 22px; }
+  .contact { font: 15px/1.5 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--muted); }
+  .contact a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); }
+  .contact a:hover { border-color: var(--ink); }
+  .contact span { margin: 0 10px; color: var(--line); }
+  .contact .loc { font-style: normal; }
+  nav.toc { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  nav.toc a { font: 500 14px/1 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--ink);
+              text-decoration: none; padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px;
+              background: var(--card); }
+  nav.toc a:hover { border-color: var(--ink); }
+  section.build { margin: 0 0 88px; }
+  .num { font: 600 13px/1 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--faint);
+         letter-spacing: .1em; margin-bottom: 10px; }
+  h2 { font-size: 32px; line-height: 1.2; margin: 0 0 12px; font-weight: 600; }
+  .one-line { font-size: 19px; color: var(--muted); margin: 0 0 28px; max-width: 760px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 0 0 30px; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+  .stat b { display: block; font: 600 26px/1.15 -apple-system, "Segoe UI", Arial, sans-serif; letter-spacing: -.01em; }
+  .stat small { font: 13px/1.35 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--muted); }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-bottom: 30px; }
+  h3 { font: 600 13px/1 -apple-system, "Segoe UI", Arial, sans-serif; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); margin: 0 0 14px; }
+  p { margin: 0 0 14px; }
+  ol { margin: 0; padding-left: 22px; }
+  ol li { margin: 0 0 8px; }
+  figure { margin: 0 0 22px; }
+  figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px;
+               background: var(--card); box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 28px rgba(0,0,0,.06); }
+  figcaption { font: 14px/1.45 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--faint); margin-top: 10px; }
+  .pair { display: grid; grid-template-columns: 1fr; gap: 26px; }
+  figure a { display: block; }
+  figure a:hover img { border-color: var(--faint); }
+  .note { background: var(--accent-soft); border-radius: 10px; padding: 18px 20px; font-size: 16px; }
+  .before { border-top: 1px solid var(--line); padding-top: 48px; }
+  .before ul { padding-left: 20px; margin: 0; }
+  .before li { margin: 0 0 10px; }
+  footer { border-top: 1px solid var(--line); padding-top: 28px; margin-top: 72px;
+           font: 14px/1.5 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--faint); }
+  @media (max-width: 760px) {
+    main { padding: 48px 20px 72px; }
+    h1 { font-size: 36px; } h2 { font-size: 26px; }
+    .cols { grid-template-columns: 1fr; gap: 22px; }
+    .contact a, .contact .loc { display: table; margin-bottom: 6px; }
+    .contact span { display: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <p class="kicker">GTM engineering builds, October 2026</p>
+  <h1>Vito Prasad</h1>
+  <p class="lede">I started in engineering at SpaceX and Northrop Grumman, moved through strategy consulting at Kearney, and then ran product marketing at an AI security startup, where I built the stack behind our pipeline. These are three tools I built in October 2026 by directing AI coding agents. Each one runs on real data.</p>
+  <p class="contact">
+    <a href="mailto:vito.prasad@gmail.com">vito.prasad@gmail.com</a><span>/</span><a href="https://www.linkedin.com/in/vitoprasad">linkedin.com/in/vitoprasad</a><span>/</span><em class="loc">San Francisco Bay Area</em>
+  </p>
+  <nav class="toc">
+    <a href="#job-search">Job-search pipeline</a>
+    <a href="#federal">Federal-contract pipeline</a>
+    <a href="#crm">Onboarding CRM</a>
+    <a href="#how">How I build</a>
+  </nav>
+</header>
+
+<section class="build" id="job-search">
+  <div class="num">01</div>
+  <h2>Job-search pipeline</h2>
+  <p class="one-line">Pulls every open role from the companies I care about, keeps the ones that fit, and has an LLM score each against a written rubric, so I read 45 good matches instead of 55,000 listings.</p>
+  <div class="stats">
+    <div class="stat"><b>55,000+</b><small>listings pulled each run</small></div>
+    <div class="stat"><b>1,381</b><small>company job boards, plus VC portfolio boards and a newsletter</small></div>
+    <div class="stat"><b>~2 cents</b><small>to score a role with an LLM</small></div>
+    <div class="stat"><b>2x a week</b><small>refreshes on its own, Sunday and Wednesday</small></div>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>What it does</h3>
+      <p>It reads the public job boards behind each company (Greenhouse, Lever, Ashby and others), the portfolio job boards of VC firms like Sequoia, a16z and Accel, and a weekly newsletter. It sorts each role into one of the lanes I apply in and drops the rest before any model call, so the LLM only reads roles worth reading.</p>
+      <p>Each survivor gets a fit score, the reason it fits, where I fall short, and what to lead with. A second view ranks companies by fit whether or not they are hiring. A third rebuilds my application record from Gmail and Calendar, so I can see which channels turn into conversations.</p>
+    </div>
+    <div>
+      <h3>How it works</h3>
+      <ol>
+        <li>Pull the boards and keep every raw posting, so nothing needs refetching when the rules change.</li>
+        <li>Place each role in a lane by its title, and drop the out-of-lane ones with the reason kept.</li>
+        <li>Score the rest in batches against the lane's written bar. Promising roles get two reads and keep the average, since one read can swing 10 to 20 points.</li>
+        <li>Show the results in a web view with Apply, Save and Not for me, and remember those choices.</li>
+        <li>Rebuild the application record from email and calendar, with every row linked to its source message.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="pair">
+    <figure>
+      <a href="img/job-search-new-roles.webp" title="Open full size"><img src="img/job-search-new-roles.webp" alt="New roles view: a GTM Engineer role scored 72, with lane filters and the reason it fits" loading="lazy"></a>
+      <figcaption>New roles. One note left readable to show how a score explains itself. My private notes are blurred.</figcaption>
+    </figure>
+    <figure>
+      <a href="img/job-search-target-companies.webp" title="Open full size"><img src="img/job-search-target-companies.webp" alt="Target companies view: companies ranked 7 of 8 with their best-fitting open role" loading="lazy"></a>
+      <figcaption>Target companies, ranked by fit whether or not they are hiring. My history with each company is blurred.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="build" id="federal">
+  <div class="num">02</div>
+  <h2>Federal-contract pipeline</h2>
+  <p class="one-line">Built overnight for a business operations interview at a defense hardware startup. It turns the federal government's full list of open opportunities into a short list a small team can act on.</p>
+  <div class="stats">
+    <div class="stat"><b>72,060</b><small>open federal postings scanned</small></div>
+    <div class="stat"><b>203</b><small>touch the company's technology</small></div>
+    <div class="stat"><b>35</b><small>rated 4 or 5 out of 5 for fit</small></div>
+    <div class="stat"><b>Nightly</b><small>pull at 4 AM, no API key needed</small></div>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>What it does</h3>
+      <p>SAM.gov's search API allows ten calls a day, so the tool pulls the full daily file instead. It filters every posting against the company's own vocabulary, rates fit from 1 to 5, and suggests a move, from submit or shape it to partner, watch or pass.</p>
+      <p>Fit comes from a four-question scorecard. Does the product solve it, does the buyer have money, how fast could it be awarded, and is there a path to production. Past awards from USAspending nudge the buyer question up or down.</p>
+    </div>
+    <div>
+      <h3>How it works</h3>
+      <ol>
+        <li>Download the daily file and keep it, so every number traces back to the source posting.</li>
+        <li>Exclude what the company can't sell into, like spare-parts buys and set-asides it doesn't qualify for.</li>
+        <li>Score the rest by term matches, then band the scores into five plain fit levels.</li>
+        <li>Classify the "door" (prototype deal, research call, early signal, solicitation) and the deadline.</li>
+        <li>Let the team mark Pursue, Watch or Pass, keyed to the solicitation number so decisions survive each refresh.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="pair">
+    <figure>
+      <a href="img/federal-pipeline.webp" title="Open full size"><img src="img/federal-pipeline.webp" alt="Opportunities table with fit ratings, suggested moves and deadlines" loading="lazy"></a>
+      <figcaption>Opportunities, filtered by fit, door, buyer and deadline. The company it was built for is cropped out.</figcaption>
+    </figure>
+    <figure>
+      <a href="img/federal-shape.webp" title="Open full size"><img src="img/federal-shape.webp" alt="Charts of fit levels, door types and buying agencies" loading="lazy"></a>
+      <figcaption>The shape of the pipeline, for a 60-second readout.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="build" id="crm">
+  <div class="num">03</div>
+  <h2>Onboarding CRM</h2>
+  <p class="one-line">Built for an AI startup's community team to work through its post-launch waitlist. Every person who needs a touch lands in a queue named for the next action.</p>
+  <div class="stats">
+    <div class="stat"><b>1,100+</b><small>signups synced from the team's tracker</small></div>
+    <div class="stat"><b>6</b><small>action queues, from "invite" to "tell them the bug is fixed"</small></div>
+    <div class="stat"><b>~1 cent</b><small>for an LLM-drafted follow-up</small></div>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>What it does</h3>
+      <p>It pulls signups from the team's existing tracker and issues from whole Slack threads, then sorts people into queues like nudge an unused invite or check in with someone going quiet. An LLM writer drafts each follow-up in the team's voice for a person to approve, and a Monday digest sums up the week.</p>
+    </div>
+    <div>
+      <h3>What I'd build next</h3>
+      <p>Product usage per account, so health scores come from real activity instead of a placeholder. Then send and track from the same screen, and close the loop when an issue a user reported gets fixed.</p>
+    </div>
+  </div>
+  <figure>
+    <a href="img/onboarding-crm.webp" title="Open full size"><img src="img/onboarding-crm.webp" alt="Today view with six action queues and a list of next actions" loading="lazy"></a>
+    <figcaption>The Today view. Names, emails and notes are blurred because these are real people.</figcaption>
+  </figure>
+</section>
+
+<section class="build before" id="how">
+  <h2>How I build</h2>
+  <div class="cols">
+    <div>
+      <p>I decide what each tool should do, the rules it follows, and what counts as right. AI coding agents write the code. I check the output against real data before I rely on it, and I keep the raw records so any number on the screen traces back to where it came from.</p>
+      <p>Happy to walk through any of these live.</p>
+    </div>
+    <div>
+      <h3>Before this, at AegisAI</h3>
+      <ul>
+        <li>Built the HubSpot and Webflow RevOps stack, with automated lead capture and nurture.</li>
+        <li>Set up conversion and visitor tracking (Google Analytics, Google Ads, Meta Pixel, UTMs) that traced deals to their campaigns.</li>
+        <li>Closed a $12.9K deal on a $500 Google Ads budget (26x ROAS).</li>
+        <li>Built pipeline automation and DNS monitoring tools in Google Apps Script.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>Vito Prasad, San Francisco Bay Area. Screenshots taken October 28, 2026.</footer>
+</main>
+</body>
+</html>
