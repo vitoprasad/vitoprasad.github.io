@@ -127,7 +127,7 @@
 <header>
   <p class="kicker">Email DNS check</p>
   <h1>What a company's email records give away</h1>
-  <p class="lede">Every company publishes its email security setup in public DNS. Type a domain and this page reads those records live, names the vendors it can see, and tells you what my sales-signal monitor would have flagged.</p>
+  <p class="lede">Every company publishes its email security setup in public DNS. Type a domain and this page reads those records live, names the vendors it can see, and flags the changes a sales team would care about.</p>
   <p class="fine">Runs in your browser against Google's public DNS. Nothing is sent to me or kept on a server.</p>
 </header>
 
@@ -146,7 +146,7 @@
 
 <section class="watch" id="watch">
   <h2>Watch list</h2>
-  <p class="intro">The original monitor earned its keep by noticing change, not by reading a record once. Add a domain here and check back. The page compares each new read with the last one, using the rules my monitor sent to sales, and counts a change only when two reads in a row agree. The history stays in this browser.</p>
+  <p class="intro">The original monitor earned its keep by noticing change, not by reading a record once. Add a domain here and check back. The page compares each new read with the last one, using the rules below, and counts a change only when two reads in a row agree. The history stays in this browser.</p>
   <div id="watchTable"></div>
   <div class="actions">
     <button class="ghost" id="recheckAll" type="button">Re-check all</button>
@@ -168,7 +168,7 @@
       <p>One blind spot stays. Tools that connect to a mailbox through an API, like Abnormal, leave no trace in DNS, so their customers look quiet here.</p>
     </div>
   </div>
-  <h3 style="margin-top:20px">The rules</h3>
+  <h3 style="margin-top:20px">The rules this page uses</h3>
   <table class="rules">
     <thead><tr><th>Level</th><th>Change between two reads</th></tr></thead>
     <tbody>
@@ -560,7 +560,7 @@ function flagsFor(read, a) {
   if (a.policy === "missing") {
     f.push(["risk", "No DMARC record", "Receivers get no instructions for mail that fails authentication, so spoofing this domain is easy. Adding DMARC is often the first move after an incident."]);
   } else if (a.policy === "none") {
-    f.push(["signal", "DMARC is in monitoring mode", "The policy is none, so mail that fails authentication still gets delivered. A move to quarantine or reject is the change my monitor sent to sales."]);
+    f.push(["signal", "DMARC is in monitoring mode", "The policy is none, so mail that fails authentication still gets delivered. A move to quarantine or reject is the change worth watching for."]);
   } else if (a.policy === "quarantine") {
     f.push(["info", "DMARC is partway enforced", "Mail that fails authentication goes to spam. The last step is reject."]);
   } else {
