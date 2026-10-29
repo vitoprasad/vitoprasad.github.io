@@ -194,7 +194,7 @@
       <h3>What it does</h3>
       <p>Hardware teams log defects as nonconformance reports. Filing one is not the hard part. The hard part is noticing that three leaks in five weeks came from the same valve lot, finding every unit that lot went into, and stopping the ones still on the floor before another one ships.</p>
       <p>In the demo, a leak at test is the third from one supplier lot. The first two were repaired and closed one at a time. The assistant connects them, compares that lot with a clean one, and proposes sending the part back and containing the lot. A quality engineer approves, nine units go on hold, and the one that already shipped gets a customer notice.</p>
-      <p>I first built it on Lovable in April 2025, in an afternoon. This version rebuilds it around what factory software is expected to show in 2026. Evidence behind each suggestion, a person approving every change, and a full audit trail. It runs on sample data in your browser, and the assistant follows written rules, so every suggestion can be traced.</p>
+      <p>I first built it on Lovable in April 2025, in an afternoon. This version rebuilds it around what factory software is expected to show in 2026. Evidence behind each suggestion, a person approving every change, and a full audit trail. It runs on sample data in your browser. The assistant follows written rules, and it shows each step it takes before it writes, the way a live model would. It is labeled as simulated.</p>
       <p class="open"><a href="issue-scribe/">Open Issue Scribe</a> and follow the 2-minute path on its home page.</p>
     </div>
     <div>
@@ -211,7 +211,7 @@
   <div class="pair">
     <figure>
       <a href="img/issue-scribe-review.webp" title="Open full size"><img src="img/issue-scribe-review.webp" alt="Report review screen with the assistant's proposal, the records behind it, and every unit built with the same valve lot" loading="lazy"></a>
-      <figcaption>Reviewing a leak report. The assistant's proposal cites two earlier reports on the same lot, and the right side shows every unit that lot went into.</figcaption>
+      <figcaption>Reviewing a leak report. The assistant shows the steps it took, then cites two earlier reports on the same lot. The right side shows every unit that lot went into.</figcaption>
     </figure>
     <figure>
       <a href="img/issue-scribe-program.webp" title="Open full size"><img src="img/issue-scribe-program.webp" alt="Program view with open reports, cost of poor quality, first pass yield, units on hold and potential escapes" loading="lazy"></a>
