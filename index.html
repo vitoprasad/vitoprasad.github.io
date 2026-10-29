@@ -78,12 +78,13 @@
 <header>
   <p class="kicker">GTM engineering builds, October 2026</p>
   <h1>Vito Prasad</h1>
-  <p class="lede">I started in engineering at SpaceX and Northrop Grumman, moved through strategy consulting at Kearney, and then ran product marketing at an AI security startup, where I built the stack behind our pipeline. These are four tools I built in October 2026 by directing AI coding agents. Each one runs on real data, and the first one you can try yourself.</p>
+  <p class="lede">I started in engineering at SpaceX and Northrop Grumman, moved through strategy consulting at Kearney, and then ran product marketing at an AI security startup, where I built the stack behind our pipeline. These are five tools I built in October 2026 by directing AI coding agents. Four run on real data, and the first two you can try yourself.</p>
   <p class="contact">
     <a href="mailto:vito.prasad@gmail.com">vito.prasad@gmail.com</a><span>/</span><a href="https://www.linkedin.com/in/vitoprasad">linkedin.com/in/vitoprasad</a><span>/</span><em class="loc">San Francisco Bay Area</em>
   </p>
   <nav class="toc">
     <a href="#scanner">Account-list scanner</a>
+    <a href="#issue-scribe">Issue Scribe</a>
     <a href="#job-search">Job-search pipeline</a>
     <a href="#federal">Federal-contract pipeline</a>
     <a href="#crm">Onboarding CRM</a>
@@ -121,8 +122,49 @@
   </div>
 </section>
 
-<section class="build" id="job-search">
+<section class="build" id="issue-scribe">
   <div class="num">02</div>
+  <h2>Issue Scribe</h2>
+  <p class="one-line">A product demo of quality software for a hardware production line. A technician reports a defect with a photo and one line, an assistant drafts the report and shows the records behind every suggestion, and a named engineer signs off before anything changes.</p>
+  <div class="stats">
+    <div class="stat"><b>4 roles</b><small>technician, quality, design and program, each with its own work queue</small></div>
+    <div class="stat"><b>1 click</b><small>from one bad part to every unit built with the same supplier lot</small></div>
+    <div class="stat"><b>20 units</b><small>serialized, each with a full build record, on sample data</small></div>
+    <div class="stat"><b>2 minutes</b><small>for the guided path, in your browser</small></div>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>What it does</h3>
+      <p>Hardware teams log defects as nonconformance reports. Filing one is not the hard part. The hard part is noticing that three leaks in five weeks came from the same valve lot, finding every unit that lot went into, and stopping the ones still on the floor before another one ships.</p>
+      <p>In the demo, a leak at test is the third from one supplier lot. The first two were repaired and closed one at a time. The assistant connects them, compares that lot with a clean one, and proposes sending the part back and containing the lot. A quality engineer approves, nine units go on hold, and the one that already shipped gets a customer notice.</p>
+      <p>I first built it on Lovable in April 2025, in an afternoon. This version rebuilds it around what factory software is expected to show in 2026. Evidence behind each suggestion, a person approving every change, and a full audit trail. It runs on sample data in your browser, and the assistant follows written rules, so every suggestion can be traced.</p>
+      <p class="open"><a href="issue-scribe/">Open Issue Scribe</a> and follow the 2-minute path on its home page.</p>
+    </div>
+    <div>
+      <h3>How it works</h3>
+      <ol>
+        <li>Keep one set of records (parts, supplier lots, 20 serialized units and what went into each), so every screen agrees.</li>
+        <li>Draft each report from the unit's build record and the technician's note, and show why each field was filled in.</li>
+        <li>Propose a disposition from past reports on the same part and lot, cite them, and change nothing until a person approves.</li>
+        <li>Require a design engineer's sign-off when a part is used off drawing, unless an approved standard repair covers it.</li>
+        <li>Log every action with who took it, and mark the ones the assistant proposed.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="pair">
+    <figure>
+      <a href="img/issue-scribe-review.webp" title="Open full size"><img src="img/issue-scribe-review.webp" alt="Report review screen with the assistant's proposal, the records behind it, and every unit built with the same valve lot" loading="lazy"></a>
+      <figcaption>Reviewing a leak report. The assistant's proposal cites two earlier reports on the same lot, and the right side shows every unit that lot went into.</figcaption>
+    </figure>
+    <figure>
+      <a href="img/issue-scribe-program.webp" title="Open full size"><img src="img/issue-scribe-program.webp" alt="Program view with open reports, cost of poor quality, first pass yield, units on hold and potential escapes" loading="lazy"></a>
+      <figcaption>The program view after the lot is contained. Every number comes from the same records.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="build" id="job-search">
+  <div class="num">03</div>
   <h2>Job-search pipeline</h2>
   <p class="one-line">Pulls every open role from the companies I care about, keeps the ones that fit, and has an LLM score each against a written rubric, so I read 45 good matches instead of 55,000 listings.</p>
   <div class="stats">
@@ -161,7 +203,7 @@
 </section>
 
 <section class="build" id="federal">
-  <div class="num">03</div>
+  <div class="num">04</div>
   <h2>Federal-contract pipeline</h2>
   <p class="one-line">Built overnight for a business operations interview at a defense hardware startup. It turns the federal government's full list of open opportunities into a short list a small team can act on.</p>
   <div class="stats">
@@ -200,7 +242,7 @@
 </section>
 
 <section class="build" id="crm">
-  <div class="num">04</div>
+  <div class="num">05</div>
   <h2>Onboarding CRM</h2>
   <p class="one-line">Built for an AI startup's community team to work through its post-launch waitlist. Every person who needs a touch lands in a queue named for the next action.</p>
   <div class="stats">
@@ -243,7 +285,7 @@
   </div>
 </section>
 
-<footer>Vito Prasad, San Francisco Bay Area. Updated October 29, 2026. Screenshots taken October 28.</footer>
+<footer>Vito Prasad, San Francisco Bay Area. Updated October 29, 2026. Screenshots taken October 28 and 29.</footer>
 </main>
 </body>
 </html>
