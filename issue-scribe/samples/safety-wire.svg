@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <defs><linearGradient id="b" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#dfe3e7"/><stop offset="1" stop-color="#7f8994"/></linearGradient></defs>
+  <rect width="400" height="300" fill="#2b3138"/>
+  <rect x="30" y="170" width="340" height="60" fill="#5b636c"/>
+  <polygon points="100,110 140,110 160,140 140,170 100,170 80,140" fill="url(#b)" stroke="#4b535c" stroke-width="2"/>
+  <polygon points="260,110 300,110 320,140 300,170 260,170 240,140" fill="url(#b)" stroke="#4b535c" stroke-width="2"/>
+  <line x1="90" y1="128" x2="150" y2="152" stroke="#e0b341" stroke-width="3"/>
+  <line x1="250" y1="128" x2="310" y2="152" stroke="#e0b341" stroke-width="3"/>
+  <path d="M152 128 C 190 90, 215 210, 248 150" fill="none" stroke="#c9ced3" stroke-width="2.5"/>
+  <path d="M248 150 C 262 128, 300 92, 330 100" fill="none" stroke="#c9ced3" stroke-width="2.5"/>
+  <text x="16" y="22" fill="#9aa4af" font-family="ui-monospace,monospace" font-size="12">Sample image: slack safety wire between B-nuts</text>
+</svg>

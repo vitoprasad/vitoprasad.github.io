@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <defs><linearGradient id="p" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#d7dce1"/><stop offset="1" stop-color="#8f99a4"/></linearGradient></defs>
+  <rect width="400" height="300" fill="#2b3138"/>
+  <rect x="60" y="40" width="280" height="200" rx="14" fill="url(#p)" stroke="#59616a" stroke-width="2"/>
+  <circle cx="200" cy="140" r="58" fill="none" stroke="#6f7984" stroke-width="10"/>
+  <circle cx="200" cy="140" r="36" fill="#3a4148"/>
+  <g fill="#3a4148"><circle cx="90" cy="70" r="9"/><circle cx="310" cy="70" r="9"/><circle cx="90" cy="210" r="9"/><circle cx="310" cy="210" r="9"/></g>
+  <path d="M262 92 L306 176" stroke="#f3f5f7" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M263 94 L305 174" stroke="#4b535c" stroke-width="1" stroke-linecap="round" transform="translate(2 0)"/>
+  <text x="16" y="22" fill="#9aa4af" font-family="ui-monospace,monospace" font-size="12">Sample image: tooling mark on manifold flange face</text>
+</svg>

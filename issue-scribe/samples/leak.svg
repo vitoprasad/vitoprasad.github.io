@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <defs>
+    <linearGradient id="m" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#cfd5dc"/><stop offset=".5" stop-color="#9aa4af"/><stop offset="1" stop-color="#6b7580"/></linearGradient>
+    <linearGradient id="t" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#e2e6ea"/><stop offset="1" stop-color="#8d97a2"/></linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="#2b3138"/>
+  <rect x="0" y="168" width="400" height="34" fill="url(#t)"/>
+  <rect x="70" y="140" width="120" height="90" rx="6" fill="url(#m)" stroke="#4b535c" stroke-width="2"/>
+  <polygon points="190,150 232,150 248,185 232,220 190,220" fill="url(#m)" stroke="#4b535c" stroke-width="2"/>
+  <rect x="100" y="110" width="60" height="32" rx="4" fill="#7d8792" stroke="#4b535c" stroke-width="2"/>
+  <ellipse cx="242" cy="185" rx="16" ry="30" fill="#bfe3f2" opacity=".35"/>
+  <g fill="none" stroke="#e8f6fc" stroke-width="2">
+    <circle cx="250" cy="160" r="6"/><circle cx="262" cy="143" r="4"/><circle cx="246" cy="132" r="7"/>
+    <circle cx="258" cy="117" r="3"/><circle cx="268" cy="104" r="5"/><circle cx="252" cy="92" r="3.5"/>
+    <circle cx="240" cy="172" r="3"/><circle cx="256" cy="200" r="2.5"/>
+  </g>
+  <text x="16" y="22" fill="#9aa4af" font-family="ui-monospace,monospace" font-size="12">Sample image: bubbles at valve fitting, helium leak test</text>
+</svg>
