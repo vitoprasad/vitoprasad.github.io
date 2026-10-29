@@ -355,6 +355,13 @@
   var items = document.querySelectorAll("[data-industry]");
   var total = document.querySelectorAll("ol.builds li").length;
   var shown = document.getElementById("shown");
+  // Counts come from the list itself, so adding a build keeps them right.
+  var rows = document.querySelectorAll("ol.builds li");
+  chips.forEach(function (c) {
+    var k = c.getAttribute("data-industry-filter");
+    c.querySelector(".c").textContent = Array.prototype.filter.call(rows, function (r) { return k === "all" || r.getAttribute("data-industry") === k; }).length;
+  });
+  tryChip.querySelector(".c").textContent = Array.prototype.filter.call(rows, function (r) { return r.getAttribute("data-try") === "yes"; }).length;
   function apply() {
     var n = 0;
     items.forEach(function (el) {
