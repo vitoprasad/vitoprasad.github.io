@@ -61,6 +61,38 @@
   .before li { margin: 0 0 10px; }
   .open { font: 600 16px/1.5 -apple-system, "Segoe UI", Arial, sans-serif; }
   .open a { color: var(--accent, #b4532a); }
+  .index { margin-top: 30px; }
+  .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 16px; }
+  .flabel { font: 600 12px/1 -apple-system, "Segoe UI", Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase;
+            color: var(--faint); min-width: 74px; }
+  .filters + .filters { margin-top: -6px; }
+  .chip { font: 500 14px/1 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--ink); background: var(--card);
+          border: 1px solid var(--line); border-radius: 999px; padding: 9px 13px; cursor: pointer; }
+  .chip:hover { border-color: var(--ink); }
+  .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .chip .c { color: var(--faint); margin-left: 6px; }
+  .chip[aria-pressed="true"] .c { color: #cfcac2; }
+  .builds-head, ol.builds a.row { display: grid; gap: 14px; align-items: baseline;
+    grid-template-columns: 30px minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr) 52px; }
+  .builds-head { font: 600 11px/1 -apple-system, "Segoe UI", Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase;
+                 color: var(--faint); padding: 0 6px 10px; }
+  ol.builds { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
+  ol.builds li { margin: 0; border-bottom: 1px solid var(--line); }
+  ol.builds a.row { padding: 12px 6px; color: var(--ink); text-decoration: none;
+                    font: 15px/1.4 -apple-system, "Segoe UI", Arial, sans-serif; }
+  ol.builds a.row:hover { background: var(--card); }
+  .row .n { font-size: 13px; font-weight: 600; letter-spacing: .1em; color: var(--faint); }
+  .row .name { font-weight: 600; }
+  .row .meta { color: var(--muted); }
+  .row .try { font-weight: 600; color: var(--accent); text-align: right; }
+  .index-foot { display: flex; justify-content: space-between; gap: 12px; margin: 12px 0 0;
+                font: 14px/1.4 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--faint); }
+  .index-foot a { color: var(--ink); }
+  .linkish { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; }
+  .tags span { font: 500 12px/1 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--muted); background: var(--card);
+               border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; }
+  .tags span.ind { color: var(--accent); background: var(--accent-soft); border-color: #ecd3c3; }
   footer { border-top: 1px solid var(--line); padding-top: 28px; margin-top: 72px;
            font: 14px/1.5 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--faint); }
   @media (max-width: 760px) {
@@ -69,6 +101,14 @@
     .cols { grid-template-columns: 1fr; gap: 22px; }
     .contact a, .contact .loc { display: table; margin-bottom: 6px; }
     .contact span { display: none; }
+    .builds-head { display: none; }
+    ol.builds a.row { grid-template-columns: 26px minmax(0, 1fr) auto; gap: 2px 10px; }
+    .row .n { grid-column: 1; grid-row: 1 / span 4; }
+    .row .name, .row .meta { grid-column: 2; }
+    .row .try { grid-column: 3; grid-row: 1; }
+    .row .meta { font-size: 14px; }
+    .row .meta.data { display: none; }
+    .flabel { min-width: 0; width: 100%; }
   }
 </style>
 </head>
@@ -82,19 +122,35 @@
   <p class="contact">
     <a href="mailto:vito.prasad@gmail.com">vito.prasad@gmail.com</a><span>/</span><a href="https://www.linkedin.com/in/vitoprasad">linkedin.com/in/vitoprasad</a><span>/</span><em class="loc">San Francisco Bay Area</em>
   </p>
-  <nav class="toc">
-    <a href="#scanner">Account-list scanner</a>
-    <a href="#issue-scribe">Issue Scribe</a>
-    <a href="#job-search">Job-search pipeline</a>
-    <a href="#federal">Federal-contract pipeline</a>
-    <a href="#crm">Onboarding CRM</a>
-    <a href="#how">How I build</a>
-  </nav>
+  <div class="index" id="builds">
+    <div class="filters" role="group" aria-label="Filter the builds">
+      <span class="flabel">Industry</span>
+      <button class="chip" type="button" data-industry-filter="all" aria-pressed="true">All<span class="c">5</span></button>
+      <button class="chip" type="button" data-industry-filter="software" aria-pressed="false">Software and AI<span class="c">2</span></button>
+      <button class="chip" type="button" data-industry-filter="hardware" aria-pressed="false">Hardware manufacturing<span class="c">1</span></button>
+      <button class="chip" type="button" data-industry-filter="defense" aria-pressed="false">Defense and government<span class="c">1</span></button>
+      <button class="chip" type="button" data-industry-filter="hiring" aria-pressed="false">Hiring<span class="c">1</span></button>
+    </div>
+    <div class="filters">
+      <span class="flabel">Show</span>
+      <button class="chip" type="button" data-try-filter aria-pressed="false">Only what you can try<span class="c">2</span></button>
+    </div>
+    <div class="builds-head" aria-hidden="true"><span></span><span>Build</span><span>Industry</span><span>Use</span><span>Data</span><span></span></div>
+    <ol class="builds">
+      <li data-industry="software" data-try="yes"><a class="row" href="#scanner"><span class="n">01</span><span class="name">Account-list scanner</span><span class="meta">Software and AI</span><span class="meta">Account research for sales and marketing</span><span class="meta data">Public DNS records</span><span class="try">Try it</span></a></li>
+      <li data-industry="hardware" data-try="yes"><a class="row" href="#issue-scribe"><span class="n">02</span><span class="name">Issue Scribe</span><span class="meta">Hardware manufacturing</span><span class="meta">Quality management on the line</span><span class="meta data">Sample data</span><span class="try">Try it</span></a></li>
+      <li data-industry="hiring" data-try="no"><a class="row" href="#job-search"><span class="n">03</span><span class="name">Job-search pipeline</span><span class="meta">Hiring</span><span class="meta">Sourcing and LLM scoring</span><span class="meta data">55,000+ live job listings</span><span class="try"></span></a></li>
+      <li data-industry="defense" data-try="no"><a class="row" href="#federal"><span class="n">04</span><span class="name">Federal-contract pipeline</span><span class="meta">Defense and government</span><span class="meta">Opportunity pipeline for business development</span><span class="meta data">SAM.gov daily file</span><span class="try"></span></a></li>
+      <li data-industry="software" data-try="no"><a class="row" href="#crm"><span class="n">05</span><span class="name">Onboarding CRM</span><span class="meta">Software and AI</span><span class="meta">Customer onboarding and follow-up</span><span class="meta data">Team tracker and Slack</span><span class="try"></span></a></li>
+    </ol>
+    <p class="index-foot"><span><span id="shown">All 5 builds.</span> <button class="linkish" type="button" id="show-all" hidden>Show all</button></span><a href="#how">How I build</a></p>
+  </div>
 </header>
 
-<section class="build" id="scanner">
+<section class="build" id="scanner" data-industry="software" data-try="yes">
   <div class="num">01</div>
   <h2>Account-list scanner</h2>
+  <p class="tags"><span class="ind">Software and AI</span><span>Account research for sales and marketing</span><span>Public DNS records</span><span>Try it yourself</span></p>
   <p class="one-line">Reads the public DNS records of any list of companies and shows which sales, marketing and AI tools each one runs, who is switching, and whose email is about to break. I ran it on 169 of the top startups from the Forbes, LinkedIn and CNBC lists.</p>
   <div class="stats">
     <div class="stat"><b>169</b><small>companies from three startup lists</small></div>
@@ -122,9 +178,10 @@
   </div>
 </section>
 
-<section class="build" id="issue-scribe">
+<section class="build" id="issue-scribe" data-industry="hardware" data-try="yes">
   <div class="num">02</div>
   <h2>Issue Scribe</h2>
+  <p class="tags"><span class="ind">Hardware manufacturing</span><span>Quality management on the line</span><span>Sample data</span><span>Try it yourself</span></p>
   <p class="one-line">A product demo of quality software for a hardware production line. A technician reports a defect with a photo and one line, an assistant drafts the report and shows the records behind every suggestion, and a named engineer signs off before anything changes.</p>
   <div class="stats">
     <div class="stat"><b>4 roles</b><small>technician, quality, design and program, each with its own work queue</small></div>
@@ -163,9 +220,10 @@
   </div>
 </section>
 
-<section class="build" id="job-search">
+<section class="build" id="job-search" data-industry="hiring" data-try="no">
   <div class="num">03</div>
   <h2>Job-search pipeline</h2>
+  <p class="tags"><span class="ind">Hiring</span><span>Sourcing and LLM scoring</span><span>55,000+ live job listings</span></p>
   <p class="one-line">Pulls every open role from the companies I care about, keeps the ones that fit, and has an LLM score each against a written rubric, so I read 45 good matches instead of 55,000 listings.</p>
   <div class="stats">
     <div class="stat"><b>55,000+</b><small>listings pulled each run</small></div>
@@ -202,9 +260,10 @@
   </div>
 </section>
 
-<section class="build" id="federal">
+<section class="build" id="federal" data-industry="defense" data-try="no">
   <div class="num">04</div>
   <h2>Federal-contract pipeline</h2>
+  <p class="tags"><span class="ind">Defense and government</span><span>Opportunity pipeline for business development</span><span>SAM.gov daily file</span></p>
   <p class="one-line">Built overnight for a business operations interview at a defense hardware startup. It turns the federal government's full list of open opportunities into a short list a small team can act on.</p>
   <div class="stats">
     <div class="stat"><b>72,060</b><small>open federal postings scanned</small></div>
@@ -241,9 +300,10 @@
   </div>
 </section>
 
-<section class="build" id="crm">
+<section class="build" id="crm" data-industry="software" data-try="no">
   <div class="num">05</div>
   <h2>Onboarding CRM</h2>
+  <p class="tags"><span class="ind">Software and AI</span><span>Customer onboarding and follow-up</span><span>Team tracker and Slack</span></p>
   <p class="one-line">Built for an AI startup's community team to work through its post-launch waitlist. Every person who needs a touch lands in a queue named for the next action.</p>
   <div class="stats">
     <div class="stat"><b>1,100+</b><small>signups synced from the team's tracker</small></div>
@@ -287,5 +347,30 @@
 
 <footer>Vito Prasad, San Francisco Bay Area. Updated October 29, 2026. Screenshots taken October 28 and 29.</footer>
 </main>
+<script>
+(function () {
+  var industry = "all", tryOnly = false;
+  var chips = document.querySelectorAll("[data-industry-filter]");
+  var tryChip = document.querySelector("[data-try-filter]");
+  var items = document.querySelectorAll("[data-industry]");
+  var total = document.querySelectorAll("ol.builds li").length;
+  var shown = document.getElementById("shown");
+  function apply() {
+    var n = 0;
+    items.forEach(function (el) {
+      var ok = (industry === "all" || el.getAttribute("data-industry") === industry) && (!tryOnly || el.getAttribute("data-try") === "yes");
+      el.hidden = !ok;
+      if (ok && el.tagName === "LI") n++;
+    });
+    chips.forEach(function (c) { c.setAttribute("aria-pressed", String(c.getAttribute("data-industry-filter") === industry)); });
+    tryChip.setAttribute("aria-pressed", String(tryOnly));
+    shown.textContent = n === total ? "All " + total + " builds." : n === 0 ? "No builds match both filters." : "Showing " + n + " of " + total + " builds.";
+    document.getElementById("show-all").hidden = n === total;
+  }
+  chips.forEach(function (c) { c.addEventListener("click", function () { industry = c.getAttribute("data-industry-filter"); apply(); }); });
+  tryChip.addEventListener("click", function () { tryOnly = !tryOnly; apply(); });
+  document.getElementById("show-all").addEventListener("click", function () { industry = "all"; tryOnly = false; apply(); });
+})();
+</script>
 </body>
 </html>
