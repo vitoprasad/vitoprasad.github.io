@@ -48,12 +48,12 @@
   figure.chart { max-width: 860px; margin: 0 auto 44px; }
   .chart-title { font: 600 17px/1.35 var(--sans); margin: 0 0 4px; }
   .chart-sub { font: 14px/1.4 var(--sans); color: var(--muted); margin: 0 0 12px; }
-  figure.chart .legend { justify-content: flex-start; margin-bottom: 6px; }
+  figure.chart .legend { justify-content: flex-start; margin-bottom: 14px; }
   figure.chart .legend i { border-radius: 50%; }
-  figure.chart figcaption { font: 12.5px/1.55 var(--mono); color: var(--faint); margin-top: 8px; }
+  figure.chart figcaption { font: 13px/1.55 var(--sans); color: var(--muted); margin-top: 10px; max-width: 760px; }
   #crossoverPlot svg { display: block; overflow: visible; }
-  #crossoverPlot text { font-family: var(--mono); }
-  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  #crossoverPlot text { font-family: var(--sans); font-variant-numeric: tabular-nums; }
+  .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   section.explore { border-top: 1px solid var(--line); padding-top: 44px; margin-top: 64px; }
   section.explore .intro { margin-bottom: 6px; }
   .controls { position: sticky; top: 0; z-index: 5; background: var(--paper); padding: 14px 0 12px; border-bottom: 1px solid var(--line);
@@ -94,6 +94,8 @@
   .tip { position: fixed; pointer-events: none; background: var(--ink); color: #fff; font: 13px/1.4 var(--sans); padding: 8px 10px;
          border-radius: 8px; max-width: 280px; z-index: 20; display: none; }
 
+  /* The company table scrolls sideways inside its box on a phone, not the whole page. */
+  #tableWrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font: 14px/1.45 var(--sans); background: var(--card);
           border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
   th { text-align: left; font-weight: 600; font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
@@ -177,13 +179,15 @@
 </article>
 
 <figure class="chart" id="crossover">
-  <p class="chart-title">Share of companies that set up Claude, and that run a marketing platform</p>
-  <p class="chart-sub">Lists ordered from the most established companies to the newest</p>
+  <p class="chart-title">Claude passes marketing platforms as the lists get newer</p>
+  <p class="chart-sub">Share of companies on each list, from the most established list to the newest</p>
   <div class="legend"><span><i style="background:var(--map)"></i>Run a marketing platform</span><span><i style="background:var(--accent)"></i>Set up Claude</span></div>
   <div id="crossoverPlot"></div>
-  <figcaption>Set up means the company verified its domain with Anthropic, the step for company-wide Claude accounts. A marketing platform counts when live mail or a live page runs on it, so one that leaves no trace in DNS is missed.</figcaption>
-  <table class="sr-only" id="crossoverTable"><caption>Share of companies by list</caption>
+  <figcaption>Set up means the company verified its domain with Anthropic, the step for company-wide Claude accounts. A marketing platform counts when live mail or a live page runs on it, so one that leaves no trace in DNS is missed. The gap is in percentage points.</figcaption>
+  <div class="sr-only">
+  <table id="crossoverTable"><caption>Share of companies by list</caption>
     <thead><tr><th>List</th><th>Companies</th><th>Run a marketing platform</th><th>Set up Claude</th><th>Set up ChatGPT</th></tr></thead><tbody></tbody></table>
+  </div>
 </figure>
 <script type="application/json" id="storyData">
 {"asOf": "2026-10-29", "rows": [
@@ -394,28 +398,53 @@ function renderStoryChart() {
   const data = JSON.parse(document.getElementById("storyData").textContent);
   const plotEl = document.getElementById("crossoverPlot");
   // Drawn at the container's real width so text stays the same size on a phone.
-  const W = Math.max(280, plotEl.clientWidth || 640), left = 14, right = 34, rowH = 64, top = 6;
-  const x = v => left + (W - left - right) * v / 100;
+  const W = Math.max(280, plotEl.clientWidth || 640);
+  const wide = W >= 560;
   const pctOf = (k, r) => Math.round(100 * r[k] / r.n);
-  const H = top + data.rows.length * rowH + 30;
+  const vals = data.rows.flatMap(r => [pctOf("map", r), pctOf("claude", r)]);
+  // Dots only encode position, so the scale starts near the data rather than at zero.
+  const lo = Math.max(0, Math.floor((Math.min(...vals) - 6) / 10) * 10);
+  const hi = Math.min(100, Math.ceil((Math.max(...vals) + 6) / 10) * 10);
+  const gutter = wide ? 200 : 0, gapW = wide ? 104 : 0;
+  const plotL = gutter + 36, plotR = W - gapW - 36;
+  const x = v => plotL + (plotR - plotL) * (v - lo) / (hi - lo);
+  const head = wide ? 22 : 0, rowH = wide ? 58 : 82, axisH = 26;
+  const H = head + data.rows.length * rowH + axisH;
+  const halo = ' paint-order="stroke" stroke="#faf8f4" stroke-width="5" stroke-linejoin="round"';
+  const gapText = r => {
+    const d = pctOf("claude", r) - pctOf("map", r);
+    return d === 0 ? "Even" : (d > 0 ? "Claude +" + d : "Marketing +" + (-d));
+  };
   let svg = '<svg viewBox="0 0 ' + W + " " + H + '" width="' + W + '" height="' + H + '" role="img" aria-labelledby="crossoverTitle"><title id="crossoverTitle">' +
     esc(data.rows.map(r => r.list + ", marketing platform " + pctOf("map", r) + "%, Claude " + pctOf("claude", r) + "%").join(". ")) + "</title>";
-  [0, 25, 50, 75, 100].forEach(t => {
-    svg += '<line x1="' + x(t) + '" x2="' + x(t) + '" y1="' + top + '" y2="' + (H - 24) + '" stroke="#ebe6de" stroke-width="1"/>' +
+  for (let t = lo; t <= hi; t += wide ? 10 : 20) {
+    svg += '<line x1="' + x(t) + '" x2="' + x(t) + '" y1="' + head + '" y2="' + (H - axisH + 4) + '" stroke="#ebe6de" stroke-width="1"/>' +
       '<text x="' + x(t) + '" y="' + (H - 6) + '" font-size="11" fill="#8b867d" text-anchor="middle">' + t + "%</text>";
-  });
+  }
+  if (wide) {
+    svg += '<text x="0" y="12" font-size="11" fill="#8b867d" letter-spacing=".08em">LIST</text>' +
+      '<text x="' + (W - gapW + 14) + '" y="12" font-size="11" fill="#8b867d" letter-spacing=".08em">GAP</text>';
+  }
   data.rows.forEach((r, i) => {
-    const y0 = top + i * rowH, y = y0 + 38;
+    const y0 = head + i * rowH;
+    const y = wide ? y0 + rowH / 2 + 2 : y0 + 58;
     const m = pctOf("map", r), c = pctOf("claude", r);
-    svg += '<text x="' + left + '" y="' + (y0 + 14) + '" font-size="14" fill="#1c1b19" style="font-family:var(--sans)">' + esc(r.list) +
-      '<tspan fill="#8b867d" dx="8">' + r.n + " companies</tspan></text>" +
-      '<line x1="' + x(Math.min(m, c)) + '" x2="' + x(Math.max(m, c)) + '" y1="' + y + '" y2="' + y + '" stroke="#cfc8bd" stroke-width="2" stroke-linecap="round"/>';
-    [["map", m, "var(--map)", "#1f6fae", r.map + " of " + r.n + " run a marketing platform"],
-     ["claude", c, "var(--accent)", "#b4532a", r.claude + " of " + r.n + " set up Claude, " + r.chatgpt + " set up ChatGPT"]].forEach(([k, v, , hex, tip]) => {
+    if (wide) {
+      svg += '<text x="0" y="' + (y - 3) + '" font-size="14" font-weight="600" fill="#1c1b19">' + esc(r.list) + "</text>" +
+        '<text x="0" y="' + (y + 14) + '" font-size="12" fill="#8b867d">' + r.n + " companies</text>" +
+        '<text x="' + (W - gapW + 14) + '" y="' + (y + 4) + '" font-size="13" fill="#5f5b54">' + gapText(r) + "</text>";
+    } else {
+      svg += '<text x="0" y="' + (y0 + 16) + '" font-size="14" font-weight="600" fill="#1c1b19"' + halo + ">" + esc(r.list) + "</text>" +
+        '<text x="0" y="' + (y0 + 33) + '" font-size="12" fill="#8b867d"' + halo + ">" + r.n + " companies</text>" +
+        '<text x="' + W + '" y="' + (y0 + 33) + '" font-size="12.5" fill="#5f5b54" text-anchor="end"' + halo + ">" + gapText(r) + "</text>";
+    }
+    svg += '<line x1="' + x(Math.min(m, c)) + '" x2="' + x(Math.max(m, c)) + '" y1="' + y + '" y2="' + y + '" stroke="#cfc8bd" stroke-width="2" stroke-linecap="round"/>';
+    [["map", m, "#1f6fae", r.map + " of " + r.n + " run a marketing platform"],
+     ["claude", c, "#b4532a", r.claude + " of " + r.n + " set up Claude, " + r.chatgpt + " set up ChatGPT"]].forEach(([k, v, hex, tip]) => {
       const before = k === "map" ? m < c : c < m;
       svg += '<g class="dot" data-tip="' + esc(r.list + ". " + tip + ".") + '"><circle cx="' + x(v) + '" cy="' + y + '" r="14" fill="transparent"/>' +
         '<circle cx="' + x(v) + '" cy="' + y + '" r="7" fill="' + hex + '" stroke="#faf8f4" stroke-width="2"/>' +
-        '<text x="' + (x(v) + (before ? -13 : 13)) + '" y="' + (y + 4) + '" font-size="12" fill="#5f5b54" text-anchor="' + (before ? "end" : "start") + '">' + v + "%</text></g>";
+        '<text x="' + (x(v) + (before ? -13 : 13)) + '" y="' + (y + 4) + '" font-size="12.5" fill="#5f5b54" text-anchor="' + (before ? "end" : "start") + '"' + halo + ">" + v + "%</text></g>";
     });
   });
   plotEl.innerHTML = svg + "</svg>";
