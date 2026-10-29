@@ -93,6 +93,11 @@
   .tags span { font: 500 12px/1 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--muted); background: var(--card);
                border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; }
   .tags span.ind { color: var(--accent); background: var(--accent-soft); border-color: #ecd3c3; }
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 12px; margin: 0 0 18px; }
+  .feature { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+  .feature b { display: block; font: 600 15px/1.3 -apple-system, "Segoe UI", Arial, sans-serif; margin: 0 0 6px; }
+  .feature p { font-size: 16px; line-height: 1.5; margin: 0; }
+  .assist { margin: 0 0 30px; }
   footer { border-top: 1px solid var(--line); padding-top: 28px; margin-top: 72px;
            font: 14px/1.5 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--faint); }
   @media (max-width: 760px) {
@@ -138,7 +143,7 @@
     <div class="builds-head" aria-hidden="true"><span></span><span>Build</span><span>Industry</span><span>Use</span><span>Data</span><span></span></div>
     <ol class="builds">
       <li data-industry="software" data-try="yes"><a class="row" href="#scanner"><span class="n">01</span><span class="name">Account-list scanner</span><span class="meta">Software and AI</span><span class="meta">Account research for sales and marketing</span><span class="meta data">Public DNS records</span><span class="try">Try it</span></a></li>
-      <li data-industry="hardware" data-try="yes"><a class="row" href="#issue-scribe"><span class="n">02</span><span class="name">Issue Scribe</span><span class="meta">Hardware manufacturing</span><span class="meta">Quality management on the line</span><span class="meta data">Sample data</span><span class="try">Try it</span></a></li>
+      <li data-industry="hardware" data-try="yes"><a class="row" href="#issue-scribe"><span class="n">02</span><span class="name">Issue Scribe</span><span class="meta">Hardware manufacturing</span><span class="meta">AI-assisted quality management</span><span class="meta data">Sample data</span><span class="try">Try it</span></a></li>
       <li data-industry="hiring" data-try="no"><a class="row" href="#job-search"><span class="n">03</span><span class="name">Job-search pipeline</span><span class="meta">Hiring</span><span class="meta">Sourcing and LLM scoring</span><span class="meta data">55,000+ live job listings</span><span class="try"></span></a></li>
       <li data-industry="defense" data-try="no"><a class="row" href="#federal"><span class="n">04</span><span class="name">Federal-contract pipeline</span><span class="meta">Defense and government</span><span class="meta">Opportunity pipeline for business development</span><span class="meta data">SAM.gov daily file</span><span class="try"></span></a></li>
       <li data-industry="software" data-try="no"><a class="row" href="#crm"><span class="n">05</span><span class="name">Onboarding CRM</span><span class="meta">Software and AI</span><span class="meta">Customer onboarding and follow-up</span><span class="meta data">Team tracker and Slack</span><span class="try"></span></a></li>
@@ -181,12 +186,12 @@
 <section class="build" id="issue-scribe" data-industry="hardware" data-try="yes">
   <div class="num">02</div>
   <h2>Issue Scribe</h2>
-  <p class="tags"><span class="ind">Hardware manufacturing</span><span>Quality management on the line</span><span>Sample data</span><span>Try it yourself</span></p>
+  <p class="tags"><span class="ind">Hardware manufacturing</span><span>AI-assisted quality management</span><span>Sample data</span><span>Try it yourself</span></p>
   <p class="one-line">A product demo of quality software for a hardware production line. A technician reports a defect with a photo and one line, an assistant drafts the report and shows the records behind every suggestion, and a named engineer signs off before anything changes.</p>
   <div class="stats">
     <div class="stat"><b>4 roles</b><small>technician, quality, design and program, each with its own work queue</small></div>
     <div class="stat"><b>1 click</b><small>from one bad part to every unit built with the same supplier lot</small></div>
-    <div class="stat"><b>20 units</b><small>serialized, each with a full build record, on sample data</small></div>
+    <div class="stat"><b>5 drafts</b><small>report, decision, corrective action, customer notice and answers, each citing its records</small></div>
     <div class="stat"><b>2 minutes</b><small>for the guided path, in your browser</small></div>
   </div>
   <div class="cols">
@@ -194,7 +199,7 @@
       <h3>What it does</h3>
       <p>Hardware teams log defects as nonconformance reports. Filing one is not the hard part. The hard part is noticing that three leaks in five weeks came from the same valve lot, finding every unit that lot went into, and stopping the ones still on the floor before another one ships.</p>
       <p>In the demo, a leak at test is the third from one supplier lot. The first two were repaired and closed one at a time. The assistant connects them, compares that lot with a clean one, and proposes sending the part back and containing the lot. A quality engineer approves, nine units go on hold, and the one that already shipped gets a customer notice.</p>
-      <p>I first built it on Lovable in April 2025, in an afternoon. This version rebuilds it around what factory software is expected to show in 2026. Evidence behind each suggestion, a person approving every change, and a full audit trail. It runs on sample data in your browser. The assistant follows written rules, and it shows each step it takes before it writes, the way a live model would. It is labeled as simulated.</p>
+      <p>I first built it on Lovable in April 2025, in an afternoon. This version rebuilds it around what factory software is expected to show in 2026. An assistant that drafts the paperwork, evidence behind each suggestion, a person approving every change, and a full audit trail.</p>
       <p class="open"><a href="issue-scribe/">Open Issue Scribe</a> and follow the 2-minute path on its home page.</p>
     </div>
     <div>
@@ -207,6 +212,18 @@
         <li>Log every action with who took it, and mark the ones the assistant proposed.</li>
       </ol>
     </div>
+  </div>
+  <div class="assist">
+    <h3>What the assistant does</h3>
+    <div class="features">
+      <div class="feature"><b>Drafts the report</b><p>From a one-line note and the unit's build record, it fills in the part, supplier lot, test step and severity, and says why it picked each one.</p></div>
+      <div class="feature"><b>Proposes the decision</b><p>It reads past reports on the same part and lot, compares lots, and checks which approved repairs apply. Then it recommends how to handle the part, from rework or an approved repair to sending it back to the supplier, and cites what it used.</p></div>
+      <div class="feature"><b>Spots repeat problems</b><p>It flags when one defect keeps coming from the same lot, even after each report was closed on its own, and shows every unit that lot went into, including ones already shipped.</p></div>
+      <div class="feature"><b>Writes the follow-up</b><p>It drafts the corrective action report and the hold notice to the customer from the same records, for a person to edit and send.</p></div>
+      <div class="feature"><b>Answers questions</b><p>Ask which supplier cost the most this quarter, or where a lot was used, and get a table linked to the records with a line on how it was worked out.</p></div>
+      <div class="feature"><b>Shows its work</b><p>Every run lists the steps it took before it writes. Nothing is saved until a named person approves it, and the activity log shows who approved what.</p></div>
+    </div>
+    <p class="note">In the demo the assistant is simulated. It follows written rules over the sample data, shows its steps the way a live model would, and is labeled that way. A live version would send the same records to a model and keep the same evidence and approval steps.</p>
   </div>
   <div class="pair">
     <figure>
