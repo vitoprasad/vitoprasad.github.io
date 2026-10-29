@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Email DNS check, Vito Prasad</title>
+<meta name="description" content="Type any domain to read its public email security records, see which vendors run its mail, and see what a sales-signal monitor would flag.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<style>
+  :root {
+    --ink: #1c1b19; --muted: #5f5b54; --faint: #8b867d; --line: #e4dfd6;
+    --paper: #faf8f4; --card: #ffffff; --accent: #b4532a; --accent-soft: #f4e6dc;
+    --good: #2f6b3f; --good-soft: #e3efe5; --warn: #9a6512; --warn-soft: #f6ecd8;
+    --bad: #a3321f; --bad-soft: #f6e0db; --info-soft: #eeebe5;
+    --sans: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font: 17px/1.6 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 64px 28px 96px; }
+  a { color: var(--ink); }
+  .back { font: 14px/1 var(--sans); color: var(--muted); text-decoration: none; }
+  .back:hover { color: var(--ink); }
+  header { border-bottom: 1px solid var(--line); padding: 28px 0 36px; margin-bottom: 36px; }
+  .kicker { font: 600 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase;
+            color: var(--accent); margin: 0 0 18px; }
+  h1 { font-size: 44px; line-height: 1.1; margin: 0 0 18px; font-weight: 600; letter-spacing: -.01em; }
+  .lede { font-size: 20px; color: var(--muted); max-width: 740px; margin: 0 0 10px; }
+  .fine { font: 14px/1.5 var(--sans); color: var(--faint); margin: 0; }
+  h2 { font-size: 28px; line-height: 1.2; margin: 0 0 6px; font-weight: 600; }
+  h3 { font: 600 13px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase;
+       color: var(--accent); margin: 0 0 14px; }
+  p { margin: 0 0 14px; }
+
+  form.check { display: flex; gap: 10px; margin: 0 0 14px; }
+  form.check input { flex: 1; min-width: 0; font: 18px/1 var(--sans); padding: 14px 16px; border: 1px solid var(--line);
+                     border-radius: 10px; background: var(--card); color: var(--ink); }
+  form.check input:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+  button { font: 600 15px/1 var(--sans); padding: 12px 18px; border-radius: 10px; border: 1px solid var(--ink);
+           background: var(--ink); color: #fff; cursor: pointer; }
+  button.ghost { background: var(--card); color: var(--ink); border-color: var(--line); font-weight: 500; }
+  button.ghost:hover { border-color: var(--ink); }
+  button:disabled { opacity: .55; cursor: default; }
+  form.check button { padding: 0 26px; }
+  .try { font: 14px/1 var(--sans); color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .try a { color: var(--ink); text-decoration: none; padding: 7px 11px; border: 1px solid var(--line);
+           border-radius: 999px; background: var(--card); }
+  .try a:hover { border-color: var(--ink); }
+  .status { font: 14px/1.4 var(--sans); color: var(--muted); min-height: 20px; margin: 18px 0 0; }
+  .status.err { color: var(--bad); }
+
+  #result { margin-top: 30px; }
+  .result-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px;
+                 margin-bottom: 18px; }
+  .result-head .when { font: 14px/1.4 var(--sans); color: var(--faint); }
+  .summary { font-size: 19px; color: var(--muted); margin: 0 0 22px; max-width: 800px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 0 0 34px; }
+  .tile { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .tile .lbl { font: 600 11px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  .tile b { display: block; font: 600 23px/1.2 var(--sans); margin: 8px 0 4px; letter-spacing: -.01em; }
+  .tile small { display: block; font: 13px/1.35 var(--sans); color: var(--muted); }
+  .tile.good b { color: var(--good); } .tile.warn b { color: var(--warn); } .tile.bad b { color: var(--bad); }
+  .block { margin: 0 0 36px; }
+  .flags { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .flag { display: grid; grid-template-columns: 92px 1fr; gap: 14px; align-items: start; background: var(--card);
+          border: 1px solid var(--line); border-radius: 10px; padding: 13px 16px; }
+  .flag strong { display: block; font: 600 16px/1.35 var(--sans); margin-bottom: 3px; }
+  .flag span.body { font: 15px/1.5 var(--sans); color: var(--muted); }
+  .chip { display: inline-block; font: 600 11px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase;
+          padding: 6px 8px; border-radius: 6px; text-align: center; margin-top: 2px; }
+  .chip.signal, .chip.critical { background: var(--accent-soft); color: var(--accent); }
+  .chip.risk, .chip.high { background: var(--bad-soft); color: var(--bad); }
+  .chip.medium { background: var(--warn-soft); color: var(--warn); }
+  .chip.good { background: var(--good-soft); color: var(--good); }
+  .chip.info { background: var(--info-soft); color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; font: 15px/1.45 var(--sans); background: var(--card);
+          border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  th { text-align: left; font-weight: 600; font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+       color: var(--faint); padding: 10px 14px; border-bottom: 1px solid var(--line); background: #fcfbf8; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td code, .mono { font: 13px/1.45 var(--mono); color: var(--muted); word-break: break-all; }
+  .note { background: var(--accent-soft); border-radius: 10px; padding: 14px 18px; font: 15px/1.5 var(--sans);
+          margin-top: 12px; }
+  details.raw { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 0; }
+  details.raw summary { cursor: pointer; padding: 13px 16px; font: 600 15px/1.3 var(--sans); }
+  details.raw .rows { border-top: 1px solid var(--line); }
+  .rawrow { padding: 10px 16px; border-bottom: 1px solid var(--line); }
+  .rawrow:last-child { border-bottom: 0; }
+  .rawrow .q { font: 600 13px/1.4 var(--sans); display: flex; justify-content: space-between; gap: 10px; }
+  .rawrow .q a { font-weight: 400; color: var(--faint); }
+  .rawrow pre { margin: 6px 0 0; white-space: pre-wrap; word-break: break-all; font: 12.5px/1.5 var(--mono);
+                color: var(--muted); }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0 0; }
+
+  section.watch { border-top: 1px solid var(--line); padding-top: 44px; margin-top: 56px; }
+  .watch .intro { font-size: 17px; color: var(--muted); max-width: 760px; }
+  .empty { font: 15px/1.5 var(--sans); color: var(--faint); padding: 16px; background: var(--card);
+           border: 1px dashed var(--line); border-radius: 10px; }
+  td .rowbtn { padding: 6px 10px; font-size: 13px; }
+  section.about { border-top: 1px solid var(--line); padding-top: 44px; margin-top: 56px; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+  .rules td:first-child { white-space: nowrap; }
+  footer { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 64px;
+           font: 14px/1.5 var(--sans); color: var(--faint); }
+  footer a { color: var(--muted); }
+  @media (max-width: 760px) {
+    main { padding: 36px 18px 72px; }
+    h1 { font-size: 34px; } .lede { font-size: 18px; }
+    form.check { flex-direction: column; } form.check button { padding: 14px; }
+    .flag { grid-template-columns: 1fr; gap: 6px; }
+    .flag .chip { justify-self: start; }
+    .tiles { grid-template-columns: 1fr 1fr; }
+    .tile b { font-size: 19px; }
+    .cols { grid-template-columns: 1fr; gap: 22px; }
+    .hide-sm { display: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../index.html">&larr; All builds</a>
+
+<header>
+  <p class="kicker">Email DNS check</p>
+  <h1>What a company's email records give away</h1>
+  <p class="lede">Every company publishes its email security setup in public DNS. Type a domain and this page reads those records live, names the vendors it can see, and tells you what my sales-signal monitor would have flagged.</p>
+  <p class="fine">Runs in your browser against Google's public DNS. Nothing is sent to me or kept on a server.</p>
+</header>
+
+<form class="check" id="form" autocomplete="off">
+  <input id="domain" name="d" type="text" inputmode="url" spellcheck="false" placeholder="company.com" aria-label="Domain to check">
+  <button id="go" type="submit">Check</button>
+</form>
+<div class="try">Try
+  <a href="?d=ibm.com" data-d="ibm.com">ibm.com</a>
+  <a href="?d=mit.edu" data-d="mit.edu">mit.edu</a>
+  <a href="?d=nasa.gov" data-d="nasa.gov">nasa.gov</a>
+</div>
+<p class="status" id="status" role="status"></p>
+
+<div id="result"></div>
+
+<section class="watch" id="watch">
+  <h2>Watch list</h2>
+  <p class="intro">The original monitor earned its keep by noticing change, not by reading a record once. Add a domain here and check back. The page compares each new read with the last one, using the rules my monitor sent to sales, and counts a change only when two reads in a row agree. The history stays in this browser.</p>
+  <div id="watchTable"></div>
+  <div class="actions">
+    <button class="ghost" id="recheckAll" type="button">Re-check all</button>
+    <button class="ghost" id="download" type="button">Download history</button>
+  </div>
+  <h3 style="margin-top:34px">Changes seen</h3>
+  <div id="changeLog"></div>
+</section>
+
+<section class="about" id="about">
+  <h2>Where this came from</h2>
+  <div class="cols" style="margin-top:20px">
+    <div>
+      <p>At an AI email security startup, I built the first version as a Google Sheet and Apps Script. Every morning it read these records for 100+ target accounts, compared them with the last 30 days, and sent sales an alert when a company started changing fast. A company that moves from watching spoofed mail to blocking it inside two weeks is usually reacting to something. Sales worked some of those alerts, and our security engineers later built the idea into the audits they ran on prospect companies.</p>
+      <p>I also wrote the company's public guides on how these records work and on moving DMARC to reject without breaking mail. The writing told the market what to do, and the monitor told sales who was doing it.</p>
+    </div>
+    <div>
+      <p>This page is a fresh rebuild with the fixes I'd make. Only a record that starts with v=spf1 counts as SPF, because a parked record marked DO NOT USE once made my monitor log a month of changes that never happened. A change has to show up on two reads in a row. And the page names the vendors behind the records, which turns a target list into a map of who already sells to whom.</p>
+      <p>One blind spot stays. Tools that connect to a mailbox through an API, like Abnormal, leave no trace in DNS, so their customers look quiet here.</p>
+    </div>
+  </div>
+  <h3 style="margin-top:20px">The rules</h3>
+  <table class="rules">
+    <thead><tr><th>Level</th><th>Change between two reads</th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip critical">Critical</span></td><td>DMARC policy goes up (none to quarantine, or to reject) within 14 days. Or two or more changes inside 30 days, which looks like firefighting.</td></tr>
+      <tr><td><span class="chip high">High</span></td><td>DMARC turned on for the first time. Mail routing or the DMARC report vendor switches, which usually means a new vendor. A policy rolled back, which usually means mail broke.</td></tr>
+      <tr><td><span class="chip medium">Medium</span></td><td>Sending services added or removed from SPF. SPF tightened or loosened. DKIM keys added or removed. Enforcement percentage changed.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>Vito Prasad. Rebuilt in October 2026 by directing AI coding agents, from a tool I first built at an AI email security startup. <a href="../index.html">See the other builds</a>.</footer>
+</main>
+
+<script>
+"use strict";
+
+/* ---------- DNS over HTTPS ---------- */
+
+const DOH_PRIMARY = "https://dns.google/resolve";
+const DOH_FALLBACK = "https://cloudflare-dns.com/dns-query";
+const TYPE = { A: 1, CNAME: 5, MX: 15, TXT: 16 };
+const MAX_SPF_QUERIES = 30;
+
+function sourceUrl(name, type) {
+  return DOH_PRIMARY + "?name=" + encodeURIComponent(name) + "&type=" + type;
+}
+
+async function fetchJson(url, headers) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 9000);
+  try {
+    const response = await fetch(url, { headers: headers || {}, signal: controller.signal });
+    if (!response.ok) throw new Error("HTTP " + response.status);
+    return await response.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// One DNS question. Returns the raw answer plus where it came from, so every
+// conclusion on the page can be traced back to a record.
+async function ask(name, type, log) {
+  const entry = { name: name, type: type, url: sourceUrl(name, type), status: null, answers: [], error: null };
+  try {
+    let data;
+    try {
+      data = await fetchJson(entry.url);
+    } catch (primaryError) {
+      const url = DOH_FALLBACK + "?name=" + encodeURIComponent(name) + "&type=" + type;
+      data = await fetchJson(url, { accept: "application/dns-json" });
+      entry.url = url;
+    }
+    entry.status = data.Status;
+    entry.answers = (data.Answer || []).map(a => ({ type: a.type, data: String(a.data) }));
+  } catch (error) {
+    entry.error = String(error && error.message || error);
+  }
+  if (log) log.push(entry);
+  return entry;
+}
+
+function txtStrings(entry) {
+  return entry.answers.filter(a => a.type === TYPE.TXT).map(a => joinTxt(a.data));
+}
+
+// Some resolvers return TXT data as quoted chunks ("abc" "def"). Join them.
+function joinTxt(data) {
+  const trimmed = data.trim();
+  if (!trimmed.startsWith('"')) return trimmed;
+  const parts = [];
+  const re = /"((?:[^"\\]|\\.)*)"/g;
+  let m;
+  while ((m = re.exec(trimmed)) !== null) parts.push(m[1].replace(/\\(.)/g, "$1"));
+  return parts.join("");
+}
+
+function cnameTargets(entry) {
+  return entry.answers.filter(a => a.type === TYPE.CNAME).map(a => a.data.replace(/\.$/, "").toLowerCase());
+}
+
+async function pool(items, size, worker) {
+  const results = new Array(items.length);
+  let next = 0;
+  async function run() {
+    while (next < items.length) {
+      const index = next++;
+      results[index] = await worker(items[index], index);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(size, items.length) }, run));
+  return results;
+}
+
+/* ---------- Parsing ---------- */
+
+function cleanDomain(raw) {
+  let d = String(raw || "").trim().toLowerCase();
+  if (d.includes("@") && !d.includes("/")) d = d.split("@").pop();
+  d = d.replace(/^[a-z]+:\/\//, "").replace(/^www\./, "").replace(/[\/?#].*$/, "").replace(/:\d+$/, "").replace(/\.$/, "");
+  return d;
+}
+
+function validDomain(d) {
+  return /^(?=.{3,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z][a-z0-9-]{0,61}[a-z0-9]$/.test(d);
+}
+
+// A record is SPF only when it starts with "v=spf1" (RFC 7208, 4.5).
+// A record that merely contains it is ignored by receivers.
+function isSpf(record) { return /^v=spf1(\s|$)/i.test(record); }
+function looksLikeSpf(record) { return /v=spf1/i.test(record) && !isSpf(record); }
+
+function parseTags(record) {
+  const tags = {};
+  record.split(";").forEach(part => {
+    const i = part.indexOf("=");
+    if (i > 0) tags[part.slice(0, i).trim().toLowerCase()] = part.slice(i + 1).trim();
+  });
+  return tags;
+}
+
+function mailtoDomains(value) {
+  if (!value) return [];
+  return value.split(",").map(s => s.trim().replace(/^mailto:/i, "").replace(/!.*$/, ""))
+    .filter(Boolean).map(addr => addr.split("@").pop().toLowerCase());
+}
+
+/* ---------- Vendor fingerprints ---------- */
+// [pattern, vendor, role]. Matched as substrings of hostnames found in the records.
+
+const MX_VENDORS = [
+  ["aspmx.l.google.com", "Google Workspace", "Mailbox"], ["googlemail.com", "Google Workspace", "Mailbox"],
+  ["smtp.google.com", "Google Workspace", "Mailbox"],
+  ["mail.protection.office365.us", "Microsoft 365 (US government cloud)", "Mailbox"],
+  ["mail.protection.outlook.com", "Microsoft 365", "Mailbox"],
+  ["pphosted.com", "Proofpoint", "Email security gateway"], ["ppe-hosted.com", "Proofpoint Essentials", "Email security gateway"],
+  ["mimecast", "Mimecast", "Email security gateway"],
+  ["barracudanetworks.com", "Barracuda", "Email security gateway"],
+  ["iphmx.com", "Cisco Secure Email", "Email security gateway"],
+  ["messagelabs.com", "Symantec Email Security.cloud", "Email security gateway"],
+  ["mailcontrol.com", "Forcepoint", "Email security gateway"],
+  ["trendmicro", "Trend Micro", "Email security gateway"],
+  ["sophos.com", "Sophos", "Email security gateway"],
+  ["fireeyecloud.com", "Trellix", "Email security gateway"], ["trellix", "Trellix", "Email security gateway"],
+  ["hornetsecurity.com", "Hornetsecurity", "Email security gateway"],
+  ["antispamcloud.com", "SpamExperts (N-able)", "Email security gateway"],
+  ["vadesecure.com", "Vade", "Email security gateway"],
+  ["libraesva", "Libraesva", "Email security gateway"],
+  ["mailguard.com.au", "MailGuard", "Email security gateway"],
+  ["zoho.", "Zoho Mail", "Mailbox"], ["secureserver.net", "GoDaddy", "Mailbox"],
+  ["emailsrvr.com", "Rackspace", "Mailbox"], ["mail.icloud.com", "Apple iCloud", "Mailbox"],
+  ["protonmail.ch", "Proton Mail", "Mailbox"], ["messagingengine.com", "Fastmail", "Mailbox"],
+  ["mx.cloudflare.net", "Cloudflare Email Routing", "Mail forwarding"],
+  ["improvmx.com", "ImprovMX", "Mail forwarding"],
+  ["mailgun.org", "Mailgun", "Inbound mail routing"],
+  ["amazonaws.com", "Amazon SES", "Inbound mail routing"]
+];
+
+const SPF_VENDORS = [
+  ["_spf.google.com", "Google Workspace", "Mailbox"],
+  ["spf.protection.office365.us", "Microsoft 365 (US government cloud)", "Mailbox"],
+  ["spf.protection.outlook.com", "Microsoft 365", "Mailbox"],
+  ["pphosted.com", "Proofpoint", "Email security gateway"],
+  ["mimecast", "Mimecast", "Email security gateway"], ["mim.ec", "Mimecast", "Hosted SPF"],
+  ["iphmx.com", "Cisco Secure Email", "Email security gateway"],
+  ["messagelabs.com", "Symantec Email Security.cloud", "Email security gateway"],
+  ["barracudanetworks.com", "Barracuda", "Email security gateway"],
+  ["trendmicro", "Trend Micro", "Email security gateway"],
+  ["sophos.com", "Sophos", "Email security gateway"],
+  ["vali.email", "Valimail", "Hosted SPF"], ["powerspf.com", "PowerDMARC", "Hosted SPF"],
+  ["ondmarc.com", "Red Sift OnDMARC", "Hosted SPF"], ["autospf", "AutoSPF", "Hosted SPF"],
+  ["sendgrid.net", "SendGrid", "Sending service"], ["mailgun.org", "Mailgun", "Sending service"],
+  ["amazonses.com", "Amazon SES", "Sending service"], ["mtasv.net", "Postmark", "Sending service"],
+  ["sparkpostmail.com", "SparkPost", "Sending service"], ["mailjet.com", "Mailjet", "Sending service"],
+  ["mandrillapp.com", "Mailchimp Transactional", "Sending service"],
+  ["mcsv.net", "Mailchimp", "Marketing email"], ["mktomail.com", "Marketo", "Marketing automation"],
+  ["pardot.com", "Salesforce Account Engagement (Pardot)", "Marketing automation"],
+  ["exacttarget.com", "Salesforce Marketing Cloud", "Marketing automation"],
+  ["hubspotemail.net", "HubSpot", "Marketing automation"], ["hubspot", "HubSpot", "Marketing automation"],
+  ["sendinblue.com", "Brevo", "Marketing email"], ["brevo.com", "Brevo", "Marketing email"],
+  ["constantcontact.com", "Constant Contact", "Marketing email"],
+  ["klaviyo", "Klaviyo", "Marketing email"], ["customeriomail.com", "Customer.io", "Marketing email"],
+  ["_spf.salesforce.com", "Salesforce", "CRM"],
+  ["zendesk.com", "Zendesk", "Support desk"], ["freshdesk.com", "Freshdesk", "Support desk"],
+  ["intercom.io", "Intercom", "Support desk"], ["helpscoutemail.com", "Help Scout", "Support desk"],
+  ["atlassian.net", "Atlassian", "Work tools"], ["docusign.net", "DocuSign", "Work tools"],
+  ["service-now.com", "ServiceNow", "Work tools"], ["qualtrics.com", "Qualtrics", "Work tools"],
+  ["greenhouse.io", "Greenhouse", "Recruiting"], ["zoho.", "Zoho", "Mailbox"]
+];
+
+const DMARC_VENDORS = [
+  ["vali.email", "Valimail"], ["emaildefense.proofpoint.com", "Proofpoint Email Fraud Defense"],
+  ["dmarcian", "dmarcian"], ["ondmarc.com", "Red Sift OnDMARC"],
+  ["dmarcanalyzer.com", "Mimecast DMARC Analyzer"], ["agari.com", "Agari (Fortra)"],
+  ["easydmarc", "EasyDMARC"], ["powerdmarc.com", "PowerDMARC"], ["report-uri.com", "Report URI"],
+  ["postmarkapp.com", "Postmark DMARC"], ["uriports.com", "URIports"], ["dmarc-report.com", "MxToolbox"],
+  ["trustifi.com", "Trustifi"], ["mailhardener.com", "Mailhardener"], ["sendmarc.com", "Sendmarc"],
+  ["dmarcadvisor.com", "DMARC Advisor"], ["fraudmarc.com", "Fraudmarc"], ["everest.email", "Everest (Validity)"],
+  ["returnpath.net", "Validity"], ["250ok.net", "Validity"], ["glockapps.com", "GlockApps"],
+  ["dmarc.mailgun.org", "Mailgun DMARC"], ["dmarc.cloudflare.net", "Cloudflare DMARC Management"],
+  ["skysnag", "Skysnag"], ["cyber.dhs.gov", "CISA (US government reporting)"]
+];
+
+// Selector names hint at who signs the mail. Weak evidence, shown as a hint.
+const DKIM_SELECTORS = [
+  ["google", "Google Workspace"], ["selector1", "Microsoft 365"], ["selector2", "Microsoft 365"],
+  ["k1", "Mailchimp"], ["k2", "Mailchimp"], ["k3", "Mailchimp"], ["s1", "SendGrid"], ["s2", "SendGrid"],
+  ["mandrill", "Mailchimp Transactional"], ["pm", "Postmark"], ["zendesk1", "Zendesk"], ["zendesk2", "Zendesk"],
+  ["ctct1", "Constant Contact"], ["ctct2", "Constant Contact"], ["sig1", "Apple iCloud"],
+  ["fm1", "Fastmail"], ["fm2", "Fastmail"], ["protonmail", "Proton Mail"], ["mxvault", null],
+  ["default", null], ["dkim", null], ["mail", null], ["email", null], ["smtp", null], ["mx", null],
+  ["everlytickey1", "Everlytic"], ["mailjet", "Mailjet"], ["krs", "Mailgun"]
+];
+
+function matchVendor(host, table) {
+  const h = host.toLowerCase();
+  for (const row of table) if (h.includes(row[0])) return row;
+  return null;
+}
+
+/* ---------- SPF walk ---------- */
+
+// Follows include: and redirect= to count DNS lookups against the limit of 10
+// (RFC 7208, 4.6.4) and to collect every service the record authorizes.
+async function walkSpf(domain, rootRecord, log) {
+  const state = { lookups: 0, includes: [], macros: [], errors: [], queries: 0, visited: new Set(),
+                  redirectTarget: null, redirectAll: null };
+  async function visit(name, depth) {
+    if (state.visited.has(name) || state.queries >= MAX_SPF_QUERIES) return;
+    state.visited.add(name);
+    let records;
+    if (depth === 0) {
+      records = [rootRecord];
+    } else {
+      state.queries++;
+      records = txtStrings(await ask(name, "TXT", log)).filter(isSpf);
+    }
+    if (!records.length) { state.errors.push(name); return; }
+    const children = [];
+    if (name === state.redirectTarget) {
+      const ending = records[0].match(/\s([+\-~?]?)all\b/i);
+      if (ending) state.redirectAll = (ending[1] || "+") + "all";
+      else {
+        const next = records[0].match(/\sredirect=(\S+)/i);
+        if (next) state.redirectTarget = next[1].toLowerCase();
+      }
+    }
+    if (depth === 0) {
+      const redirect = records[0].match(/\sredirect=(\S+)/i);
+      if (redirect && !/\s[+\-~?]?all\b/i.test(records[0])) state.redirectTarget = redirect[1].toLowerCase();
+    }
+    for (const term of records[0].split(/\s+/).slice(1)) {
+      const t = term.replace(/^[+\-~?]/, "");
+      const lower = t.toLowerCase();
+      let target = null;
+      if (lower.startsWith("include:")) target = t.slice(8);
+      else if (lower.startsWith("redirect=")) target = t.slice(9);
+      if (target !== null) {
+        state.lookups++;
+        state.includes.push({ host: target.toLowerCase(), depth: depth });
+        if (target.includes("%{")) state.macros.push(target);
+        else if (depth < 6) children.push(target.toLowerCase());
+      } else if (/^(a|mx|ptr|exists)([:/]|$)/.test(lower)) {
+        state.lookups++;
+      }
+    }
+    for (const child of children) await visit(child, depth + 1);
+  }
+  await visit(domain, 0);
+  return state;
+}
+
+/* ---------- One full read of a domain ---------- */
+
+async function readDomain(domain, onProgress) {
+  const log = [];
+  let done = 0;
+  const tick = () => { done++; if (onProgress) onProgress(done); };
+
+  const base = await Promise.all([
+    ask(domain, "MX", log), ask(domain, "TXT", log), ask("_dmarc." + domain, "TXT", log),
+    ask("_mta-sts." + domain, "TXT", log), ask("_smtp._tls." + domain, "TXT", log),
+    ask("default._bimi." + domain, "TXT", log)
+  ].map(p => p.then(r => { tick(); return r; })));
+  const [mx, rootTxt, dmarc, mtaSts, tlsRpt, bimi] = base;
+
+  const dkim = await pool(DKIM_SELECTORS, 8, async ([selector, hint]) => {
+    const entry = await ask(selector + "._domainkey." + domain, "TXT", log);
+    tick();
+    const txt = txtStrings(entry).find(t => /(^|;)\s*(v=DKIM1|p=)/i.test(t) || /\bp=/.test(t));
+    if (!txt) return null;
+    const p = (parseTags(txt).p || "").trim();
+    return { selector: selector, hint: hint, revoked: p === "", cnames: cnameTargets(entry) };
+  });
+
+  const rootRecords = txtStrings(rootTxt);
+  const spfRecords = rootRecords.filter(isSpf);
+  const decoys = rootRecords.filter(looksLikeSpf);
+  const spfWalk = spfRecords.length ? await walkSpf(domain, spfRecords[0], log) : null;
+  tick();
+
+  return { domain: domain, at: new Date().toISOString(), log: log,
+           mx: mx, rootRecords: rootRecords, spfRecords: spfRecords, decoys: decoys, spfWalk: spfWalk,
+           dmarcRecords: txtStrings(dmarc).filter(t => /^v=DMARC1/i.test(t)), dmarcEntry: dmarc,
+           dkim: dkim.filter(Boolean),
+           mtaSts: txtStrings(mtaSts).some(t => /^v=STSv1/i.test(t)),
+           tlsRpt: txtStrings(tlsRpt).some(t => /^v=TLSRPTv1/i.test(t)),
+           bimi: txtStrings(bimi).some(t => /^v=BIMI1/i.test(t)),
+           nxdomain: mx.status === 3 && rootTxt.status === 3,
+           failed: base.every(e => e.error) };
+}
+
+/* ---------- Turning records into findings ---------- */
+
+const POLICY_RANK = { missing: 0, none: 1, quarantine: 2, reject: 3 };
+
+function analyze(read) {
+  const a = { domain: read.domain };
+  const dmarc = read.dmarcRecords[0] ? parseTags(read.dmarcRecords[0]) : null;
+  a.dmarc = dmarc;
+  a.policy = dmarc ? ((dmarc.p || "").toLowerCase() || "none") : "missing";
+  if (!(a.policy in POLICY_RANK)) a.policy = "none";
+  a.subPolicy = dmarc && dmarc.sp ? dmarc.sp.toLowerCase() : null;
+  a.pct = dmarc && dmarc.pct !== undefined ? parseInt(dmarc.pct, 10) : 100;
+  if (isNaN(a.pct)) a.pct = 100;
+  a.reportDomains = dmarc ? mailtoDomains(dmarc.rua).concat(mailtoDomains(dmarc.ruf)) : [];
+
+  const spf = read.spfRecords[0] || null;
+  a.spf = spf;
+  const allTerm = spf ? (spf.match(/\s([+\-~?]?)all\b/i) || null) : null;
+  a.spfAll = !spf ? "missing" : allTerm ? (allTerm[1] || "+") + "all" :
+             (read.spfWalk && read.spfWalk.redirectAll) || (/redirect=/i.test(spf) ? "redirect" : "none");
+  a.spfDelegated = !!(spf && !allTerm && /redirect=/i.test(spf));
+  a.spfLookups = read.spfWalk ? read.spfWalk.lookups : 0;
+  a.spfTopIncludes = read.spfWalk ? read.spfWalk.includes.filter(i => i.depth === 0).map(i => i.host).sort() : [];
+  a.mxHosts = read.mx.answers.filter(x => x.type === TYPE.MX)
+    .map(x => x.data.split(/\s+/).pop().replace(/\.$/, "").toLowerCase()).sort();
+
+  // Vendors, each with the record that gave it away.
+  const vendors = new Map();
+  function add(row, role, source, evidence) {
+    if (!row) return;
+    const name = row[1];
+    const key = name + "|" + role;
+    if (!vendors.has(key)) vendors.set(key, { vendor: name, role: role, sources: new Set(), evidence: new Set() });
+    vendors.get(key).sources.add(source);
+    vendors.get(key).evidence.add(evidence);
+  }
+  a.mxHosts.forEach(h => { const r = matchVendor(h, MX_VENDORS); add(r, r && r[2], "MX", h); });
+  (read.spfWalk ? read.spfWalk.includes : []).forEach(i => {
+    const r = matchVendor(i.host, SPF_VENDORS); add(r, r && r[2], "SPF", i.host);
+  });
+  a.reportDomains.forEach(d => { const r = matchVendor(d, DMARC_VENDORS); add(r, "DMARC reporting", "DMARC", d); });
+  read.dkim.forEach(k => k.cnames.forEach(c => {
+    const r = matchVendor(c, SPF_VENDORS) || (c.includes("onmicrosoft.com") ? [c, "Microsoft 365", "Mailbox"] : null);
+    add(r, r && r[2], "DKIM", c);
+  }));
+  a.vendors = Array.from(vendors.values()).filter(v => v.role)
+    .map(v => ({ vendor: v.vendor, role: v.role, sources: Array.from(v.sources), evidence: Array.from(v.evidence) }));
+  const mxMailboxes = a.mxHosts.map(h => matchVendor(h, MX_VENDORS)).filter(r => r && r[2] === "Mailbox").map(r => r[1]);
+  a.vendors.forEach(v => {
+    if (v.role === "Mailbox" && !v.sources.includes("MX") && mxMailboxes.length && !mxMailboxes.includes(v.vendor)) v.role = "Also sends mail";
+  });
+  const roleOrder = ["Mailbox", "Also sends mail", "Email security gateway", "DMARC reporting", "Hosted SPF", "Inbound mail routing",
+    "Mail forwarding", "CRM", "Marketing automation", "Marketing email", "Sending service", "Support desk", "Work tools", "Recruiting"];
+  a.vendors.sort((x, y) => roleOrder.indexOf(x.role) - roleOrder.indexOf(y.role) || x.vendor.localeCompare(y.vendor));
+
+  const mxVendors = a.mxHosts.map(h => matchVendor(h, MX_VENDORS)).filter(Boolean);
+  a.mailbox = uniq(mxVendors.filter(r => r[2] === "Mailbox").map(r => r[1]));
+  a.gateway = uniq(mxVendors.filter(r => r[2] === "Email security gateway").map(r => r[1]));
+  const own = d => d === read.domain || d.endsWith("." + read.domain);
+  a.reportVendors = uniq(a.reportDomains.map(d => own(d) ? "its own team" : (matchVendor(d, DMARC_VENDORS) || [d, d])[1]));
+  if (!a.mailbox.length) {
+    const spfMailbox = a.vendors.filter(v => v.role === "Mailbox" && v.sources.includes("SPF")).map(v => v.vendor);
+    a.mailboxFromSpf = uniq(spfMailbox);
+  }
+  a.flags = flagsFor(read, a);
+  return a;
+}
+
+function uniq(list) { return Array.from(new Set(list)); }
+
+function flagsFor(read, a) {
+  const f = [];
+  const d = read.domain;
+  if (!read.mx.error && !read.mx.answers.some(x => x.type === TYPE.MX)) {
+    f.push(["risk", "No mail servers listed", "This domain does not take email. If it never sends mail either, a reject policy stops anyone from spoofing it."]);
+  }
+  if (read.dmarcRecords.length > 1) f.push(["risk", "Two DMARC records", "Receivers ignore DMARC completely when a domain publishes more than one."]);
+  if (a.policy === "missing") {
+    f.push(["risk", "No DMARC record", "Receivers get no instructions for mail that fails authentication, so spoofing this domain is easy. Adding DMARC is often the first move after an incident."]);
+  } else if (a.policy === "none") {
+    f.push(["signal", "DMARC is in monitoring mode", "The policy is none, so mail that fails authentication still gets delivered. A move to quarantine or reject is the change my monitor sent to sales."]);
+  } else if (a.policy === "quarantine") {
+    f.push(["info", "DMARC is partway enforced", "Mail that fails authentication goes to spam. The last step is reject."]);
+  } else {
+    f.push(["good", "DMARC is fully enforced", "Mail that fails authentication is refused."]);
+  }
+  if (a.policy !== "missing" && a.pct < 100) {
+    f.push(["signal", "Enforcement covers only " + a.pct + "% of failing mail", "A partial percentage usually means a rollout in progress."]);
+  }
+  if (a.subPolicy && POLICY_RANK[a.subPolicy] !== undefined && POLICY_RANK[a.subPolicy] < POLICY_RANK[a.policy]) {
+    f.push(["risk", "Subdomains are less protected", "The main domain is at " + a.policy + " but subdomains are at " + a.subPolicy + ", so a look-alike sender such as billing." + d + " gets through."]);
+  }
+  if (a.policy !== "missing" && !a.reportDomains.length) {
+    f.push(["info", "Nobody receives DMARC reports", "Without reports the company cannot see who is sending mail in its name."]);
+  }
+
+  if (read.decoys.length) {
+    f.push(["info", "A look-alike SPF record is ignored", "A TXT record here contains v=spf1 but does not start with it, so receivers skip it. My first monitor read records like this one and logged changes that never happened."]);
+  }
+  if (!read.spfRecords.length) {
+    f.push(["risk", "No SPF record", "Receivers cannot check which servers may send mail for this domain."]);
+  } else if (read.spfRecords.length > 1) {
+    f.push(["risk", "Two SPF records", "Receivers treat that as an error, so SPF fails for every message."]);
+  } else {
+    if (a.spfLookups > 10) {
+      f.push(["risk", "SPF needs " + a.spfLookups + " lookups, over the limit of 10", "Receivers may give up partway and fail legitimate mail. It happens when a company keeps adding sending tools."]);
+    } else if (a.spfLookups >= 8) {
+      f.push(["signal", "SPF is near its lookup limit (" + a.spfLookups + " of 10)", "One or two more sending tools will push it over."]);
+    }
+    if (a.spfAll === "+all") f.push(["risk", "SPF allows any server", "The record ends in +all, which authorizes the whole internet."]);
+    else if (a.spfAll === "?all") f.push(["risk", "SPF takes no position", "The record ends in ?all, so unknown servers are treated as neutral."]);
+    else if (a.spfAll === "~all") f.push(["info", "SPF soft-fails unknown senders", "Unlisted servers are marked suspicious rather than refused. That is fine once DMARC is enforced."]);
+    else if (a.spfAll === "-all") f.push(["good", "SPF hard-fails unknown senders", "Only listed servers may send for this domain."]);
+    if (read.spfWalk && read.spfWalk.macros.length) {
+      f.push(["info", "SPF is managed by a service", "Part of the record is built on the fly by a hosted SPF provider, so it can change without anyone editing DNS."]);
+    }
+  }
+
+  const live = read.dkim.filter(k => !k.revoked);
+  if (!live.length) {
+    f.push(["info", "No DKIM key under " + DKIM_SELECTORS.length + " common names", "Many senders use their own key names, so this is not proof there is none."]);
+  } else {
+    f.push(["good", live.length + " DKIM key" + (live.length > 1 ? "s" : "") + " found", "Signed by " + live.map(k => k.selector + (k.hint ? " (" + k.hint + ")" : "")).join(", ") + "."]);
+  }
+  read.dkim.filter(k => k.revoked).forEach(k => f.push(["info", "DKIM key " + k.selector + " is revoked", "The key is published empty, which is how a sender retires it."]));
+
+  if (read.mtaSts) f.push(["good", "MTA-STS is on", "Mail to this domain must arrive over an encrypted connection."]);
+  if (read.bimi) f.push(["good", "Brand logo published (BIMI)", "BIMI only works once DMARC is enforced, so it usually means a finished project."]);
+  return f;
+}
+
+/* ---------- Watch list and change rules ---------- */
+
+const STORE_KEY = "emailDnsCheck.v1";
+const SEV_ORDER = { critical: 0, high: 1, medium: 2, info: 3 };
+
+function loadStore() {
+  try {
+    const s = JSON.parse(localStorage.getItem(STORE_KEY) || "{}");
+    return { domains: s.domains || {}, log: s.log || [] };
+  } catch (e) { return { domains: {}, log: [] }; }
+}
+function saveStore(store) { localStorage.setItem(STORE_KEY, JSON.stringify(store)); }
+
+// The fields a change is judged on, normalized so record order never counts as a change.
+function snapshot(read, a) {
+  return {
+    dmarc: a.policy, pct: a.policy === "missing" ? null : a.pct, sp: a.subPolicy,
+    reportVendors: a.reportVendors.slice().sort(),
+    spfAll: a.spfAll, spfIncludes: a.spfTopIncludes,
+    dkim: read.dkim.filter(k => !k.revoked).map(k => k.selector).sort(),
+    mailRouting: a.mailbox.concat(a.gateway).sort(), mxHosts: a.mxHosts
+  };
+}
+
+const FIELD_NAMES = { dmarc: "DMARC policy", pct: "enforcement percentage", sp: "subdomain policy",
+  reportVendors: "DMARC report vendor", spfAll: "SPF ending", spfIncludes: "SPF senders", dkim: "DKIM keys",
+  mailRouting: "mail routing", mxHosts: "mail servers" };
+
+function same(x, y) { return JSON.stringify(x) === JSON.stringify(y); }
+
+function changedFields(prev, next) {
+  return Object.keys(FIELD_NAMES).filter(k => !same(prev[k], next[k]));
+}
+
+function daysBetween(fromIso, toIso) {
+  return Math.max(0, Math.round((new Date(toIso) - new Date(fromIso)) / 86400000));
+}
+
+function list(items) { return items.length ? items.join(", ") : "none"; }
+
+function rulesFor(prev, next, fields, prevAt, nowAt) {
+  const out = [];
+  const days = daysBetween(prevAt, nowAt);
+  if (fields.includes("dmarc")) {
+    const from = prev.dmarc, to = next.dmarc;
+    if (from === "missing") {
+      out.push(["high", "DMARC turned on", "First DMARC record, at policy " + to + "."]);
+      if (POLICY_RANK[to] >= 2 && days <= 14) out.push(["critical", "Straight to enforcement", "DMARC went from nothing to " + to + " in " + days + " days."]);
+    } else if (POLICY_RANK[to] > POLICY_RANK[from]) {
+      out.push([days <= 14 ? "critical" : "high", "DMARC policy went up", "From " + from + " to " + to + " in " + days + " days."]);
+    } else {
+      out.push(["high", "DMARC policy rolled back", "From " + from + " to " + to + ". A rollback usually means legitimate mail broke."]);
+    }
+  }
+  if (fields.includes("mailRouting") && (prev.mailRouting.length || next.mailRouting.length)) {
+    out.push(["high", "Mail routing changed", "Now " + list(next.mailRouting) + ", was " + list(prev.mailRouting) + ". Usually a new vendor."]);
+  } else if (fields.includes("mxHosts")) {
+    out.push(["medium", "Mail servers changed", "Now " + list(next.mxHosts) + "."]);
+  }
+  if (fields.includes("reportVendors")) {
+    out.push(["high", "DMARC reports moved", "Now " + list(next.reportVendors) + ", was " + list(prev.reportVendors) + ". A new DMARC vendor or a new project."]);
+  }
+  if (fields.includes("pct")) out.push(["medium", "Enforcement percentage changed", "From " + prev.pct + "% to " + next.pct + "%."]);
+  if (fields.includes("sp")) out.push(["medium", "Subdomain policy changed", "From " + (prev.sp || "same as main") + " to " + (next.sp || "same as main") + "."]);
+  if (fields.includes("spfIncludes")) {
+    const added = next.spfIncludes.filter(x => !prev.spfIncludes.includes(x));
+    const removed = prev.spfIncludes.filter(x => !next.spfIncludes.includes(x));
+    out.push(["medium", "Sending services changed in SPF", "Added " + list(added) + ". Removed " + list(removed) + "."]);
+  }
+  if (fields.includes("spfAll")) out.push(["medium", "SPF ending changed", "From " + prev.spfAll + " to " + next.spfAll + "."]);
+  if (fields.includes("dkim")) {
+    const added = next.dkim.filter(x => !prev.dkim.includes(x));
+    const removed = prev.dkim.filter(x => !next.dkim.includes(x));
+    out.push(["medium", "DKIM keys changed", "Added " + list(added) + ". Removed " + list(removed) + "."]);
+  }
+  return out;
+}
+
+// Compare a fresh read with the saved one. A field counts as changed only if a
+// second read moments later agrees, so flapping answers never raise an alert.
+async function compareAndRecord(domain, read, a, onProgress) {
+  const store = loadStore();
+  const entry = store.domains[domain];
+  if (!entry || !entry.last) return { baseline: true };
+  const prev = entry.last.snap;
+  let next = snapshot(read, a);
+  let fields = changedFields(prev, next);
+  const unstable = [];
+  if (fields.length) {
+    if (onProgress) onProgress("Change spotted. Reading again to confirm");
+    await new Promise(r => setTimeout(r, 1500));
+    const read2 = await readDomain(domain);
+    const next2 = snapshot(read2, analyze(read2));
+    fields.forEach(k => { if (!same(next[k], next2[k])) unstable.push(k); });
+    fields = fields.filter(k => !unstable.includes(k));
+    unstable.forEach(k => { next2[k] = prev[k]; });
+    next = next2;
+  }
+  const now = new Date().toISOString();
+  const alerts = rulesFor(prev, next, fields, entry.last.at, now);
+  const recentEvents = new Set(store.log.filter(l => l.domain === domain && l.severity !== "info" &&
+                                 daysBetween(l.at, now) <= 30).map(l => l.at)).size;
+  if (alerts.length && recentEvents + 1 >= 2) {
+    alerts.unshift(["critical", "Firefighting", (recentEvents + 1) + " separate changes in 30 days."]);
+  }
+  unstable.forEach(k => alerts.push(["info", "Ignored a change that did not hold", "The " + FIELD_NAMES[k] + " read differently twice in a row, so it was not counted."]));
+  alerts.slice().reverse().forEach(x => store.log.unshift({ at: now, domain: domain, severity: x[0], title: x[1], detail: x[2] }));
+  entry.history = (entry.history || []).concat([{ at: now, snap: next }]).slice(-60);
+  entry.last = { at: now, snap: next };
+  store.log = store.log.slice(0, 500);
+  saveStore(store);
+  return { baseline: false, alerts: alerts, since: prev && entry.history.length > 1 ? entry.history[entry.history.length - 2].at : null };
+}
+
+function watchDomain(domain, read, a) {
+  const store = loadStore();
+  const now = new Date().toISOString();
+  const snap = snapshot(read, a);
+  store.domains[domain] = { added: now, last: { at: now, snap: snap }, history: [{ at: now, snap: snap }] };
+  saveStore(store);
+}
+
+/* ---------- Rendering ---------- */
+
+function esc(value) {
+  return String(value === undefined || value === null ? "" : value)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+function fmtTime(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) + " " +
+         d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+}
+
+function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
+function summarySentence(a) {
+  const parts = [];
+  const mailbox = a.mailbox.length ? a.mailbox : (a.mailboxFromSpf || []);
+  if (mailbox.length && a.gateway.length) parts.push("Mail lands in " + list(mailbox) + " after passing through a " + list(a.gateway) + " gateway.");
+  else if (a.gateway.length) parts.push("Mail passes through a " + list(a.gateway) + " gateway.");
+  else if (mailbox.length) parts.push("Mail lands in " + list(mailbox) + (a.mailbox.length ? "" : " (seen in SPF, not in the mail servers)") + ".");
+  else if (a.mxHosts.length) parts.push("Mail goes to servers this page does not recognize.");
+  if (a.reportVendors.length) parts.push("DMARC reports go to " + list(a.reportVendors) + ".");
+  const senders = a.vendors.filter(v => !["Mailbox", "Email security gateway", "DMARC reporting", "Hosted SPF"].includes(v.role));
+  if (senders.length) parts.push(senders.length + " other service" + (senders.length > 1 ? "s send" : " sends") + " mail as this domain.");
+  if (!parts.length && !a.mxHosts.length && a.policy === "missing" && !a.spf) {
+    parts.push("This domain publishes no mail servers and no email protection, so anyone can send mail that claims to come from it.");
+  }
+  return parts.join(" ");
+}
+
+function tile(label, value, sub, tone) {
+  return '<div class="tile ' + (tone || "") + '"><span class="lbl">' + esc(label) + "</span><b>" + esc(value) + "</b><small>" + esc(sub) + "</small></div>";
+}
+
+function flagItem(sev, title, body) {
+  const label = { signal: "Signal", risk: "Risk", good: "Good", info: "Note", critical: "Critical", high: "High", medium: "Medium" }[sev] || sev;
+  return '<li class="flag"><span class="chip ' + esc(sev) + '">' + esc(label) + '</span><div><strong>' + esc(title) +
+         '</strong><span class="body">' + esc(body) + "</span></div></li>";
+}
+
+function renderResult(read, a, comparison) {
+  const el = document.getElementById("result");
+  if (read.nxdomain) {
+    el.innerHTML = '<div class="empty">' + esc(read.domain) + " does not exist in DNS. Check the spelling.</div>";
+    return;
+  }
+  const watched = !!loadStore().domains[read.domain];
+  const policyTone = { reject: "good", quarantine: "warn", none: "warn", missing: "bad" }[a.policy];
+  const spfLabel = { "-all": "Hard fail", "~all": "Soft fail", "?all": "Neutral", "+all": "Allows all", missing: "Missing",
+                     none: "No ending", redirect: "Delegated" }[a.spfAll] || a.spfAll;
+  const spfTone = a.spfAll === "missing" || a.spfAll === "+all" || a.spfLookups > 10 ? "bad" :
+                  (a.spfAll === "-all" ? "good" : "");
+  const liveKeys = read.dkim.filter(k => !k.revoked).length;
+  const mailbox = a.mailbox.length ? a.mailbox : (a.mailboxFromSpf || []);
+  const extras = [read.mtaSts ? "MTA-STS" : null, read.tlsRpt ? "TLS reports" : null, read.bimi ? "BIMI" : null].filter(Boolean);
+
+  let html = '<div class="result-head"><h2>' + esc(read.domain) + '</h2><span class="when">Read ' + esc(fmtTime(read.at)) + "</span></div>";
+  const sentence = summarySentence(a);
+  if (sentence) html += '<p class="summary">' + esc(sentence) + "</p>";
+
+  html += '<div class="tiles">' +
+    tile("DMARC", a.policy === "missing" ? "Missing" : cap(a.policy),
+         a.policy === "missing" ? "No policy published" : (a.pct < 100 ? a.pct + "% of failing mail" : "All failing mail") +
+         (a.reportVendors.length ? ", reports to " + a.reportVendors[0] : ""), policyTone) +
+    tile("SPF", spfLabel, read.spfRecords.length ? a.spfLookups + " of 10 lookups used" + (a.spfDelegated ? ", hosted record" : "") : "No record", spfTone) +
+    tile("DKIM", liveKeys + " found", "Under " + DKIM_SELECTORS.length + " common key names", liveKeys ? "good" : "") +
+    tile("Mail", mailbox[0] || (a.mxHosts.length ? "Unrecognized" : "None"),
+         a.gateway.length ? "Through " + a.gateway.join(", ") : (extras.length ? "Also " + extras.join(", ") : "No gateway seen")) +
+    "</div>";
+
+  if (comparison && !comparison.baseline) {
+    html += '<div class="block"><h3>Since the last check</h3><ul class="flags">' +
+      (comparison.alerts.length ? comparison.alerts.map(x => flagItem(x[0], x[1], x[2])).join("")
+        : flagItem("info", "No change", "Every record that matters reads the same as last time.")) + "</ul></div>";
+  }
+
+  html += '<div class="block"><h3>What I\'d flag</h3><ul class="flags">' + a.flags.map(x => flagItem(x[0], x[1], x[2])).join("") + "</ul></div>";
+
+  html += '<div class="block"><h3>Who runs their mail</h3>';
+  if (a.vendors.length) {
+    html += '<table><thead><tr><th>Vendor</th><th>What it does here</th><th class="hide-sm">Seen in</th></tr></thead><tbody>' +
+      a.vendors.map(v => "<tr><td>" + esc(v.vendor) + "</td><td>" + esc(v.role) + '</td><td class="hide-sm"><code>' +
+        esc(v.sources.join(", ") + " · " + v.evidence.slice(0, 3).join(", ")) + "</code></td></tr>").join("") +
+      "</tbody></table>";
+  } else {
+    html += '<div class="empty">No vendor this page recognizes. The raw records below show what is published.</div>';
+  }
+  html += '<p class="note">Tools that connect to a mailbox through an API, like Abnormal or Sublime, leave no trace in DNS. A quiet result does not mean nobody is protecting this inbox.</p></div>';
+
+  const shown = read.log.filter(e => e.answers.length || e.error || !/_domainkey\./.test(e.name));
+  html += '<div class="block"><h3>Raw records</h3><details class="raw"><summary>' + read.log.length +
+    " lookups, each linked to its source. Empty DKIM lookups are hidden.</summary><div class=\"rows\">" +
+    shown.map(e => '<div class="rawrow"><div class="q"><span>' + esc(e.name) + " " + esc(e.type) + '</span><a href="' + esc(e.url) +
+        '" target="_blank" rel="noopener">source</a></div><pre>' +
+        esc(e.error ? "Lookup failed. " + e.error : e.answers.length ? e.answers.map(x => x.data).join("\n") : "No record") +
+        "</pre></div>").join("") + "</div></details></div>";
+
+  html += '<div class="actions">' + (watched ? '<button class="ghost" type="button" disabled>On your watch list</button>'
+    : '<button type="button" id="watchBtn">Watch this domain</button>') +
+    '<button class="ghost" type="button" id="copyLink">Copy link to this result</button></div>';
+  el.innerHTML = html;
+
+  const watchBtn = document.getElementById("watchBtn");
+  if (watchBtn) watchBtn.addEventListener("click", () => {
+    watchDomain(read.domain, read, a);
+    watchBtn.textContent = "On your watch list";
+    watchBtn.disabled = true;
+    watchBtn.className = "ghost";
+    renderWatch();
+  });
+  document.getElementById("copyLink").addEventListener("click", e => {
+    const url = location.origin + location.pathname + "?d=" + encodeURIComponent(read.domain);
+    (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(
+      () => { e.target.textContent = "Link copied"; },
+      () => { e.target.textContent = url; });
+  });
+}
+
+function renderWatch() {
+  const store = loadStore();
+  const names = Object.keys(store.domains).sort();
+  const table = document.getElementById("watchTable");
+  if (!names.length) {
+    table.innerHTML = '<div class="empty">Nothing watched yet. Check a domain above and choose Watch this domain.</div>';
+  } else {
+    table.innerHTML = '<table><thead><tr><th>Domain</th><th>Last checked</th><th>DMARC</th><th class="hide-sm">Mail</th><th class="hide-sm">Changes</th><th></th></tr></thead><tbody>' +
+      names.map(name => {
+        const entry = store.domains[name];
+        const snap = entry.last.snap;
+        const changes = store.log.filter(l => l.domain === name && l.severity !== "info").length;
+        return '<tr><td><a href="?d=' + esc(encodeURIComponent(name)) + '" data-d="' + esc(name) + '">' + esc(name) + "</a></td><td>" +
+          esc(fmtTime(entry.last.at)) + "</td><td>" + esc(cap(snap.dmarc)) + '</td><td class="hide-sm">' + esc(list(snap.mailRouting)) +
+          '</td><td class="hide-sm">' + changes + '</td><td><button class="ghost rowbtn" type="button" data-remove="' + esc(name) + '">Remove</button></td></tr>';
+      }).join("") + "</tbody></table>";
+  }
+  const log = document.getElementById("changeLog");
+  if (!store.log.length) {
+    log.innerHTML = '<div class="empty">No changes yet. The first check of a domain only sets the baseline.</div>';
+  } else {
+    log.innerHTML = '<ul class="flags">' + store.log.slice(0, 50).map(l =>
+      flagItem(l.severity, l.domain + ". " + l.title, l.detail + " (" + fmtTime(l.at) + ")")).join("") + "</ul>";
+  }
+  table.querySelectorAll("[data-remove]").forEach(btn => btn.addEventListener("click", () => {
+    const s = loadStore();
+    delete s.domains[btn.getAttribute("data-remove")];
+    saveStore(s);
+    renderWatch();
+  }));
+  table.querySelectorAll("a[data-d]").forEach(link => link.addEventListener("click", e => {
+    e.preventDefault();
+    runCheck(link.getAttribute("data-d"));
+  }));
+}
+
+/* ---------- Wiring ---------- */
+
+let busy = false;
+
+function setStatus(text, isError) {
+  const s = document.getElementById("status");
+  s.textContent = text || "";
+  s.className = "status" + (isError ? " err" : "");
+}
+
+async function runCheck(raw) {
+  if (busy) return;
+  const domain = cleanDomain(raw);
+  document.getElementById("domain").value = domain;
+  if (!validDomain(domain)) { setStatus("That does not look like a domain. Try something like company.com.", true); return; }
+  busy = true;
+  document.getElementById("go").disabled = true;
+  const total = 7 + DKIM_SELECTORS.length;
+  setStatus("Reading public records for " + domain + "...");
+  try {
+    const read = await readDomain(domain, n => setStatus("Reading public records for " + domain + " (" + Math.min(n, total) + " of " + total + ")"));
+    if (read.failed) { setStatus("Could not reach public DNS. Check your connection and try again.", true); return; }
+    const a = analyze(read);
+    let comparison = null;
+    if (loadStore().domains[domain]) comparison = await compareAndRecord(domain, read, a, msg => setStatus(msg + "..."));
+    renderResult(read, a, comparison);
+    renderWatch();
+    setStatus("");
+    history.replaceState(null, "", "?d=" + encodeURIComponent(domain));
+    document.getElementById("result").scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (error) {
+    setStatus("Something went wrong reading " + domain + ". " + (error && error.message || ""), true);
+  } finally {
+    busy = false;
+    document.getElementById("go").disabled = false;
+  }
+}
+
+async function recheckAll() {
+  const names = Object.keys(loadStore().domains).sort();
+  const button = document.getElementById("recheckAll");
+  button.disabled = true;
+  for (let i = 0; i < names.length; i++) {
+    button.textContent = "Checking " + (i + 1) + " of " + names.length;
+    try {
+      const read = await readDomain(names[i]);
+      if (!read.failed) await compareAndRecord(names[i], read, analyze(read));
+    } catch (e) { /* one bad domain should not stop the rest */ }
+    renderWatch();
+  }
+  button.textContent = "Re-check all";
+  button.disabled = false;
+}
+
+function downloadHistory() {
+  const blob = new Blob([JSON.stringify(loadStore(), null, 2)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "email-dns-watch-history.json";
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+}
+
+document.getElementById("form").addEventListener("submit", e => { e.preventDefault(); runCheck(document.getElementById("domain").value); });
+document.querySelectorAll(".try a").forEach(link => link.addEventListener("click", e => { e.preventDefault(); runCheck(link.getAttribute("data-d")); }));
+document.getElementById("recheckAll").addEventListener("click", recheckAll);
+document.getElementById("download").addEventListener("click", downloadHistory);
+renderWatch();
+const initial = new URLSearchParams(location.search).get("d");
+if (initial) runCheck(initial);
+</script>
+</body>
+</html>

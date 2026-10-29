@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GTM stack scanner, Vito Prasad</title>
+<meta name="description" content="Which sales, marketing and AI tools the top startups run, read from public DNS. Filter by tool, spot switches, export the list.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:,">
+<style>
+  :root {
+    --ink: #1c1b19; --muted: #5f5b54; --faint: #8b867d; --line: #e4dfd6;
+    --paper: #faf8f4; --card: #ffffff; --accent: #b4532a; --map: #1f6fae; --accent-soft: #f4e6dc; --accent-light: #d9906a;
+    --good: #2f6b3f; --good-soft: #e3efe5; --warn: #9a6512; --warn-soft: #f6ecd8;
+    --bad: #a3321f; --bad-soft: #f6e0db; --info-soft: #eeebe5;
+    --sans: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font: 17px/1.6 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 64px 28px 96px; }
+  a { color: var(--ink); }
+  .back { font: 14px/1 var(--sans); color: var(--muted); text-decoration: none; }
+  .back:hover { color: var(--ink); }
+  h1 { font-size: 44px; line-height: 1.1; margin: 0 0 18px; font-weight: 600; letter-spacing: -.01em; max-width: 900px; }
+  .fine { font: 14px/1.5 var(--sans); color: var(--faint); margin: 0; }
+  h2 { font-size: 28px; line-height: 1.2; margin: 0 0 6px; font-weight: 600; }
+  h3 { font: 600 17px/1.3 var(--sans); color: var(--ink); margin: 0 0 14px; }
+  p { margin: 0 0 14px; }
+  button { font: 600 15px/1 var(--sans); padding: 12px 18px; border-radius: 10px; border: 1px solid var(--ink);
+           background: var(--ink); color: #fff; cursor: pointer; }
+  button.ghost { background: var(--card); color: var(--ink); border-color: var(--line); font-weight: 500; }
+  button.ghost:hover { border-color: var(--ink); }
+  button:disabled { opacity: .55; cursor: default; }
+  select, input[type=search] { font: 15px/1.2 var(--sans); padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px;
+           background: var(--card); color: var(--ink); min-width: 0; }
+  select:focus, input:focus, textarea:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+
+  .story { max-width: 660px; margin: 0 auto; }
+  .story h1 { font-size: 46px; line-height: 1.12; margin: 28px 0 22px; font-weight: 600; letter-spacing: -.015em; }
+  .story .dek { font-size: 21px; line-height: 1.55; color: var(--muted); margin: 0 0 18px; }
+  .story .byline { font: 14px/1.4 var(--sans); color: var(--faint); margin: 0 0 40px; }
+  .story p { font-size: 19px; line-height: 1.65; margin: 0 0 20px; }
+  .story h2 { font-size: 27px; margin: 44px 0 14px; }
+  .story a { color: var(--accent); }
+  figure.chart { max-width: 860px; margin: 0 auto 44px; }
+  .chart-title { font: 600 17px/1.35 var(--sans); margin: 0 0 4px; }
+  .chart-sub { font: 14px/1.4 var(--sans); color: var(--muted); margin: 0 0 12px; }
+  figure.chart .legend { justify-content: flex-start; margin-bottom: 6px; }
+  figure.chart .legend i { border-radius: 50%; }
+  figure.chart figcaption { font: 12.5px/1.55 var(--mono); color: var(--faint); margin-top: 8px; }
+  #crossoverPlot svg { display: block; overflow: visible; }
+  #crossoverPlot text { font-family: var(--mono); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  section.explore { border-top: 1px solid var(--line); padding-top: 44px; margin-top: 64px; }
+  section.explore .intro { margin-bottom: 6px; }
+  .controls { position: sticky; top: 0; z-index: 5; background: var(--paper); padding: 14px 0 12px; border-bottom: 1px solid var(--line);
+              margin-bottom: 18px; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .row + .row { margin-top: 10px; }
+  .pill { font: 14px/1 var(--sans); padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--card);
+          color: var(--ink); cursor: pointer; font-weight: 500; }
+  .pill:hover { border-color: var(--ink); }
+  .pill[aria-pressed=true] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .pill .n { color: var(--faint); margin-left: 4px; }
+  .pill[aria-pressed=true] .n { color: #d9d4cc; }
+  .lbl-inline { font: 14px/1 var(--sans); color: var(--muted); margin-right: 2px; }
+  .views a { font: 14px/1.3 var(--sans); color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); }
+  .views a:hover { color: var(--ink); border-color: var(--ink); }
+  .count { font: 14px/1.3 var(--sans); color: var(--muted); margin-left: auto; }
+  .row.grow > select, .row.grow > input { flex: 1 1 180px; }
+
+  section.block { margin: 0 0 40px; }
+  .base-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+  .base-head p { font: 14px/1.4 var(--sans); color: var(--muted); margin: 0; }
+  .legend { display: flex; gap: 16px; font: 13px/1 var(--sans); color: var(--muted); align-items: center; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  .bars { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; }
+  .bar { display: grid; grid-template-columns: 220px 1fr 120px; gap: 12px; align-items: center; padding: 5px 6px; border-radius: 8px;
+         cursor: pointer; font: 14px/1.3 var(--sans); }
+  .bar:hover, .bar.on { background: #f6f2ec; }
+  .bar .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar .track { display: flex; gap: 2px; height: 16px; }
+  .bar .seg { height: 16px; }
+  .bar .seg.use { background: var(--accent); }
+  .bar .seg.ver { background: var(--accent-light); }
+  .bar .seg:last-child { border-radius: 0 4px 4px 0; }
+  .bar .val { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .bar .val b { color: var(--ink); font-weight: 600; }
+  .cats { margin-bottom: 12px; }
+  .more { font: 14px/1 var(--sans); background: none; border: 0; color: var(--accent); padding: 10px 6px 4px; }
+  .tip { position: fixed; pointer-events: none; background: var(--ink); color: #fff; font: 13px/1.4 var(--sans); padding: 8px 10px;
+         border-radius: 8px; max-width: 280px; z-index: 20; display: none; }
+
+  table { width: 100%; border-collapse: collapse; font: 14px/1.45 var(--sans); background: var(--card);
+          border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  th { text-align: left; font-weight: 600; font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+       color: var(--faint); padding: 10px 12px; border-bottom: 1px solid var(--line); background: #fcfbf8; }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr.co { cursor: pointer; }
+  tr.co:hover td { background: #fcfaf6; }
+  tr.co.open td { background: #fbf6f1; border-bottom-color: transparent; }
+  td.who b { display: block; font-weight: 600; }
+  td.who small { color: var(--faint); }
+  .ranks { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  .rank { font: 600 10.5px/1 var(--sans); letter-spacing: .04em; padding: 4px 6px; border-radius: 5px; background: var(--info-soft); color: var(--muted); white-space: nowrap; }
+  .v { display: inline-block; padding: 2px 7px; margin: 0 4px 4px 0; border-radius: 6px; border: 1px solid var(--line); white-space: nowrap; }
+  .v.ver { border-style: dashed; color: var(--muted); }
+  .none { color: var(--faint); }
+  .chip { display: inline-block; font: 600 11px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase;
+          padding: 6px 8px; border-radius: 6px; text-align: center; white-space: nowrap; }
+  .chip.good { background: var(--good-soft); color: var(--good); } .chip.warn { background: var(--warn-soft); color: var(--warn); }
+  .chip.bad { background: var(--bad-soft); color: var(--bad); } .chip.info { background: var(--info-soft); color: var(--muted); }
+  .chip.critical, .chip.signal { background: var(--accent-soft); color: var(--accent); }
+  .chip.high { background: var(--bad-soft); color: var(--bad); } .chip.medium { background: var(--warn-soft); color: var(--warn); }
+  .spf { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .spf.warn { color: var(--warn); font-weight: 600; } .spf.bad { color: var(--bad); font-weight: 600; }
+  .sig { display: block; font-size: 12.5px; color: var(--accent); margin-top: 4px; }
+
+  tr.detail td { background: #fbf6f1; padding: 4px 18px 22px; }
+  .dgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 28px; }
+  .cat { margin: 14px 0 0; }
+  .cat h4 { font: 600 12px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin: 0 0 8px; }
+  .ev { font: 13.5px/1.45 var(--sans); margin: 0 0 8px; }
+  .ev b { font-weight: 600; }
+  .ev .why { display: block; color: var(--muted); }
+  .ev code { font: 12px/1.4 var(--mono); color: var(--muted); word-break: break-all; }
+  .ev a { color: var(--faint); font-size: 12px; }
+  .flags { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
+  .flag { display: grid; grid-template-columns: 82px 1fr; gap: 12px; align-items: start; background: var(--card);
+          border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; font: 14px/1.45 var(--sans); }
+  .flag strong { display: block; font-weight: 600; }
+  .flag span.body { color: var(--muted); }
+  details.raw { background: var(--card); border: 1px solid var(--line); border-radius: 10px; margin-top: 16px; }
+  details.raw summary { cursor: pointer; padding: 11px 14px; font: 600 14px/1.3 var(--sans); }
+  .rawrow { padding: 9px 14px; border-top: 1px solid var(--line); }
+  .rawrow .q { font: 600 12.5px/1.4 var(--sans); display: flex; justify-content: space-between; gap: 10px; }
+  .rawrow .q a { font-weight: 400; color: var(--faint); }
+  .rawrow pre { margin: 5px 0 0; white-space: pre-wrap; word-break: break-all; font: 12px/1.5 var(--mono); color: var(--muted); }
+  .dactions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; font: 14px/1 var(--sans); }
+  .dactions a { color: var(--muted); }
+
+  .empty { font: 15px/1.5 var(--sans); color: var(--faint); padding: 16px; background: var(--card);
+           border: 1px dashed var(--line); border-radius: 10px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 0; }
+  textarea { width: 100%; min-height: 150px; font: 14px/1.5 var(--mono); padding: 12px 14px; border: 1px solid var(--line);
+             border-radius: 10px; background: var(--card); color: var(--ink); resize: vertical; }
+  .status { font: 14px/1.4 var(--sans); color: var(--muted); min-height: 20px; margin: 12px 0 0; }
+  .status.err { color: var(--bad); }
+  section.split { border-top: 1px solid var(--line); padding-top: 44px; margin-top: 56px; }
+  .intro { font-size: 17px; color: var(--muted); max-width: 780px; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+  .kinds td:first-child { white-space: nowrap; font-weight: 600; }
+  footer { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 64px; font: 14px/1.5 var(--sans); color: var(--faint); }
+  footer a { color: var(--muted); }
+  @media (max-width: 860px) {
+    main { padding: 36px 16px 72px; }
+    .story h1 { font-size: 32px; } .story .dek { font-size: 18px; } .story p { font-size: 17.5px; }
+    .bar { grid-template-columns: 130px 1fr 74px; }
+    .hide-sm { display: none; }
+    .dgrid, .cols { grid-template-columns: 1fr; gap: 0 22px; }
+    .flag { grid-template-columns: 1fr; gap: 6px; } .flag .chip { justify-self: start; }
+    .controls { position: static; }
+  }
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../index.html">&larr; All builds</a>
+
+<article class="story">
+  <h1>The newest startups set up Claude before they buy marketing software</h1>
+  <p class="dek">I read the public DNS records of 169 of the most watched startups, from the Forbes Cloud 100 and the LinkedIn and CNBC lists for 2026. Those records show which tools a company actually runs, which ones it is switching, and where its email is about to break. Sales teams usually pay a data vendor for those answers.</p>
+  <p class="byline">By Vito Prasad. Records read October 29, 2026.</p>
+</article>
+
+<figure class="chart" id="crossover">
+  <p class="chart-title">Share of companies that set up Claude, and that run a marketing platform</p>
+  <p class="chart-sub">Lists ordered from the most established companies to the newest</p>
+  <div class="legend"><span><i style="background:var(--map)"></i>Run a marketing platform</span><span><i style="background:var(--accent)"></i>Set up Claude</span></div>
+  <div id="crossoverPlot"></div>
+  <figcaption>Set up means the company verified its domain with Anthropic, the step for company-wide Claude accounts. A marketing platform counts when live mail or a live page runs on it, so one that leaves no trace in DNS is missed.</figcaption>
+  <table class="sr-only" id="crossoverTable"><caption>Share of companies by list</caption>
+    <thead><tr><th>List</th><th>Companies</th><th>Run a marketing platform</th><th>Set up Claude</th><th>Set up ChatGPT</th></tr></thead><tbody></tbody></table>
+</figure>
+<script type="application/json" id="storyData">
+{"asOf": "2026-10-29", "rows": [
+  {"list": "Forbes Cloud 100 (2025)", "n": 100, "map": 86, "claude": 80, "chatgpt": 74},
+  {"list": "CNBC Disruptor 50 (2026)", "n": 50, "map": 33, "claude": 38, "chatgpt": 34},
+  {"list": "LinkedIn Top Startups (2026)", "n": 50, "map": 23, "claude": 31, "chatgpt": 27}
+]}
+</script>
+
+<article class="story">
+  <p>Among the established companies on the Cloud 100, 86 run a marketing platform like HubSpot or Marketo and 80 have set up Claude. Among LinkedIn's top startups of 2026 it flips. 31 of the 50 have set up Claude, and only 23 run a marketing platform that shows up in their records.</p>
+  <p>My read is that the newest companies build their go-to-market around AI tools first and buy marketing software later, if at all. For a marketing platform, that makes more than half of the next generation a market still open, or one that may never come.</p>
+  <p>Spending data points the same way. On <a href="https://ramp.com/data/ai-index" target="_blank" rel="noopener">Ramp's AI Index</a>, Anthropic took 60.5% of what businesses on Ramp spent on AI tokens in the week ending October 23, 2026. Across all 169 companies here, 128 have set up Claude, 111 ChatGPT and 94 Cursor. The typical company has three AI vendors, not one.</p>
+
+  <h2>33 run two marketing platforms at once</h2>
+  <p>That is usually a switch halfway done, or two teams that never agreed on one tool. OpenAI, Databricks and Notion are among them. Either way the decision is open now, and a sales team that knows can call this month instead of at renewal. <a href="#controls" data-view="two">See all 33</a>.</p>
+
+  <h2>19 are close to breaking their own email</h2>
+  <p>Every tool that sends mail as a company takes at least one of 10 slots in the record that tells inboxes who may send it. Celonis, ClickUp, Armada and Metropolis are already past 10. Mail from any tool without its own signing key can now fail, and since 2024 Gmail, Yahoo and Outlook junk or reject that mail. Nobody gets a bounce. Replies just stop. 17 of the 19 run a marketing platform, so the sales and marketing tools are what filled the record.</p>
+  <p>The fix takes an afternoon. Drop the tools nobody uses. Have every sending tool sign mail with the company's own key, which has no limit. Send marketing mail from a subdomain like mail.company.com, which gets its own 10. Then check the count before connecting the next tool, which is a job for whoever runs GTM or marketing ops. <a href="#controls" data-view="spfrisk">Here are the 19</a>.</p>
+
+  <h2>Anyone can send email as 17 of them</h2>
+  <p>Their DMARC setting watches spoofed mail instead of blocking it, so a fake email from Runway or Hugging Face lands like a real one. Fast-growing, famous companies are the ones scammers copy, with fake recruiter emails to candidates and fake invoices to customers. 15 of the 17 already get the reports and are watching. They usually stop there because blocking can break their own marketing email, and nobody has a full list of the tools that send as them.</p>
+  <p>That list is what this scan produces. Make every tool on it sign with the company's own key, then move the setting from watching to blocking over a few weeks. For a startup with a dozen senders it is part-time work, not a project. <a href="#controls" data-view="spoof">Here are the 17</a>.</p>
+
+  <h2>Why public records</h2>
+  <p>A website crawl shows the tags on a company's pages. DNS shows the back office, who sends mail in the company's name and which AI tools it signed everyone into. It changes the day the work happens, before a press release or a job post, and every claim links to a record anyone can check. I built the first version at an AI email security startup, where it told sales which target accounts were changing their email setup, and sales worked those alerts.</p>
+</article>
+
+<section class="explore">
+  <h2>Every company, every tool</h2>
+  <p class="intro">Filter by any tool, find who uses one and not another, open a company to see each record behind it, or download what you see. The table shows the latest read.</p>
+  <p class="fine" id="scanned">Loading the scan...</p>
+</section>
+
+<div class="controls" id="controls">
+  <div class="row" id="listPills"></div>
+  <div class="row grow">
+    <input type="search" id="q" placeholder="Company or domain" aria-label="Search companies">
+    <select id="uses" aria-label="Uses this tool"><option value="">Uses any tool</option></select>
+    <select id="notUses" aria-label="Does not use this tool"><option value="">No exclusion</option></select>
+    <select id="signal" aria-label="Signal"><option value="">Any signal</option></select>
+  </div>
+  <div class="row views" id="views">
+    <span class="lbl-inline">Start with</span>
+    <a href="#" data-view="spf">Marketo customers near the SPF limit</a>
+    <a href="#" data-view="two">Two marketing platforms at once</a>
+    <a href="#" data-view="ai">ChatGPT but no Claude</a>
+    <a href="#" data-view="bulk">Marketing mail with no DMARC</a>
+    <span class="count" id="count"></span>
+  </div>
+</div>
+
+<section class="block" id="base">
+  <div class="base-head">
+    <h3 style="margin:0">Who uses what</h3>
+    <div class="legend"><span><i style="background:var(--accent)"></i>In use</span><span><i style="background:var(--accent-light)"></i>Domain verified only</span></div>
+  </div>
+  <div class="row cats" id="cats"></div>
+  <div class="base-head"><p id="baseNote"></p></div>
+  <div class="bars" id="bars"></div>
+</section>
+
+<section class="block">
+  <div class="base-head">
+    <h3 style="margin:0">The companies</h3>
+    <div class="actions" style="margin:0"><button class="ghost" type="button" id="csv">Download these as CSV</button></div>
+  </div>
+  <div id="tableWrap"></div>
+</section>
+
+<section class="split" id="changes">
+  <h2>What changed</h2>
+  <p class="intro">A stack is most useful when it moves. Every scan is compared with the one before, and a change counts only when a second read minutes later agrees, so a flaky answer never reaches this list. Marketo disappearing while HubSpot shows up is a migration in flight. A new AI vendor is a new contract.</p>
+  <div id="changeLog"></div>
+</section>
+
+<section class="split" id="mine">
+  <h2>Scan your own list</h2>
+  <p class="intro">Paste up to 300 companies, one per line, as a domain or as Company, domain. Your browser asks Google's public DNS directly, about 80 questions per company, and keeps the results here so the next scan can show what changed. Nothing is sent to me.</p>
+  <textarea id="paste" spellcheck="false" placeholder="ibm.com&#10;MIT, mit.edu&#10;https://www.nasa.gov"></textarea>
+  <div class="actions">
+    <button type="button" id="scanBtn">Scan list</button>
+    <button class="ghost" type="button" id="rescanMine">Re-scan my list</button>
+    <button class="ghost" type="button" id="clearMine">Clear my list</button>
+  </div>
+  <p class="status" id="status" role="status"></p>
+</section>
+
+<section class="split" id="about">
+  <h2>How it reads a stack</h2>
+  <div class="cols" style="margin-top:20px">
+    <div>
+      <p>Most go-to-market tools need a company to touch its DNS before they work. A landing page on Marketo needs a subdomain pointed at Marketo. A marketing platform that sends mail as the company needs a spot in SPF and a signing key. A workspace on ChatGPT, Claude or Cursor with single sign-on needs a verification record on the domain. Read those records together and the tools fall out.</p>
+      <p>For each company the scanner asks about 80 questions. It checks 45 common marketing and support subdomains, the mail servers, SPF and every service it includes, 27 common DKIM key names, DMARC, and the verification records on the main domain. It skips any subdomain that only answers because the company points every possible name at one server.</p>
+    </div>
+    <div>
+      <p>Two strengths are kept apart. In use means live mail or a live web page depends on the vendor today. Domain verified means the company connected its domain to the vendor at some point, which is strong for AI and work tools but can outlive a contract. Every finding links to the record behind it.</p>
+      <p>Some tools stay invisible. Anything that only runs inside the browser, like chat widgets and analytics tags, needs a page crawl. Tools that connect to a mailbox or a CRM through an API leave nothing in DNS. And a company can hide a tool behind its own servers. A quiet row means nothing was found, not that nothing is there.</p>
+      <p>This grew out of a monitor I built at an AI email security startup that read target accounts' email records every morning and told sales when one started changing fast. The <a href="../email-dns-check/">email DNS check</a> is the single-company version.</p>
+    </div>
+  </div>
+  <h3 style="margin-top:22px">The records it reads</h3>
+  <table class="kinds">
+    <thead><tr><th>Record</th><th>What it shows</th></tr></thead>
+    <tbody>
+      <tr><td>Subdomain</td><td>go.company.com points at Marketo, events.company.com at Goldcast, trust.company.com at SafeBase. The strongest sign a tool is live.</td></tr>
+      <tr><td>SPF</td><td>Services allowed to send mail as the company. Also the lookup count, where 10 is the hard limit and every new sending tool adds one or more.</td></tr>
+      <tr><td>DKIM</td><td>Signing keys. Many point at the vendor that holds them, like hs1 at HubSpot or s1 at SendGrid.</td></tr>
+      <tr><td>Mail servers</td><td>Who runs the inbox and which security gateway sits in front of it.</td></tr>
+      <tr><td>DMARC</td><td>Whether spoofed mail gets blocked, and which vendor reads the reports.</td></tr>
+      <tr><td>Verification</td><td>Records like openai-domain-verification that a vendor asks for when a company connects its domain.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>Vito Prasad. Built in October 2026 by directing AI coding agents. Company lists from <span id="sources">Forbes, LinkedIn and CNBC</span>. <a href="../index.html">See the other builds</a>.</footer>
+</main>
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script src="engine.js"></script>
+<script>
+"use strict";
+const E = window.StackEngine;
+const MINE_KEY = "gtmStackScanner.v1";
+const LIST_SHORT = { "forbes-cloud-100-2025": "Cloud 100", "linkedin-top-startups-2026": "LinkedIn", "cnbc-disruptor-50-2026": "CNBC" };
+const COLUMNS = [["Marketing automation", "Marketing automation"], ["Sales tools", "Sales tools"], ["AI tools", "AI tools"]];
+const BASE_CATS = ["Marketing automation", "Newsletter tools", "Sales tools", "AI tools", "CRM", "Content and landing pages", "Website", "Events and webinars",
+  "Training and community", "Support and docs", "Trust and status pages", "Partner programs", "Email senders", "Mailbox", "Email security",
+  "Data and analytics", "Work apps", "Security and IT", "Developer tools"];
+
+let DATA = { companies: [], lists: [] };
+let CHANGES = { changes: [] };
+let RAW = null;
+const state = { list: "all", q: "", uses: "", notUses: "", signal: "", cat: "Marketing automation", open: null, allBars: false };
+
+/* ---------- Helpers ---------- */
+
+function esc(value) {
+  return String(value === undefined || value === null ? "" : value)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+function fmtDate(iso) {
+  return new Date(iso.length === 10 ? iso + "T12:00:00" : iso).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+function pct(n, d) { return d ? Math.round(100 * n / d) + "%" : "0%"; }
+function vkey(v) { return v.vendor + "|" + v.category; }
+function inCat(c, cat, strength) {
+  return (c.vendors || []).filter(v => v.category === cat && (!strength || v.strength === strength));
+}
+
+/* ---------- Your own list, kept in this browser ---------- */
+
+function loadMine() {
+  try {
+    const s = JSON.parse(localStorage.getItem(MINE_KEY) || "{}");
+    return { companies: s.companies || {}, changes: s.changes || [] };
+  } catch (e) { return { companies: {}, changes: [] }; }
+}
+function saveMine(m) {
+  try { localStorage.setItem(MINE_KEY, JSON.stringify(m)); }
+  catch (e) { setStatus("This browser ran out of room to keep the list. Clear it or scan fewer companies.", true); }
+}
+function mineRows() {
+  const m = loadMine();
+  return Object.keys(m.companies).map(d => {
+    const c = m.companies[d];
+    return Object.assign({ domain: d, name: c.name, lists: [{ slug: "mine", rank: null }], mine: true }, c.result);
+  });
+}
+
+/* ---------- Filtering ---------- */
+
+function allRows() {
+  const mine = mineRows();
+  const seen = new Set(mine.map(r => r.domain));
+  return DATA.companies.filter(c => !seen.has(c.domain) || true).concat(mine);
+}
+
+function scopeRows() {
+  return allRows().filter(c => state.list === "all" ? !c.mine : state.list === "mine" ? c.mine : c.lists.some(l => l.slug === state.list));
+}
+
+function matches(c) {
+  if (c.error) return !state.uses && !state.signal && (!state.q || (c.name + " " + c.domain).toLowerCase().includes(state.q));
+  if (state.q && !(c.name + " " + c.domain).toLowerCase().includes(state.q)) return false;
+  if (state.uses && !c.vendors.some(v => vkey(v) === state.uses)) return false;
+  if (state.notUses && c.vendors.some(v => vkey(v) === state.notUses)) return false;
+  if (state.signal === "spf-risk" ? !(c.signals.includes("spf-over") || c.signals.includes("spf-near"))
+      : state.signal && !c.signals.includes(state.signal)) return false;
+  return true;
+}
+
+function shownRows() {
+  const rows = scopeRows().filter(matches);
+  const rankIn = (c, slug) => (c.lists.find(l => l.slug === slug) || {}).rank || 999;
+  if (state.list !== "all" && state.list !== "mine") rows.sort((a, b) => rankIn(a, state.list) - rankIn(b, state.list));
+  else rows.sort((a, b) => a.name.localeCompare(b.name));
+  return rows;
+}
+
+/* ---------- Rendering ---------- */
+
+// A dumbbell per list. Rows run from the most established list to the newest,
+// so the point where Claude passes marketing platforms reads top to bottom.
+function renderStoryChart() {
+  const data = JSON.parse(document.getElementById("storyData").textContent);
+  const plotEl = document.getElementById("crossoverPlot");
+  // Drawn at the container's real width so text stays the same size on a phone.
+  const W = Math.max(280, plotEl.clientWidth || 640), left = 14, right = 34, rowH = 64, top = 6;
+  const x = v => left + (W - left - right) * v / 100;
+  const pctOf = (k, r) => Math.round(100 * r[k] / r.n);
+  const H = top + data.rows.length * rowH + 30;
+  let svg = '<svg viewBox="0 0 ' + W + " " + H + '" width="' + W + '" height="' + H + '" role="img" aria-labelledby="crossoverTitle"><title id="crossoverTitle">' +
+    esc(data.rows.map(r => r.list + ", marketing platform " + pctOf("map", r) + "%, Claude " + pctOf("claude", r) + "%").join(". ")) + "</title>";
+  [0, 25, 50, 75, 100].forEach(t => {
+    svg += '<line x1="' + x(t) + '" x2="' + x(t) + '" y1="' + top + '" y2="' + (H - 24) + '" stroke="#ebe6de" stroke-width="1"/>' +
+      '<text x="' + x(t) + '" y="' + (H - 6) + '" font-size="11" fill="#8b867d" text-anchor="middle">' + t + "%</text>";
+  });
+  data.rows.forEach((r, i) => {
+    const y0 = top + i * rowH, y = y0 + 38;
+    const m = pctOf("map", r), c = pctOf("claude", r);
+    svg += '<text x="' + left + '" y="' + (y0 + 14) + '" font-size="14" fill="#1c1b19" style="font-family:var(--sans)">' + esc(r.list) +
+      '<tspan fill="#8b867d" dx="8">' + r.n + " companies</tspan></text>" +
+      '<line x1="' + x(Math.min(m, c)) + '" x2="' + x(Math.max(m, c)) + '" y1="' + y + '" y2="' + y + '" stroke="#cfc8bd" stroke-width="2" stroke-linecap="round"/>';
+    [["map", m, "var(--map)", "#1f6fae", r.map + " of " + r.n + " run a marketing platform"],
+     ["claude", c, "var(--accent)", "#b4532a", r.claude + " of " + r.n + " set up Claude, " + r.chatgpt + " set up ChatGPT"]].forEach(([k, v, , hex, tip]) => {
+      const before = k === "map" ? m < c : c < m;
+      svg += '<g class="dot" data-tip="' + esc(r.list + ". " + tip + ".") + '"><circle cx="' + x(v) + '" cy="' + y + '" r="14" fill="transparent"/>' +
+        '<circle cx="' + x(v) + '" cy="' + y + '" r="7" fill="' + hex + '" stroke="#faf8f4" stroke-width="2"/>' +
+        '<text x="' + (x(v) + (before ? -13 : 13)) + '" y="' + (y + 4) + '" font-size="12" fill="#5f5b54" text-anchor="' + (before ? "end" : "start") + '">' + v + "%</text></g>";
+    });
+  });
+  plotEl.innerHTML = svg + "</svg>";
+  document.querySelector("#crossoverTable tbody").innerHTML = data.rows.map(r => "<tr><td>" + esc(r.list) + "</td><td>" + r.n + "</td><td>" +
+    pctOf("map", r) + "%</td><td>" + pctOf("claude", r) + "%</td><td>" + pctOf("chatgpt", r) + "%</td></tr>").join("");
+}
+
+function wireStoryChart() {
+  const tip = document.getElementById("tip");
+  const plot = document.getElementById("crossoverPlot");
+  let lastWidth = plot.clientWidth;
+  window.addEventListener("resize", () => {
+    if (plot.clientWidth !== lastWidth) { lastWidth = plot.clientWidth; renderStoryChart(); }
+  });
+  plot.addEventListener("mousemove", e => {
+    const g = e.target.closest(".dot");
+    if (!g) { tip.style.display = "none"; return; }
+    tip.textContent = g.getAttribute("data-tip");
+    tip.style.display = "block";
+    tip.style.left = Math.min(e.clientX + 14, window.innerWidth - 300) + "px";
+    tip.style.top = (e.clientY + 16) + "px";
+  });
+  plot.addEventListener("mouseleave", () => { tip.style.display = "none"; });
+}
+
+function renderPills() {
+  const rows = allRows();
+  const pills = [["all", "All lists", rows.filter(c => !c.mine).length]];
+  DATA.lists.forEach(l => pills.push([l.slug, l.list, rows.filter(c => c.lists.some(x => x.slug === l.slug)).length]));
+  const mine = rows.filter(c => c.mine).length;
+  if (mine) pills.push(["mine", "My list", mine]);
+  document.getElementById("listPills").innerHTML = pills.map(p => '<button type="button" class="pill" data-list="' + esc(p[0]) +
+    '" aria-pressed="' + (state.list === p[0]) + '">' + esc(p[1]) + '<span class="n">' + p[2] + "</span></button>").join("");
+}
+
+function renderSelects(scope) {
+  const counts = new Map();
+  scope.forEach(c => (c.vendors || []).forEach(v => counts.set(vkey(v), (counts.get(vkey(v)) || 0) + 1)));
+  const byCat = {};
+  Array.from(counts.keys()).forEach(k => { const [vendor, cat] = k.split("|"); (byCat[cat] = byCat[cat] || []).push([k, vendor]); });
+  const groups = E.CATEGORIES.filter(cat => byCat[cat]).map(cat => '<optgroup label="' + esc(cat) + '">' +
+    byCat[cat].sort((a, b) => counts.get(b[0]) - counts.get(a[0]) || a[1].localeCompare(b[1]))
+      .map(([k, vendor]) => '<option value="' + esc(k) + '">' + esc(vendor) + " (" + counts.get(k) + ")</option>").join("") + "</optgroup>").join("");
+  const uses = document.getElementById("uses"), notUses = document.getElementById("notUses");
+  uses.innerHTML = '<option value="">Uses any tool</option>' + groups;
+  notUses.innerHTML = '<option value="">No exclusion</option>' + groups.replace(/<option value/g, "<option value");
+  notUses.querySelectorAll("option").forEach(o => { if (o.value) o.textContent = "Not " + o.textContent; });
+  uses.value = counts.has(state.uses) ? state.uses : "";
+  notUses.value = counts.has(state.notUses) ? state.notUses : "";
+  if (!counts.has(state.uses)) state.uses = "";
+  if (!counts.has(state.notUses)) state.notUses = "";
+  const sig = document.getElementById("signal");
+  sig.innerHTML = '<option value="">Any signal</option>' + E.SIGNALS.map(s => '<option value="' + s[0] + '">' + esc(s[1]) + " (" +
+    scope.filter(c => (c.signals || []).includes(s[0])).length + ")</option>").join("") +
+    '<option value="spf-risk">SPF at or near the limit (' + scope.filter(c => (c.signals || []).some(x => x === "spf-over" || x === "spf-near")).length + ")</option>";
+  sig.value = state.signal;
+}
+
+function renderBase(rows) {
+  const ok = rows.filter(c => !c.error);
+  const cats = BASE_CATS.filter(cat => ok.some(c => inCat(c, cat).length));
+  if (!cats.includes(state.cat)) state.cat = cats[0] || "Marketing automation";
+  document.getElementById("cats").innerHTML = cats.map(cat => '<button type="button" class="pill" data-cat="' + esc(cat) +
+    '" aria-pressed="' + (state.cat === cat) + '">' + esc(cat) + "</button>").join("");
+  const tally = new Map();
+  ok.forEach(c => inCat(c, state.cat).forEach(v => {
+    const t = tally.get(v.vendor) || { vendor: v.vendor, use: 0, ver: 0, key: vkey(v) };
+    if (v.strength === "in use") t.use++; else t.ver++;
+    tally.set(v.vendor, t);
+  }));
+  const list = Array.from(tally.values()).sort((a, b) => (b.use + b.ver) - (a.use + a.ver) || b.use - a.use || a.vendor.localeCompare(b.vendor));
+  const anyVerified = list.some(t => t.ver);
+  const denom = ok.length || 1;
+  const none = ok.filter(c => !inCat(c, state.cat).length).length;
+  document.getElementById("baseNote").textContent = ok.length ? "Out of the " + ok.length + " companies shown. " + none + " show no " +
+    state.cat.toLowerCase() + " at all." + (anyVerified ? "" : "") + " Click a bar to see who." : "";
+  const shown = state.allBars ? list : list.slice(0, 12);
+  document.getElementById("bars").innerHTML = shown.length ? shown.map(t => {
+    const use = 100 * t.use / denom, ver = 100 * t.ver / denom;
+    return '<div class="bar' + (state.uses === t.key ? " on" : "") + '" data-key="' + esc(t.key) + '" data-tip="' + esc(t.vendor + ". " +
+      t.use + " in use" + (t.ver ? ", " + t.ver + " with the domain verified only" : "") + ". " + pct(t.use + t.ver, denom) + " of the companies shown.") + '">' +
+      '<span class="name">' + esc(t.vendor) + '</span><span class="track">' +
+      (t.use ? '<span class="seg use" style="width:' + use + '%"></span>' : "") + (t.ver ? '<span class="seg ver" style="width:' + ver + '%"></span>' : "") +
+      '</span><span class="val"><b>' + (t.use + t.ver) + "</b> " + pct(t.use + t.ver, denom) + "</span></div>";
+  }).join("") + (list.length > 12 ? '<button class="more" type="button" id="moreBars">' + (state.allBars ? "Show the top 12" : "Show all " + list.length) + "</button>" : "")
+    : '<div class="none" style="padding:6px">Nothing in this category for the companies shown.</div>';
+}
+
+function vendorCell(c, cat) {
+  const vs = inCat(c, cat);
+  if (!vs.length) return '<span class="none">None seen</span>';
+  return vs.map(v => '<span class="v' + (v.strength === "verified" ? " ver" : "") + '" title="' +
+    (v.strength === "verified" ? "Domain verified" : "In use") + '">' + esc(v.vendor.replace(/ \(.*\)$/, "")) + "</span>").join("");
+}
+
+function mailCell(c) {
+  const p = c.posture;
+  const box = p.mailbox.join(", ") || (p.gateway.length ? "Hidden by a gateway" : p.mxHosts.length ? "Unrecognized servers" : "No mail servers");
+  return esc(box) + (p.gateway.length ? '<small class="none" style="display:block">through ' + esc(p.gateway.join(", ")) + "</small>" : "");
+}
+
+function dmarcChip(p) {
+  const tone = { reject: "good", quarantine: "warn", none: "bad", missing: "bad" }[p.dmarc];
+  return '<span class="chip ' + tone + '">' + esc(p.dmarc === "missing" ? "None" : p.dmarc === "none" ? "Monitor" : cap(p.dmarc)) + "</span>";
+}
+
+function spfCell(p) {
+  if (p.spf === "missing") return '<span class="spf bad">Missing</span>';
+  const tone = p.spfLookups > 10 ? "bad" : p.spfLookups >= 9 ? "warn" : "";
+  return '<span class="spf ' + tone + '">' + p.spfLookups + " of 10</span>";
+}
+
+function ranks(c) {
+  return '<span class="ranks">' + c.lists.map(l => '<span class="rank">' + esc(l.slug === "mine" ? "My list" : LIST_SHORT[l.slug] + " #" + l.rank) + "</span>").join("") + "</span>";
+}
+
+function renderTable(rows) {
+  const wrap = document.getElementById("tableWrap");
+  document.getElementById("count").textContent = rows.length + " of " + scopeRows().length + " shown";
+  if (!rows.length) { wrap.innerHTML = '<div class="empty">No company matches these filters.</div>'; return; }
+  let html = '<table><thead><tr><th>Company</th>' + COLUMNS.map(c => "<th>" + esc(c[1]) + "</th>").join("") +
+    '<th class="hide-sm">Mail</th><th>DMARC</th><th class="hide-sm">SPF</th></tr></thead><tbody>';
+  rows.forEach(c => {
+    const open = state.open === c.domain;
+    html += '<tr class="co' + (open ? " open" : "") + '" data-domain="' + esc(c.domain) + '"><td class="who"><b>' + esc(c.name) + "</b><small>" + esc(c.domain) + "</small>" + ranks(c) + "</td>";
+    if (c.error) {
+      html += '<td colspan="6" class="none">' + esc(c.error) + "</td></tr>";
+      return;
+    }
+    html += COLUMNS.map(col => "<td>" + vendorCell(c, col[0]) + (col[0] === "Marketing automation" && c.signals.includes("two-maps") ? '<span class="sig">Two at once</span>' : "") + "</td>").join("");
+    html += '<td class="hide-sm">' + mailCell(c) + "</td><td>" + dmarcChip(c.posture) + '</td><td class="hide-sm">' + spfCell(c.posture) + "</td></tr>";
+    if (open) html += '<tr class="detail"><td colspan="7">' + detailHtml(c) + "</td></tr>";
+  });
+  wrap.innerHTML = html + "</tbody></table>";
+  if (state.open) loadRaw(state.open);
+}
+
+const KIND_SOURCE = { CNAME: "A", SPF: "TXT", MX: "MX", DKIM: "TXT", DMARC: "TXT", TXT: "TXT" };
+function evidenceText(e) {
+  if (e.kind === "CNAME") return esc(e.name) + " points to <code>" + esc(e.value) + "</code>";
+  if (e.kind === "SPF") return "SPF lets <code>" + esc(e.value) + "</code> send mail";
+  if (e.kind === "MX") return "Mail is delivered to <code>" + esc(e.value) + "</code>";
+  if (e.kind === "DKIM") return "Signing key " + esc(e.name.split(".")[0]) + (e.value === "key published" ? " is published" : " points to <code>" + esc(e.value) + "</code>");
+  if (e.kind === "DMARC") return "DMARC reports go to <code>" + esc(e.value) + "</code>";
+  const prefix = e.value.match(/^[^=:]+[=:]?/);
+  return "Verification record <code>" + esc(prefix ? prefix[0].replace(/[=:]$/, "") : e.value) + "</code>";
+}
+
+function detailHtml(c) {
+  const sigs = (c.signalText || []);
+  let html = "";
+  if (sigs.length) html += '<ul class="flags">' + sigs.map(s => '<li class="flag"><span class="chip signal">Signal</span><div><strong>' + esc(s[0]) +
+    '</strong><span class="body">' + esc(s[1]) + "</span></div></li>").join("") + "</ul>";
+  const cats = E.CATEGORIES.filter(cat => inCat(c, cat).length);
+  html += '<div class="dgrid">' + cats.map(cat => '<div class="cat"><h4>' + esc(cat) + "</h4>" + inCat(c, cat).map(v =>
+    '<p class="ev"><b>' + esc(v.vendor) + '</b> <span class="chip ' + (v.strength === "in use" ? "good" : "info") + '" style="padding:3px 6px;font-size:10px">' +
+    (v.strength === "in use" ? "In use" : "Domain verified") + "</span>" + v.evidence.slice(0, 2).map(e => '<span class="why">' + evidenceText(e) +
+    ' <a href="' + esc(E.sourceUrl(e.name, KIND_SOURCE[e.kind])) + '" target="_blank" rel="noopener">record</a></span>').join("") + "</p>").join("") + "</div>").join("") + "</div>";
+  if (!cats.length) html += '<p class="ev" style="margin-top:14px">No tool this scanner recognizes.</p>';
+  const p = c.posture;
+  html += '<p class="ev" style="margin-top:14px;color:var(--muted)">Scanned ' + esc(fmtDate(c.at)) + ". DMARC " + esc(p.dmarc) + (p.pct !== null && p.pct < 100 ? " at " + p.pct + "%" : "") +
+    ", SPF " + (p.spf === "missing" ? "missing" : "ends " + esc(p.spfAll) + " with " + p.spfLookups + " lookups") + ", DKIM keys " + esc(p.dkimKeys.join(", ") || "none under common names") +
+    (p.mtaSts ? ", MTA-STS on" : "") + (p.bimi ? ", brand logo published" : "") + ".</p>";
+  html += '<details class="raw" id="raw-' + esc(c.domain) + '"><summary>Raw records</summary><div class="rows">Loading...</div></details>';
+  html += '<div class="dactions"><a href="../email-dns-check/?d=' + esc(encodeURIComponent(c.domain)) + '">Read its email setup live</a>' +
+    '<a href="https://' + esc(c.domain) + '" target="_blank" rel="noopener">Visit ' + esc(c.domain) + "</a></div>";
+  return html;
+}
+
+async function loadRaw(domain) {
+  const el = document.querySelector("#raw-" + CSS.escape(domain) + " .rows");
+  if (!el) return;
+  let records = null;
+  const mine = loadMine().companies[domain];
+  if (mine && mine.raw) records = mine.raw;
+  else {
+    if (!RAW) {
+      try { RAW = await (await fetch("data/raw.json")).json(); } catch (e) { el.textContent = "Could not load the raw records."; return; }
+    }
+    records = RAW.records[domain];
+  }
+  if (!records) { el.textContent = "No raw records saved for this company."; return; }
+  el.innerHTML = records.map(r => '<div class="rawrow"><div class="q"><span>' + esc(r.name) + " " + esc(r.type) + '</span><a href="' +
+    esc(E.sourceUrl(r.name, r.type)) + '" target="_blank" rel="noopener">live</a></div><pre>' + esc(r.answers.join("\n")) + "</pre></div>").join("");
+  el.closest("details").querySelector("summary").textContent = "Raw records, " + records.length + " answered lookups, each with a live link";
+}
+
+function renderChanges() {
+  const shared = (CHANGES.changes || []).map(x => Object.assign({ mine: false }, x));
+  const mine = loadMine().changes.map(x => Object.assign({ mine: true }, x));
+  const names = new Map(allRows().map(c => [c.domain, c.name]));
+  const all = shared.concat(mine).sort((a, b) => b.at.localeCompare(a.at) || ({ critical: 0, high: 1, medium: 2, info: 3 }[a.severity] - { critical: 0, high: 1, medium: 2, info: 3 }[b.severity]));
+  const el = document.getElementById("changeLog");
+  if (!all.length) {
+    el.innerHTML = '<div class="empty">No changes yet. The first scan was on ' + esc(fmtDate(CHANGES.firstScan || DATA.scannedAt || new Date().toISOString())) +
+      ", and it only sets the baseline. Changes show up here from the next scan on.</div>";
+    return;
+  }
+  el.innerHTML = '<ul class="flags">' + all.slice(0, 200).map(x => '<li class="flag"><span class="chip ' + esc(x.severity) + '">' + esc(cap(x.severity)) +
+    '</span><div><strong>' + esc((names.get(x.domain) || x.domain) + ". " + x.title) + '</strong><span class="body">' + esc(x.detail + " " + fmtDate(x.at) + (x.mine ? ", my list." : ".")) +
+    "</span></div></li>").join("") + "</ul>";
+}
+
+function render() {
+  const scope = scopeRows();
+  renderPills();
+  renderSelects(scope);
+  const rows = shownRows();
+
+  renderBase(rows);
+  renderTable(rows);
+  writeUrl();
+}
+
+/* ---------- URL state, so a filtered view can be shared ---------- */
+
+function writeUrl() {
+  const p = new URLSearchParams();
+  ["list", "q", "uses", "notUses", "signal", "cat"].forEach(k => { if (state[k] && !(k === "list" && state[k] === "all") && !(k === "cat" && state[k] === "Marketing automation")) p.set(k, state[k]); });
+  const s = p.toString();
+  history.replaceState(null, "", location.pathname + (s ? "?" + s : "") + location.hash);
+}
+function readUrl() {
+  const p = new URLSearchParams(location.search);
+  ["list", "q", "uses", "notUses", "signal", "cat"].forEach(k => { if (p.get(k)) state[k] = p.get(k); });
+  document.getElementById("q").value = state.q;
+}
+
+/* ---------- CSV ---------- */
+
+function csvCell(v) { const s = String(v === undefined || v === null ? "" : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function downloadCsv() {
+  const rows = shownRows().filter(c => !c.error);
+  const head = ["company", "domain", "lists"].concat(E.CATEGORIES.map(c => c.toLowerCase().replace(/ /g, "_")))
+    .concat(["dmarc", "spf_lookups", "spf_ending", "signals", "scanned"]);
+  const lines = [head.join(",")].concat(rows.map(c => [c.name, c.domain,
+    c.lists.map(l => l.slug === "mine" ? "my list" : LIST_SHORT[l.slug] + " #" + l.rank).join("; ")]
+    .concat(E.CATEGORIES.map(cat => inCat(c, cat).map(v => v.vendor + (v.strength === "verified" ? " (verified)" : "")).join("; ")))
+    .concat([c.posture.dmarc, c.posture.spf === "missing" ? "" : c.posture.spfLookups, c.posture.spfAll, c.signals.join("; "), c.at.slice(0, 10)])
+    .map(csvCell).join(",")));
+  const blob = new Blob([lines.join("\n")], { type: "text/csv" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "gtm-stacks-" + (state.list === "all" ? "all-lists" : state.list) + ".csv";
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+}
+
+/* ---------- Live scanning of a pasted list ---------- */
+
+let busy = false;
+function setStatus(text, isError) {
+  const s = document.getElementById("status");
+  s.textContent = text || "";
+  s.className = "status" + (isError ? " err" : "");
+}
+
+function resultOf(read) {
+  const a = E.analyze(read);
+  return { at: read.at, vendors: a.vendors, posture: a.posture, signals: a.signals.map(s => s.id), signalText: a.signals.map(s => [s.title, s.detail]) };
+}
+
+async function scanRows(rows) {
+  if (busy || !rows.length) return;
+  busy = true;
+  ["scanBtn", "rescanMine", "clearMine"].forEach(id => { document.getElementById(id).disabled = true; });
+  let done = 0, failed = 0, changed = 0;
+  try {
+    await E.pool(rows, 3, async row => {
+      const read = await E.readDomain(row.domain, { concurrency: 8 });
+      const m = loadMine();
+      const prev = m.companies[row.domain];
+      if (read.failed || read.nxdomain) {
+        failed++;
+        m.companies[row.domain] = { name: row.name, result: { error: read.nxdomain ? "Domain not found" : "DNS did not answer" } };
+      } else {
+        let result = resultOf(read);
+        let raw = E.rawAnswers(read);
+        if (prev && prev.result && !prev.result.error) {
+          const first = E.compare(prev.result, result);
+          if (first.length) {
+            const read2 = await E.readDomain(row.domain, { concurrency: 8 });
+            const kept = read2.failed ? [] : E.confirmed(first, E.compare(prev.result, resultOf(read2)));
+            if (kept.length) {
+              changed++;
+              const now = new Date().toISOString().slice(0, 10);
+              const fresh = loadMine();
+              fresh.changes = kept.map(r => ({ at: now, domain: row.domain, severity: r[0], title: r[1], detail: r[2] })).concat(fresh.changes).slice(0, 500);
+              m.changes = fresh.changes;
+            } else {
+              result = prev.result;
+              raw = prev.raw;
+            }
+          }
+        }
+        m.companies[row.domain] = { name: prev && prev.name !== row.domain ? prev.name : row.name, result: result, raw: raw };
+      }
+      saveMine(m);
+      done++;
+      setStatus("Scanned " + done + " of " + rows.length + (failed ? ". " + failed + " could not be read" : "") + "...");
+    });
+    state.list = "mine";
+    setStatus("Done. " + (rows.length - failed) + " of " + rows.length + " read" + (changed ? ", " + changed + " changed since the last scan." : "."), failed > 0 && failed === rows.length);
+    render();
+    renderChanges();
+    document.getElementById("controls").scrollIntoView({ behavior: "smooth", block: "start" });
+  } finally {
+    busy = false;
+    ["scanBtn", "rescanMine", "clearMine"].forEach(id => { document.getElementById(id).disabled = false; });
+  }
+}
+
+/* ---------- Wiring ---------- */
+
+const VIEWS = {
+  spf: () => ({ uses: "Marketo|Marketing automation", signal: "spf-near" }),
+  two: () => ({ signal: "two-maps" }),
+  ai: () => ({ uses: "OpenAI (ChatGPT)|AI tools", notUses: "Anthropic (Claude)|AI tools", cat: "AI tools" }),
+  claude: () => ({ uses: "Anthropic (Claude)|AI tools", notUses: "OpenAI (ChatGPT)|AI tools", cat: "AI tools" }),
+  spfrisk: () => ({ signal: "spf-risk" }),
+  spoof: () => ({ signal: "dmarc-not-enforced" }),
+  bulk: () => ({ signal: "bulk-no-dmarc" })
+};
+
+function wire() {
+  document.getElementById("listPills").addEventListener("click", e => {
+    const b = e.target.closest("[data-list]"); if (!b) return;
+    state.list = b.getAttribute("data-list"); state.open = null; render();
+  });
+  document.getElementById("cats").addEventListener("click", e => {
+    const b = e.target.closest("[data-cat]"); if (!b) return;
+    state.cat = b.getAttribute("data-cat"); state.allBars = false; render();
+  });
+  const bars = document.getElementById("bars");
+  const tip = document.getElementById("tip");
+  bars.addEventListener("click", e => {
+    if (e.target.id === "moreBars") { state.allBars = !state.allBars; render(); return; }
+    const b = e.target.closest("[data-key]"); if (!b) return;
+    const key = b.getAttribute("data-key");
+    state.uses = state.uses === key ? "" : key; render();
+  });
+  bars.addEventListener("mousemove", e => {
+    const b = e.target.closest("[data-tip]");
+    if (!b) { tip.style.display = "none"; return; }
+    tip.textContent = b.getAttribute("data-tip");
+    tip.style.display = "block";
+    tip.style.left = Math.min(e.clientX + 14, window.innerWidth - 300) + "px";
+    tip.style.top = (e.clientY + 16) + "px";
+  });
+  bars.addEventListener("mouseleave", () => { tip.style.display = "none"; });
+  document.getElementById("q").addEventListener("input", e => { state.q = e.target.value.trim().toLowerCase(); render(); });
+  ["uses", "notUses", "signal"].forEach(id => document.getElementById(id).addEventListener("change", e => { state[id] = e.target.value; render(); }));
+  document.getElementById("views").addEventListener("click", e => {
+    const a = e.target.closest("[data-view]"); if (!a) return;
+    e.preventDefault();
+    Object.assign(state, { q: "", uses: "", notUses: "", signal: "" }, VIEWS[a.getAttribute("data-view")]());
+    if (state.list === "mine" && !mineRows().length) state.list = "all";
+    document.getElementById("q").value = "";
+    render();
+  });
+  document.getElementById("tableWrap").addEventListener("click", e => {
+    if (e.target.closest("a, details, .detail")) return;
+    const tr = e.target.closest("tr.co"); if (!tr) return;
+    const d = tr.getAttribute("data-domain");
+    state.open = state.open === d ? null : d;
+    renderTable(shownRows());
+  });
+  document.querySelectorAll(".story [data-view]").forEach(a => a.addEventListener("click", e => {
+    e.preventDefault();
+    Object.assign(state, { list: "all", q: "", uses: "", notUses: "", signal: "" }, VIEWS[a.getAttribute("data-view")]());
+    document.getElementById("q").value = "";
+    render();
+    document.getElementById("controls").scrollIntoView({ behavior: "smooth", block: "start" });
+  }));
+  document.getElementById("csv").addEventListener("click", downloadCsv);
+  document.getElementById("scanBtn").addEventListener("click", () => {
+    const rows = E.parseList(document.getElementById("paste").value);
+    if (!rows.length) { setStatus("No domains found. Put one company per line, like company.com or Company, company.com.", true); return; }
+    if (rows.length > 300) { setStatus("That is " + rows.length + " companies. Scan 300 or fewer at a time.", true); return; }
+    setStatus("Scanning " + rows.length + " compan" + (rows.length > 1 ? "ies" : "y") + "...");
+    scanRows(rows);
+  });
+  document.getElementById("rescanMine").addEventListener("click", () => {
+    const m = loadMine();
+    const rows = Object.keys(m.companies).map(d => ({ domain: d, name: m.companies[d].name }));
+    if (!rows.length) { setStatus("Your list is empty. Paste some companies first.", true); return; }
+    scanRows(rows);
+  });
+  document.getElementById("clearMine").addEventListener("click", () => {
+    localStorage.removeItem(MINE_KEY);
+    if (state.list === "mine") state.list = "all";
+    setStatus("Your list is cleared.");
+    render(); renderChanges();
+  });
+}
+
+async function boot() {
+  renderStoryChart();
+  wireStoryChart();
+  readUrl();
+  wire();
+  try {
+    const [stacks, changes] = await Promise.all([fetch("data/stacks.json").then(r => r.json()), fetch("data/changes.json").then(r => r.json()).catch(() => ({ changes: [] }))]);
+    DATA = stacks; CHANGES = changes;
+    const ok = DATA.companies.filter(c => !c.error).length;
+    document.getElementById("scanned").innerHTML = esc(ok + " companies from " + DATA.lists.length + " lists, scanned " + fmtDate(DATA.scannedAt) +
+      " from Google's public DNS. A list you paste below is read live in your browser.") +
+      " " + DATA.lists.filter(l => l.note).map(l => esc(l.list + " is the latest edition, since Forbes published no 2026 list.")).join(" ");
+    document.getElementById("sources").innerHTML = DATA.lists.map(l => '<a href="' + esc((l.source_urls || [])[0] || "#") + '">' + esc(l.list) + "</a>").join(", ");
+  } catch (e) {
+    document.getElementById("scanned").textContent = "The saved scan did not load. You can still scan your own list below.";
+  }
+  if (state.list !== "all" && state.list !== "mine" && !DATA.lists.some(l => l.slug === state.list)) state.list = "all";
+  if (state.list === "mine" && !mineRows().length) state.list = "all";
+  render();
+  renderChanges();
+}
+boot();
+</script>
+</body>
+</html>
