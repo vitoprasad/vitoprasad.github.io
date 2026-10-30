@@ -123,18 +123,17 @@
 <header>
   <p class="kicker">GTM engineering builds, October 2026</p>
   <h1>Vito Prasad</h1>
-  <p class="lede">I started in engineering at SpaceX and Northrop Grumman, moved through strategy consulting at Kearney, and then ran product marketing at an AI security startup, where I built the stack behind our pipeline. These are five tools I built in October 2026 by directing AI coding agents. Four run on real data, and the first two you can try yourself.</p>
+  <p class="lede">I started in engineering at SpaceX and Northrop Grumman, moved through strategy consulting at Kearney, and then ran product marketing at an AI security startup, where I built the stack behind our pipeline. These are four tools I built in October 2026 by directing AI coding agents. Three run on real data, and the first two you can try yourself.</p>
   <p class="contact">
     <a href="mailto:vito.prasad@gmail.com">vito.prasad@gmail.com</a><span>/</span><a href="https://www.linkedin.com/in/vitoprasad">linkedin.com/in/vitoprasad</a><span>/</span><em class="loc">San Francisco Bay Area</em>
   </p>
   <div class="index" id="builds">
     <div class="filters" role="group" aria-label="Filter the builds">
       <span class="flabel">Industry</span>
-      <button class="chip" type="button" data-industry-filter="all" aria-pressed="true">All<span class="c">5</span></button>
+      <button class="chip" type="button" data-industry-filter="all" aria-pressed="true">All<span class="c">4</span></button>
       <button class="chip" type="button" data-industry-filter="software" aria-pressed="false">Software and AI<span class="c">2</span></button>
       <button class="chip" type="button" data-industry-filter="hardware" aria-pressed="false">Hardware manufacturing<span class="c">1</span></button>
       <button class="chip" type="button" data-industry-filter="defense" aria-pressed="false">Defense and government<span class="c">1</span></button>
-      <button class="chip" type="button" data-industry-filter="hiring" aria-pressed="false">Hiring<span class="c">1</span></button>
     </div>
     <div class="filters">
       <span class="flabel">Show</span>
@@ -144,11 +143,10 @@
     <ol class="builds">
       <li data-industry="software" data-try="yes"><a class="row" href="#scanner"><span class="n">01</span><span class="name">Account-list scanner</span><span class="meta">Software and AI</span><span class="meta">Account research for sales and marketing</span><span class="meta data">Public DNS records</span><span class="try">Try it</span></a></li>
       <li data-industry="hardware" data-try="yes"><a class="row" href="#issue-scribe"><span class="n">02</span><span class="name">Issue Scribe</span><span class="meta">Hardware manufacturing</span><span class="meta">AI-assisted quality management</span><span class="meta data">Sample data</span><span class="try">Try it</span></a></li>
-      <li data-industry="hiring" data-try="no"><a class="row" href="#job-search"><span class="n">03</span><span class="name">Job-search pipeline</span><span class="meta">Hiring</span><span class="meta">Sourcing and LLM scoring</span><span class="meta data">55,000+ live job listings</span><span class="try"></span></a></li>
-      <li data-industry="defense" data-try="no"><a class="row" href="#federal"><span class="n">04</span><span class="name">Federal-contract pipeline</span><span class="meta">Defense and government</span><span class="meta">Opportunity pipeline for business development</span><span class="meta data">SAM.gov daily file</span><span class="try"></span></a></li>
-      <li data-industry="software" data-try="no"><a class="row" href="#crm"><span class="n">05</span><span class="name">Onboarding CRM</span><span class="meta">Software and AI</span><span class="meta">Customer onboarding and follow-up</span><span class="meta data">Team tracker and Slack</span><span class="try"></span></a></li>
+      <li data-industry="defense" data-try="no"><a class="row" href="#federal"><span class="n">03</span><span class="name">Federal-contract pipeline</span><span class="meta">Defense and government</span><span class="meta">Opportunity pipeline for business development</span><span class="meta data">SAM.gov daily file</span><span class="try"></span></a></li>
+      <li data-industry="software" data-try="no"><a class="row" href="#crm"><span class="n">04</span><span class="name">Onboarding CRM</span><span class="meta">Software and AI</span><span class="meta">Customer onboarding and follow-up</span><span class="meta data">Team tracker and Slack</span><span class="try"></span></a></li>
     </ol>
-    <p class="index-foot"><span><span id="shown">All 5 builds.</span> <button class="linkish" type="button" id="show-all" hidden>Show all</button></span><a href="#how">How I build</a></p>
+    <p class="index-foot"><span><span id="shown">All 4 builds.</span> <button class="linkish" type="button" id="show-all" hidden>Show all</button></span><a href="#how">How I build</a></p>
   </div>
 </header>
 
@@ -237,48 +235,8 @@
   </div>
 </section>
 
-<section class="build" id="job-search" data-industry="hiring" data-try="no">
-  <div class="num">03</div>
-  <h2>Job-search pipeline</h2>
-  <p class="tags"><span class="ind">Hiring</span><span>Sourcing and LLM scoring</span><span>55,000+ live job listings</span></p>
-  <p class="one-line">Pulls every open role from the companies I care about, keeps the ones that fit, and has an LLM score each against a written rubric, so I read 45 good matches instead of 55,000 listings.</p>
-  <div class="stats">
-    <div class="stat"><b>55,000+</b><small>listings pulled each run</small></div>
-    <div class="stat"><b>1,381</b><small>company job boards, plus VC portfolio boards and a newsletter</small></div>
-    <div class="stat"><b>~2 cents</b><small>to score a role with an LLM</small></div>
-    <div class="stat"><b>2x a week</b><small>refreshes on its own, Sunday and Wednesday</small></div>
-  </div>
-  <div class="cols">
-    <div>
-      <h3>What it does</h3>
-      <p>It reads the public job boards behind each company (Greenhouse, Lever, Ashby and others), the portfolio job boards of VC firms like Sequoia, a16z and Accel, and a weekly newsletter. It sorts each role into one of the lanes I apply in and drops the rest before any model call, so the LLM only reads roles worth reading.</p>
-      <p>Each survivor gets a fit score, the reason it fits, where I fall short, and what to lead with. A second view ranks companies by fit whether or not they are hiring. A third rebuilds my application record from Gmail and Calendar, so I can see which channels turn into conversations.</p>
-    </div>
-    <div>
-      <h3>How it works</h3>
-      <ol>
-        <li>Pull the boards and keep every raw posting, so nothing needs refetching when the rules change.</li>
-        <li>Place each role in a lane by its title, and drop the out-of-lane ones with the reason kept.</li>
-        <li>Score the rest in batches against the lane's written bar. Promising roles get two reads and keep the average, since one read can swing 10 to 20 points.</li>
-        <li>Show the results in a web view with Apply, Save and Not for me, and remember those choices.</li>
-        <li>Rebuild the application record from email and calendar, with every row linked to its source message.</li>
-      </ol>
-    </div>
-  </div>
-  <div class="pair">
-    <figure>
-      <a href="img/job-search-new-roles.webp" title="Open full size"><img src="img/job-search-new-roles.webp" alt="New roles view: a GTM Engineer role scored 72, with lane filters and the reason it fits" loading="lazy"></a>
-      <figcaption>New roles. One note left readable to show how a score explains itself. My private notes are blurred.</figcaption>
-    </figure>
-    <figure>
-      <a href="img/job-search-target-companies.webp" title="Open full size"><img src="img/job-search-target-companies.webp" alt="Target companies view: companies ranked 7 of 8 with their best-fitting open role" loading="lazy"></a>
-      <figcaption>Target companies, ranked by fit whether or not they are hiring. My history with each company is blurred.</figcaption>
-    </figure>
-  </div>
-</section>
-
 <section class="build" id="federal" data-industry="defense" data-try="no">
-  <div class="num">04</div>
+  <div class="num">03</div>
   <h2>Federal-contract pipeline</h2>
   <p class="tags"><span class="ind">Defense and government</span><span>Opportunity pipeline for business development</span><span>SAM.gov daily file</span></p>
   <p class="one-line">Built overnight for a business operations interview at a defense hardware startup. It turns the federal government's full list of open opportunities into a short list a small team can act on.</p>
@@ -318,7 +276,7 @@
 </section>
 
 <section class="build" id="crm" data-industry="software" data-try="no">
-  <div class="num">05</div>
+  <div class="num">04</div>
   <h2>Onboarding CRM</h2>
   <p class="tags"><span class="ind">Software and AI</span><span>Customer onboarding and follow-up</span><span>Team tracker and Slack</span></p>
   <p class="one-line">Built for an AI startup's community team to work through its post-launch waitlist. Every person who needs a touch lands in a queue named for the next action.</p>
