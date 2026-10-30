@@ -48,8 +48,10 @@
   .events button:hover { border-color: var(--ink); }
   .events button[aria-pressed=true] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
   .events button.reset { color: var(--muted); }
-  .summary { font-size: 19px; line-height: 1.55; margin: 6px 0 22px; max-width: 900px; }
-  .summary b { font-weight: 600; }
+  .summary { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; font: 15px/1.5 var(--sans); margin: 8px 0 22px; max-width: 900px; }
+  .summary dt { color: var(--muted); }
+  .summary dd { margin: 0; }
+  .summary dd b { font-weight: 600; }
   .tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
   .tabs button { font: 500 15px/1 var(--sans); border: 0; background: none; padding: 11px 14px; cursor: pointer; color: var(--muted);
                  border-bottom: 2px solid transparent; margin-bottom: -1px; }
@@ -125,7 +127,7 @@
     <span class="lbl">Make something happen this week</span>
     <div class="events" id="events"></div>
   </div>
-  <p class="summary" id="summary"></p>
+  <dl class="summary" id="summary"></dl>
   <div class="tabs" role="tablist">
     <button type="button" role="tab" data-tab="readiness" aria-selected="true">Readiness Matrix</button>
     <button type="button" role="tab" data-tab="review" aria-selected="false">Critical Path Review<span class="n" id="nReview"></span></button>
@@ -390,12 +392,14 @@ function renderDecisions(decs) {
 function renderSummary(rows, nItems, w) {
   const total = rows.reduce((t, r) => t + r.mass, 0), alloc = rows.reduce((t, r) => t + r.s.allocKg, 0);
   const worst = rows.reduce((a, r) => r.slack < a.slack ? r : a, rows[0]);
-  const late = rows.filter(r => r.status === "late").map(r => r.s.name.toLowerCase());
-  document.getElementById("summary").innerHTML = "Week <b>" + w + "</b>. The system weighs <b>" + kg(total) + " kg</b> against " + kg(alloc) +
-    " kg budgeted inside the " + P.program.landerLimitT + "-tonne lander, with " + P.program.reserveKg + " kg held in reserve. The tightest order, " +
-    esc(worst.s.longLead.item.toLowerCase()) + ", " + (worst.slack < 0 ? "<b>is " + (-worst.slack) + " days late</b>" : "has <b>" + plural(worst.slack, "day", "days") + " of slack</b>") +
-    " to its SR-1 need-by week. " + (nItems ? "<b>" + plural(nItems, "item goes", "items go") + "</b> to Tuesday's Critical Path Review" : "Nothing meets a trigger, so there is no Critical Path Review this week") +
-    (late.length ? ", and " + esc(late.join(" and ")) + (late.length > 1 ? " are" : " is") + " red." : ".");
+  const red = rows.filter(r => r.status === "late").map(r => r.s.name);
+  const line = (k, v) => "<dt>" + k + "</dt><dd>" + v + "</dd>";
+  document.getElementById("summary").innerHTML =
+    line("Week", "<b>" + w + "</b>" + (isNow(w) ? ", now" : "")) +
+    line("Mass", "<b>" + kg(total) + " kg</b> of " + kg(alloc) + " kg budgeted inside the " + P.program.landerLimitT + "-tonne lander. " + P.program.reserveKg + " kg in reserve.") +
+    line("Tightest order", esc(worst.s.longLead.item) + ", " + (worst.slack < 0 ? "<b>" + (-worst.slack) + " days late</b>" : "<b>" + plural(worst.slack, "day", "days") + " of slack</b>") + " to its SR-1 need-by week.") +
+    line("Critical Path Review", (nItems ? "<b>" + plural(nItems, "item", "items") + "</b> on Tuesday's agenda." : "Nothing meets a trigger, so no review this week.") +
+      (red.length ? " Red. " + esc(red.join(", ")) + "." : ""));
 }
 
 function render() {

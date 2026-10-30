@@ -48,8 +48,10 @@
   .events button:hover { border-color: var(--ink); }
   .events button[aria-pressed=true] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
   .events button.reset { color: var(--muted); }
-  .summary { font-size: 19px; line-height: 1.55; margin: 6px 0 22px; max-width: 900px; }
-  .summary b { font-weight: 600; }
+  .summary { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; font: 15px/1.5 var(--sans); margin: 8px 0 22px; max-width: 900px; }
+  .summary dt { color: var(--muted); }
+  .summary dd { margin: 0; }
+  .summary dd b { font-weight: 600; }
   .tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
   .tabs button { font: 500 15px/1 var(--sans); border: 0; background: none; padding: 11px 14px; cursor: pointer; color: var(--muted);
                  border-bottom: 2px solid transparent; margin-bottom: -1px; }
@@ -131,7 +133,7 @@
       <button type="button" class="reset" data-event="reset">Reset</button>
     </div>
   </div>
-  <p class="summary" id="summary"></p>
+  <dl class="summary" id="summary"></dl>
   <div class="tabs" role="tablist">
     <button type="button" role="tab" data-tab="readiness" aria-selected="true">Readiness</button>
     <button type="button" role="tab" data-tab="review" aria-selected="false">Tuesday's review<span class="n" id="nReview"></span></button>
@@ -382,13 +384,15 @@ function renderDecisions(decs, w) {
 
 function renderSummary(rows, nItems, w) {
   const total = rows.reduce((t, r) => t + r.mass, 0);
-  const worst = Math.min(...rows.map(r => r.slack));
-  const late = rows.filter(r => r.status === "late").map(r => r.s.name.toLowerCase());
-  document.getElementById("summary").innerHTML = "Week <b>" + w + "</b> of " + P.program.deliveryWeek + ". The parts weigh <b>" + kg(total) + " kg</b> of the " +
-    P.program.slotLimitKg + " kg slot, with " + P.program.reserveKg + " kg held back as reserve. The slowest order has " +
-    (worst < 0 ? "<b>missed its need-by week by " + (-worst) + " days</b>" : "<b>" + plural(worst, "day", "days") + " of slack</b>") + ". " +
-    (nItems ? "<b>" + plural(nItems, "item meets", "items meet") + "</b> a trigger for Tuesday's review" : "Nothing meets a trigger, so there is no review this week") +
-    (late.length ? ", and " + esc(late.join(" and ")) + (late.length > 1 ? " are" : " is") + " late." : ".");
+  const worst = rows.reduce((a, r) => r.slack < a.slack ? r : a, rows[0]);
+  const late = rows.filter(r => r.status === "late").map(r => r.s.name);
+  const line = (k, v) => "<dt>" + k + "</dt><dd>" + v + "</dd>";
+  document.getElementById("summary").innerHTML =
+    line("Week", "<b>" + w + "</b> of " + P.program.deliveryWeek + (isNow(w) ? ", now" : "")) +
+    line("Weight", "<b>" + kg(total) + " kg</b> of the " + P.program.slotLimitKg + " kg slot. " + P.program.reserveKg + " kg in reserve.") +
+    line("Tightest order", esc(worst.s.longLead.item) + ", " + (worst.slack < 0 ? "<b>" + (-worst.slack) + " days late</b>" : "<b>" + plural(worst.slack, "day", "days") + " of slack</b>") + " to its need-by week.") +
+    line("Tuesday's review", (nItems ? "<b>" + plural(nItems, "item", "items") + "</b> on the agenda." : "Nothing meets a trigger, so no review this week.") +
+      (late.length ? " Late. " + esc(late.join(", ")) + "." : ""));
 }
 
 function render() {
