@@ -1,0 +1,384 @@
+{
+ "about": "A made-up program for a demo. No real company, people, suppliers or dates.",
+ "program": {
+  "name": "Demo satellite program",
+  "summary": "A first-of-a-kind Earth-observation satellite with a fixed rideshare launch slot.",
+  "currentWeek": 8,
+  "firstWeek": 4,
+  "deliveryWeek": 26,
+  "slotLimitKg": 300,
+  "reserveKg": 15
+ },
+ "subsystems": [
+  {
+   "id": "STR",
+   "name": "Structure and thermal",
+   "owner": "Mechanical lead",
+   "allocKg": 62,
+   "massKg": {
+    "1": 57,
+    "2": 57,
+    "3": 58,
+    "4": 58,
+    "5": 58.5,
+    "6": 58.5,
+    "7": 59,
+    "8": 59
+   },
+   "trl": {
+    "1": 5,
+    "5": 6
+   },
+   "longLead": {
+    "item": "Machined panels",
+    "needWeek": 14,
+    "commitWeek": {
+     "1": 11
+    }
+   }
+  },
+  {
+   "id": "PROP",
+   "name": "Propulsion module",
+   "owner": "Propulsion lead",
+   "allocKg": 38,
+   "massKg": {
+    "1": 31,
+    "2": 31,
+    "3": 32,
+    "4": 32,
+    "5": 33,
+    "6": 34,
+    "7": 35.5,
+    "8": 37
+   },
+   "trl": {
+    "1": 4,
+    "5": 5
+   },
+   "reg": {
+    "gate": "Export classification of the thruster",
+    "gateWeek": 16,
+    "depOpen": {
+     "1": true
+    },
+    "dependency": "Final thruster model"
+   },
+   "longLead": {
+    "item": "Electric thruster",
+    "needWeek": 20,
+    "commitWeek": {
+     "1": 18
+    }
+   }
+  },
+  {
+   "id": "PWR",
+   "name": "Power",
+   "owner": "Power lead",
+   "allocKg": 41,
+   "massKg": {
+    "1": 40,
+    "2": 40,
+    "3": 40,
+    "4": 40,
+    "5": 40,
+    "6": 40,
+    "7": 40,
+    "8": 40
+   },
+   "trl": {
+    "1": 6
+   },
+   "longLead": {
+    "item": "Space-grade solar cells",
+    "needWeek": 18,
+    "commitWeek": {
+     "1": 16,
+     "7": 17,
+     "8": 19
+    }
+   }
+  },
+  {
+   "id": "ADCS",
+   "name": "Attitude control",
+   "owner": "Guidance lead",
+   "allocKg": 24,
+   "massKg": {
+    "1": 23,
+    "2": 23,
+    "3": 23,
+    "4": 23,
+    "5": 23,
+    "6": 23,
+    "7": 23,
+    "8": 23
+   },
+   "trl": {
+    "1": 6
+   },
+   "longLead": {
+    "item": "Reaction wheels",
+    "needWeek": 22,
+    "commitWeek": {
+     "1": 19
+    }
+   }
+  },
+  {
+   "id": "PAY",
+   "name": "Imaging payload",
+   "owner": "Payload lead",
+   "allocKg": 70,
+   "massKg": {
+    "1": 64,
+    "2": 65,
+    "3": 65.5,
+    "4": 66,
+    "5": 66.5,
+    "6": 66.5,
+    "7": 67,
+    "8": 67
+   },
+   "trl": {
+    "1": 4,
+    "6": 5
+   },
+   "reg": {
+    "gate": "Imaging license, resolution input",
+    "gateWeek": 11,
+    "depOpen": {
+     "1": true
+    },
+    "dependency": "Final ground resolution"
+   },
+   "longLead": {
+    "item": "Telescope mirror",
+    "needWeek": 24,
+    "commitWeek": {
+     "1": 21
+    }
+   }
+  },
+  {
+   "id": "COM",
+   "name": "Radio and antennas",
+   "owner": "Comms lead",
+   "allocKg": 9,
+   "massKg": {
+    "1": 8.5,
+    "2": 8.5,
+    "3": 8.5,
+    "4": 8.5,
+    "5": 8.5,
+    "6": 8.5,
+    "7": 8.5,
+    "8": 8.5
+   },
+   "trl": {
+    "1": 5,
+    "4": 6
+   },
+   "reg": {
+    "gate": "Spectrum license filing",
+    "gateWeek": 13,
+    "depOpen": {
+     "1": true,
+     "5": false
+    },
+    "dependency": "Frequency plan"
+   },
+   "longLead": {
+    "item": "X-band transmitter",
+    "needWeek": 21,
+    "commitWeek": {
+     "1": 18
+    }
+   }
+  },
+  {
+   "id": "AVI",
+   "name": "Flight computer and software",
+   "owner": "Avionics lead",
+   "allocKg": 12,
+   "massKg": {
+    "1": 11,
+    "2": 11,
+    "3": 11,
+    "4": 11,
+    "5": 11,
+    "6": 11,
+    "7": 11,
+    "8": 11
+   },
+   "trl": {
+    "1": 4,
+    "6": 5
+   },
+   "longLead": {
+    "item": "Radiation-tolerant processor boards",
+    "needWeek": 19,
+    "commitWeek": {
+     "1": 16
+    }
+   }
+  },
+  {
+   "id": "INT",
+   "name": "Harness and integration",
+   "owner": "Integration lead",
+   "allocKg": 29,
+   "massKg": {
+    "1": 24,
+    "2": 24.5,
+    "3": 25,
+    "4": 25.3,
+    "5": 25.6,
+    "6": 25.9,
+    "7": 26.2,
+    "8": 26.4
+   },
+   "trl": {
+    "1": 5
+   },
+   "longLead": {
+    "item": "Flight connectors",
+    "needWeek": 15,
+    "commitWeek": {
+     "1": 12
+    }
+   }
+  }
+ ],
+ "decisions": [
+  {
+   "id": "D-01",
+   "week": 2,
+   "status": "made",
+   "owner": "Program lead",
+   "subsystems": [],
+   "decision": "Hold 15 kg as program mass reserve. Only the program lead can release it.",
+   "why": [
+    "Late findings almost always add mass",
+    "A named reserve stops each team padding its own number"
+   ],
+   "reopenIf": {
+    "text": "Two subsystems ask for reserve in the same month",
+    "never": true
+   }
+  },
+  {
+   "id": "D-02",
+   "week": 3,
+   "status": "made",
+   "owner": "Supply chain lead",
+   "subsystems": [
+    "PWR"
+   ],
+   "decision": "Buy solar cells from one qualified supplier. No second source on this program.",
+   "why": [
+    "Qualifying a second source adds about 10 weeks",
+    "The supplier has delivered on time twice before"
+   ],
+   "rejected": "Qualify a second source now",
+   "reopenIf": {
+    "text": "The supplier slips more than 2 weeks",
+    "type": "slip",
+    "subsystem": "PWR",
+    "weeks": 2
+   }
+  },
+  {
+   "id": "D-03",
+   "week": 5,
+   "status": "made",
+   "owner": "Comms lead",
+   "subsystems": [
+    "COM"
+   ],
+   "decision": "Freeze the frequency plan on X-band.",
+   "why": [
+    "The spectrum filing cannot start without it",
+    "Both ground stations already support X-band"
+   ],
+   "reopenIf": {
+    "text": "The spectrum regulator objects to the band in pre-filing",
+    "never": true
+   }
+  },
+  {
+   "id": "D-04",
+   "week": 6,
+   "status": "made",
+   "owner": "Propulsion lead",
+   "subsystems": [
+    "PROP"
+   ],
+   "decision": "Keep the larger propellant tank for now and revisit at week 9.",
+   "why": [
+    "Mission life drops by a year with the smaller tank",
+    "There was still margin at week 6"
+   ],
+   "reopenIf": {
+    "text": "A mass breach is projected within 3 weeks",
+    "type": "breach",
+    "subsystem": "PROP",
+    "weeks": 3
+   }
+  },
+  {
+   "id": "D-05",
+   "week": 8,
+   "status": "open",
+   "due": 10,
+   "owner": "Program lead",
+   "subsystems": [
+    "PROP"
+   ],
+   "decision": "Cut 3 kg from the propulsion tank brackets.",
+   "recommendation": "Cut 3 kg. The reserve is for late surprises, and the launch provider's safety review has not reported yet.",
+   "rejected": "Release 3 kg of program reserve",
+   "action": {
+    "text": "Release the bracket redesign",
+    "owner": "Propulsion lead",
+    "closesWhen": "Propulsion mass is 3 kg lower",
+    "subsystem": "PROP",
+    "dropKg": 3
+   }
+  },
+  {
+   "id": "D-06",
+   "week": 8,
+   "status": "open",
+   "due": 9,
+   "owner": "Supply chain lead",
+   "subsystems": [
+    "PWR"
+   ],
+   "decision": "Pay to expedite the solar cells this week.",
+   "recommendation": "Pay the expedite fee. Missing the slot costs a full rideshare cycle, which is worth far more than the fee.",
+   "rejected": "Accept the slip and hope slack appears later",
+   "action": {
+    "text": "Place the expedite order",
+    "owner": "Supply chain lead",
+    "closesWhen": "Solar cells back on or before the need-by week",
+    "subsystem": "PWR",
+    "commitBy": "need"
+   }
+  },
+  {
+   "id": "D-07",
+   "week": 8,
+   "status": "open",
+   "due": 10,
+   "owner": "Payload lead",
+   "subsystems": [
+    "PAY"
+   ],
+   "decision": "Set the imaging license resolution input at 1.0 m.",
+   "recommendation": "Lock 1.0 m now. The camera meets it with margin, and the license clock is the longer one.",
+   "rejected": "Wait for the last optics test to argue for 0.8 m"
+  }
+ ]
+}
