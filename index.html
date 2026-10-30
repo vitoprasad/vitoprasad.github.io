@@ -144,7 +144,7 @@
     <ol class="builds">
       <li data-industry="software" data-try="yes"><a class="row" href="#scanner"><span class="n">01</span><span class="name">Account-list scanner</span><span class="meta">Software and AI</span><span class="meta">Account research for sales and marketing</span><span class="meta data">Public DNS records</span><span class="try">Try it</span></a></li>
       <li data-industry="hardware" data-try="yes"><a class="row" href="#issue-scribe"><span class="n">02</span><span class="name">Issue Scribe</span><span class="meta">Hardware manufacturing</span><span class="meta">AI-assisted quality management</span><span class="meta data">Sample data</span><span class="try">Try it</span></a></li>
-      <li data-industry="aerospace" data-try="yes"><a class="row" href="#program-tracker"><span class="n">03</span><span class="name">Program readiness tracker</span><span class="meta">Aerospace</span><span class="meta">Program management for hardware teams</span><span class="meta data">Made-up program</span><span class="try">Try it</span></a></li>
+      <li data-industry="aerospace" data-try="yes"><a class="row" href="#lunar-reactor-tracker"><span class="n">03</span><span class="name">Lunar reactor readiness tracker</span><span class="meta">Aerospace</span><span class="meta">Program operations for a hardware program</span><span class="meta data">Hypothetical program</span><span class="try">Try it</span></a></li>
       <li data-industry="defense" data-try="no"><a class="row" href="#federal"><span class="n">04</span><span class="name">Federal-contract pipeline</span><span class="meta">Defense and government</span><span class="meta">Opportunity pipeline for business development</span><span class="meta data">SAM.gov daily file</span><span class="try"></span></a></li>
       <li data-industry="software" data-try="no"><a class="row" href="#crm"><span class="n">05</span><span class="name">Onboarding CRM</span><span class="meta">Software and AI</span><span class="meta">Customer onboarding and follow-up</span><span class="meta data">Team tracker and Slack</span><span class="try"></span></a></li>
     </ol>
@@ -237,32 +237,32 @@
   </div>
 </section>
 
-<section class="build" id="program-tracker" data-industry="aerospace" data-try="yes">
+<section class="build" id="lunar-reactor-tracker" data-industry="aerospace" data-try="yes">
   <div class="num">03</div>
-  <h2>Program readiness tracker</h2>
-  <p class="tags"><span class="ind">Aerospace</span><span>Program management for hardware teams</span><span>Made-up program</span><span>Try it yourself</span></p>
-  <p class="one-line">Keeps a first-of-a-kind hardware program on schedule when engineering, regulatory and supply chain each see only their part. One row per part shows weight, license steps and slow orders together, and the tracker writes the weekly review agenda and the Friday update on its own.</p>
+  <h2>Lunar reactor readiness tracker</h2>
+  <p class="tags"><span class="ind">Aerospace</span><span>Program operations for a hardware program</span><span>Hypothetical program</span><span>Try it yourself</span></p>
+  <p class="one-line">Keeps a hypothetical lunar reactor program on schedule when engineering, regulatory and supply chain each see only their part. One row per subsystem shows mass, NRC steps and long-lead orders together, and the tracker writes the Critical Path Review agenda and the weekly Context Pack on its own.</p>
   <div class="stats">
-    <div class="stat"><b>3 clocks</b><small>engineering weeks, regulatory quarters and a launch date that does not move, read on one row</small></div>
-    <div class="stat"><b>3 weeks</b><small>of warning before the demo's propulsion module breaks its weight allowance</small></div>
-    <div class="stat"><b>4 triggers</b><small>the only way onto the weekly review, so the meeting makes decisions instead of hearing updates</small></div>
-    <div class="stat"><b>2 hours</b><small>the cap on standing meetings a week for each team lead</small></div>
+    <div class="stat"><b>3 clocks</b><small>hardware in weeks, the NRC in quarters and a landing slot that does not move, read on one row</small></div>
+    <div class="stat"><b>6 weeks</b><small>of warning before the radiator breaks its mass budget</small></div>
+    <div class="stat"><b>2 decisions</b><small>in the leadership ask, each binary, each with the alternative it rejects</small></div>
+    <div class="stat"><b>2 hours</b><small>the cap on standing meetings a week for each functional lead</small></div>
   </div>
   <div class="cols">
     <div>
       <h3>What it does</h3>
-      <p>I built it from a product operations take-home I did in October 2026, where I proposed how to run a new hardware program across engineering, regulatory and supply chain. Then I built the proposal so it runs.</p>
-      <p>The demo follows a made-up satellite with a fixed launch slot. Step back to week 6 and propulsion is already flagged. Make the solar cell supplier slip and watch the Friday update and the decision log change. Approve the fixes and the actions close on their own once the rows show the change.</p>
-      <p class="open"><a href="program-tracker/">Open the tracker</a>, step through weeks 4 to 8, then make something slip.</p>
+      <p>For a product operations take-home in October 2026, I framed a hypothetical program from public news about lunar surface power. It integrates the heat rejection system for the LR-1 lunar reactor ahead of the SR-1 orbital test, inside a 15-tonne lander. I proposed how to run it across engineering, regulatory and supply chain, then built the proposal so it runs.</p>
+      <p>Step to week 7 and the titanium tubing slip is already on the review. At week 8 the radiator is flagged six weeks before it breaks its budget. Ask for more shielding and the reserve decision reopens. Approve the two leadership decisions and their actions close on their own once the matrix shows the change.</p>
+      <p class="open"><a href="lunar-reactor-tracker/">Open the tracker</a>, step through weeks 4 to 8, then make something happen.</p>
     </div>
     <div>
       <h3>How it works</h3>
       <ol>
-        <li>Keep one row per part, with weight against its allowance, the next license step and the slowest order, all read the same week.</li>
-        <li>Flag a part when its weight trend breaks the allowance within six weeks, a license input is due within 30 days with an open question, or an order has under two weeks of slack.</li>
-        <li>Build the weekly review agenda from those flags only, each tied to the decision it needs.</li>
+        <li>Keep a Cross-Functional Readiness Matrix with one row per subsystem, reading manufacturing readiness, mass against budget, the next NRC step and the slowest order the same week.</li>
+        <li>Flag a subsystem when its mass trend breaks the budget within six weeks, an NRC design input is due within 30 days with an engineering question open, or an order has two weeks of slack or less.</li>
+        <li>Build the Critical Path Review agenda from those flags only, each tied to the decision it needs.</li>
         <li>Keep a decision log where every entry says what would reopen it, and flag the entry when that comes true.</li>
-        <li>Write the Friday update from the week's changes, and close each action when its row shows the change.</li>
+        <li>Write the Friday Context Pack from the week's changes, and close each action when its matrix row shows the change.</li>
       </ol>
     </div>
   </div>

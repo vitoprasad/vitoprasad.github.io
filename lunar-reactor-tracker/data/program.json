@@ -1,0 +1,430 @@
+{
+ "about": "A hypothetical program framed for a product operations take-home in October 2026, built on public news about lunar surface power. The program status, problems, suppliers and people are made up.",
+ "program": {
+  "name": "LR-1 thermal management system integration",
+  "currentWeek": 8,
+  "firstWeek": 4,
+  "landerLimitT": 15,
+  "reserveKg": 10,
+  "slackTriggerDays": 14
+ },
+ "subsystems": [
+  {
+   "id": "RAD",
+   "name": "Radiator panels",
+   "owner": "Radiator lead",
+   "allocKg": 1850,
+   "massKg": {
+    "1": 1826,
+    "2": 1828,
+    "3": 1829,
+    "4": 1830,
+    "5": 1832,
+    "6": 1834,
+    "7": 1836,
+    "8": 1838
+   },
+   "mrl": {
+    "1": 4,
+    "6": 5
+   },
+   "longLead": {
+    "item": "Radiator face sheets",
+    "needWeek": 22,
+    "commitWeek": {
+     "1": 18
+    }
+   }
+  },
+  {
+   "id": "HP",
+   "name": "Titanium-water heat pipes",
+   "owner": "Heat pipe lead",
+   "allocKg": 142,
+   "massKg": {
+    "1": 120,
+    "2": 121,
+    "3": 122,
+    "4": 123,
+    "5": 124,
+    "6": 125,
+    "7": 127,
+    "8": 128
+   },
+   "mrl": {
+    "1": 4,
+    "5": 5
+   },
+   "reg": {
+    "gate": "Part 52 design input, heat pipe shielding geometry",
+    "gateWeek": 17,
+    "depOpen": {
+     "1": true,
+     "2": true,
+     "3": true,
+     "4": true,
+     "5": true,
+     "6": true,
+     "7": true,
+     "8": true
+    },
+    "dependency": "Shielding geometry"
+   },
+   "longLead": {
+    "item": "Grade 5 titanium seamless tubing",
+    "needWeek": 20,
+    "commitWeek": {
+     "1": 14,
+     "7": 18
+    },
+    "lockWeek": 14
+   }
+  },
+  {
+   "id": "BRY",
+   "name": "Brayton power conversion",
+   "owner": "Power conversion lead",
+   "allocKg": 2400,
+   "massKg": {
+    "1": 2348,
+    "2": 2350,
+    "3": 2350,
+    "4": 2352,
+    "5": 2352,
+    "6": 2352,
+    "7": 2353,
+    "8": 2353
+   },
+   "mrl": {
+    "1": 5
+   },
+   "longLead": {
+    "item": "Turbomachinery castings",
+    "needWeek": 26,
+    "commitWeek": {
+     "1": 21
+    }
+   }
+  },
+  {
+   "id": "SHD",
+   "name": "Radiation shielding",
+   "owner": "Shielding lead",
+   "allocKg": 3200,
+   "massKg": {
+    "1": 3180,
+    "2": 3180,
+    "3": 3180,
+    "4": 3180,
+    "5": 3180,
+    "6": 3180,
+    "7": 3180,
+    "8": 3180
+   },
+   "mrl": {
+    "1": 5
+   },
+   "reg": {
+    "gate": "Category II transit shielding input to the NRC",
+    "gateWeek": 12,
+    "depOpen": {
+     "1": true,
+     "2": true,
+     "3": true,
+     "4": true,
+     "5": true,
+     "6": true,
+     "7": true,
+     "8": true
+    },
+    "dependency": "Transit shielding thickness"
+   },
+   "longLead": {
+    "item": "Boron carbide tiles",
+    "needWeek": 24,
+    "commitWeek": {
+     "1": 19
+    }
+   }
+  },
+  {
+   "id": "FUEL",
+   "name": "Fuel and core",
+   "owner": "Fuel lead",
+   "allocKg": 950,
+   "massKg": {
+    "1": 941,
+    "2": 941,
+    "3": 941,
+    "4": 941,
+    "5": 941,
+    "6": 941,
+    "7": 941,
+    "8": 941
+   },
+   "mrl": {
+    "1": 4
+   },
+   "longLead": {
+    "item": "HALEU fuel delivery",
+    "needWeek": 30,
+    "commitWeek": {
+     "1": 25
+    }
+   }
+  },
+  {
+   "id": "NIGHT",
+   "name": "Lunar night survival",
+   "owner": "Thermal lead",
+   "allocKg": 380,
+   "massKg": {
+    "1": 352,
+    "2": 352,
+    "3": 353,
+    "4": 354,
+    "5": 355,
+    "6": 355,
+    "7": 356,
+    "8": 356
+   },
+   "mrl": {
+    "1": 4,
+    "7": 5
+   },
+   "longLead": {
+    "item": "Multilayer insulation blankets",
+    "needWeek": 22,
+    "commitWeek": {
+     "1": 18
+    }
+   }
+  },
+  {
+   "id": "STR",
+   "name": "Structure and lander interface",
+   "owner": "Structures lead",
+   "allocKg": 1600,
+   "massKg": {
+    "1": 1561,
+    "2": 1561,
+    "3": 1561,
+    "4": 1561,
+    "5": 1561,
+    "6": 1561,
+    "7": 1561,
+    "8": 1561
+   },
+   "mrl": {
+    "1": 6
+   },
+   "longLead": {
+    "item": "Lander interface ring",
+    "needWeek": 18,
+    "commitWeek": {
+     "1": 14
+    }
+   }
+  },
+  {
+   "id": "SEC",
+   "name": "Safeguards and security",
+   "owner": "Security lead",
+   "allocKg": 420,
+   "massKg": {
+    "1": 404,
+    "2": 404,
+    "3": 404,
+    "4": 404,
+    "5": 404,
+    "6": 404,
+    "7": 404,
+    "8": 404
+   },
+   "mrl": {
+    "1": 4
+   },
+   "reg": {
+    "gate": "Category II security plan",
+    "gateWeek": 16,
+    "depOpen": {
+     "1": true,
+     "2": true,
+     "3": true,
+     "4": true,
+     "5": true,
+     "6": true,
+     "7": true,
+     "8": true
+    },
+    "dependency": "Safeguards information handling procedure"
+   },
+   "longLead": {
+    "item": "Vault-type room build-out",
+    "needWeek": 24,
+    "commitWeek": {
+     "1": 20
+    }
+   }
+  }
+ ],
+ "events": [
+  {
+   "id": "slip",
+   "label": "The titanium mill slips another 3 weeks",
+   "subsystem": "HP",
+   "slipWeeks": 3
+  },
+  {
+   "id": "shield",
+   "label": "The NRC asks for 12 kg more transit shielding",
+   "subsystem": "SHD",
+   "addKg": 12
+  },
+  {
+   "id": "D-042",
+   "label": "Approve the 8 kg radiator cut",
+   "approve": "D-042"
+  },
+  {
+   "id": "D-043",
+   "label": "Approve the titanium purchase order",
+   "approve": "D-043"
+  }
+ ],
+ "decisions": [
+  {
+   "id": "D-038",
+   "week": 2,
+   "status": "made",
+   "owner": "Program lead",
+   "subsystems": [
+    "SHD"
+   ],
+   "decision": "Hold 10 kg of mass reserve against the Category II shielding risk. Only the program lead can release it.",
+   "why": [
+    "The shielding requirement is the likeliest late mass add",
+    "A named reserve stops every team padding its own number"
+   ],
+   "reopenIf": {
+    "text": "The NRC's shielding ask exceeds the 10 kg reserve",
+    "type": "added",
+    "subsystem": "SHD",
+    "kg": 10
+   }
+  },
+  {
+   "id": "D-039",
+   "week": 3,
+   "status": "made",
+   "owner": "Supply chain lead",
+   "subsystems": [
+    "HP"
+   ],
+   "decision": "Buy the heat pipe tubing from one qualified titanium mill. No second source yet.",
+   "why": [
+    "Qualifying a second mill takes about six months",
+    "The tubing spec is already proven at this mill"
+   ],
+   "rejected": "Qualify a second mill before ordering",
+   "reopenIf": {
+    "text": "The mill slips more than 2 weeks",
+    "type": "slip",
+    "subsystem": "HP",
+    "weeks": 2
+   }
+  },
+  {
+   "id": "D-040",
+   "week": 5,
+   "status": "made",
+   "owner": "Regulatory lead",
+   "subsystems": [
+    "SHD",
+    "HP"
+   ],
+   "decision": "Regulatory signs off on shielding geometry before each design maturity gate, not after.",
+   "why": [
+    "A shielding finding after design freeze forces a redesign",
+    "It keeps NRC inputs ahead of the design, not behind it"
+   ],
+   "reopenIf": {
+    "text": "Sign-off adds more than a week to any gate",
+    "never": true
+   }
+  },
+  {
+   "id": "D-041",
+   "week": 6,
+   "status": "made",
+   "owner": "Radiator lead",
+   "subsystems": [
+    "RAD"
+   ],
+   "decision": "Keep the current radiator geometry and revisit at week 9.",
+   "why": [
+    "Heat rejection margin for the 14-day lunar night is thin",
+    "There were 16 kg of headroom at week 6"
+   ],
+   "reopenIf": {
+    "text": "A mass breach is projected within 6 weeks",
+    "type": "breach",
+    "subsystem": "RAD",
+    "weeks": 6
+   }
+  },
+  {
+   "id": "D-042",
+   "week": 8,
+   "status": "open",
+   "due": 10,
+   "owner": "Program lead",
+   "subsystems": [
+    "RAD"
+   ],
+   "decision": "Cut 8 kg from the radiator geometry within what the current titanium tubing can do.",
+   "recommendation": "Back the 8 kg cut. The 10 kg reserve is the insurance against the Category II shielding risk we still carry.",
+   "rejected": "Release 10 kg of reserve",
+   "action": {
+    "text": "Publish the revised radiator design with the 8 kg reduction",
+    "owner": "Radiator lead",
+    "closesWhen": "The radiator row shows 8 kg less",
+    "subsystem": "RAD",
+    "dropKg": 8
+   }
+  },
+  {
+   "id": "D-043",
+   "week": 8,
+   "status": "open",
+   "due": 9,
+   "owner": "Supply chain lead",
+   "subsystems": [
+    "HP"
+   ],
+   "decision": "Issue the firm-fixed-price order to the primary titanium mill this quarter, and start qualifying a second mill in parallel.",
+   "recommendation": "Lock the current lead time now. Do not trade schedule slack for supplier options at this stage.",
+   "rejected": "Qualify a second mill before ordering",
+   "action": {
+    "text": "Issue the purchase order to the primary mill",
+    "owner": "Supply chain lead",
+    "closesWhen": "The tubing lead time is locked in the matrix",
+    "subsystem": "HP",
+    "lock": true
+   }
+  },
+  {
+   "id": "D-044",
+   "week": 8,
+   "status": "open",
+   "due": 11,
+   "owner": "Regulatory lead",
+   "subsystems": [
+    "SHD"
+   ],
+   "decision": "Agree the Category II transit shielding assumption with the NRC before the design input is due.",
+   "recommendation": "Schedule the NRC engagement this month and carry a range, not a single number, until it is settled.",
+   "rejected": "Submit the design input on today's assumption and fix it later"
+  }
+ ]
+}
