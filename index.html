@@ -68,7 +68,7 @@
   .chip .c { color: var(--faint); margin-left: 6px; }
   .chip[aria-pressed="true"] .c { color: inherit; opacity: .7; }
   .builds-head, ol.builds .row { display: grid; gap: 14px; align-items: baseline;
-    grid-template-columns: 30px minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr) 52px; }
+    grid-template-columns: 30px minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr) auto; }
   .builds-head { font: 600 11px/1 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--faint); padding: 0 6px 10px; }
   ol.builds { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
   ol.builds li { margin: 0; border-bottom: 1px solid var(--line); }
@@ -79,7 +79,8 @@
   .row .name { font-weight: 600; color: var(--ink); text-decoration: none; }
   .row .name:hover { text-decoration: underline; }
   .row .meta { color: var(--muted); }
-  .row a.try { font: 600 13px/1 var(--sans); background: var(--accent); color: #fff; padding: 7px 10px; border-radius: 8px; justify-self: end; text-decoration: none; }
+  .row a.try { font: 600 13px/1 var(--sans); background: var(--accent); color: #fff; padding: 7px 10px; border-radius: 8px; justify-self: end; align-self: start;
+                text-decoration: none; white-space: nowrap; }
   .row a.try:hover { filter: brightness(1.08); }
   .row .try { text-align: right; }
   .row { cursor: pointer; }
@@ -108,7 +109,8 @@
     ol.builds .row { grid-template-columns: 26px minmax(0, 1fr) auto; gap: 2px 10px; }
     .row .n { grid-column: 1; grid-row: 1 / span 4; }
     .row .name, .row .meta { grid-column: 2; }
-    .row a.try { font: 600 13px/1 var(--sans); background: var(--accent); color: #fff; padding: 7px 10px; border-radius: 8px; justify-self: end; text-decoration: none; }
+    .row a.try { font: 600 13px/1 var(--sans); background: var(--accent); color: #fff; padding: 7px 10px; border-radius: 8px; justify-self: end; align-self: start;
+                text-decoration: none; white-space: nowrap; }
   .row a.try:hover { filter: brightness(1.08); }
   .row .try { grid-column: 3; grid-row: 1; }
     .row .meta { font-size: 14px; }
