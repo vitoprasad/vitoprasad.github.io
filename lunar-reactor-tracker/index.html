@@ -7,20 +7,14 @@
 <meta name="description" content="A working readiness tracker for a hypothetical lunar reactor program. Step through the weeks, make something slip, and watch the Critical Path Review and the Context Pack write themselves.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:,">
+<script>(function(){try{var t=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<link rel="stylesheet" href="../site.css">
 <style>
-  :root {
-    --ink: #1c1b19; --muted: #5f5b54; --faint: #8b867d; --line: #e4dfd6;
-    --paper: #faf8f4; --card: #ffffff; --accent: #b4532a; --accent-soft: #f4e6dc; --blue: #1f6fae;
-    --good: #2f6b3f; --good-soft: #e3efe5; --warn: #9a6512; --warn-soft: #f6ecd8;
-    --bad: #a3321f; --bad-soft: #f6e0db; --info-soft: #eeebe5;
-    --sans: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body { margin: 0; background: var(--paper); color: var(--ink);
          font: 17px/1.6 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
-  main { max-width: 1180px; margin: 0 auto; padding: 64px 28px 96px; }
+  main { --page-w: 1180px; max-width: 1180px; margin: 0 auto; padding: 64px 28px 96px; }
   a { color: var(--ink); }
   .back { font: 14px/1 var(--sans); color: var(--muted); text-decoration: none; }
   .back:hover { color: var(--ink); }
@@ -41,7 +35,7 @@
   .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--card); }
   .seg button { font: 500 14px/1 var(--sans); border: 0; background: none; padding: 9px 12px; cursor: pointer; color: var(--ink); }
   .seg button + button { border-left: 1px solid var(--line); }
-  .seg button[aria-pressed=true] { background: var(--ink); color: #fff; }
+  .seg button[aria-pressed=true] { background: var(--ink); color: var(--paper); }
   .events { display: flex; flex-wrap: wrap; gap: 8px; }
   .events button { font: 14px/1.2 var(--sans); padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--card);
                    color: var(--ink); cursor: pointer; }
@@ -61,7 +55,7 @@
   .scroll { overflow-x: auto; }
   table.grid { width: 100%; min-width: 900px; border-collapse: collapse; font: 14px/1.45 var(--sans); background: var(--card);
                border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-  table.grid th { text-align: left; font-weight: 600; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--line); background: #fcfbf8; }
+  table.grid th { text-align: left; font-weight: 600; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--th-bg); }
   table.grid td { padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
   table.grid tr:last-child td { border-bottom: 0; }
   td .sub { display: block; color: var(--faint); font-size: 13px; }
@@ -109,7 +103,7 @@
 </head>
 <body>
 <main>
-<a class="back" href="../index.html">&larr; All builds</a>
+<a class="back" href="../index.html#lunar-reactor-tracker">&larr; About this build</a>
 
 <article class="story">
   <h1>Hardware iterates in weeks, the NRC moves in quarters, and the landing slot does not move at all</h1>
@@ -141,13 +135,13 @@
 </section>
 
 <article class="story">
-  <h2>Four artifacts, each replacing something</h2>
+  <h2 id="pieces">Four artifacts, each replacing something</h2>
   <p>The Cross-Functional Readiness Matrix replaces the three trackers each team already keeps. Engineering tracks heat pipe and radiator maturity in design review notes, regulatory tracks its NRC dependencies in a separate tracker, and supply chain tracks fuel and titanium lead times in procurement email. On one row per subsystem, read the same week, a shielding change that adds mass shows up before engineering commits to a radiator geometry. Mass and maturity are pulled from the design and mass budget tools, not typed in.</p>
   <p>The Critical Path Decision Log stops decisions from being quietly argued again three weeks later, after the hardware has moved on. Each entry is one sentence with a yes or no answer, a short reason, the dissenting view, and the data that would reopen it. When that condition comes true, the log says so.</p>
   <p>The Long-Lead Procurement Burndown keys the ten slowest items to their need-by dates. A four-week tubing slip late in the year is not a four-week problem when it lands on the SR-1 test, because the 2030 landing slot does not wait.</p>
   <p>The Weekly Context Pack replaces the status meeting. It answers three questions in under a page. What moved, with numbers from the matrix rather than narrative. What is blocked, and on whom. What decision reaches leadership in the next 14 days. Nobody writes status for it. It is built from the matrix changes, the decision log, and a short read of the week's design reviews and regulatory notes.</p>
 
-  <h2>One meeting, and it only makes decisions</h2>
+  <h2 id="meeting">One meeting, and it only makes decisions</h2>
   <p>The Critical Path Review is the one meeting I would set up in week one. An item gets on the agenda only if a subsystem is on course to break its mass budget within six weeks, a regulatory design input is less than 30 days from its NRC gate with an engineering question still open, or a long-lead order has two weeks of slack or less. No general updates, no roadmap debates. Every item leaves as a decision with an owner and a date, or as an escalation with a written recommendation.</p>
   <table>
     <thead><tr><th>Touchpoint</th><th>How often</th><th>What comes out</th></tr></thead>
@@ -161,11 +155,11 @@
   </table>
   <p>Standing meetings stay under two hours a week for each functional lead. More than that means the written artifacts are failing and need fixing, not that the program needs another meeting.</p>
 
-  <h2>Leadership gets decisions, not updates</h2>
+  <h2 id="leadership">Leadership gets decisions, not updates</h2>
   <p>Leadership never sits through a status meeting. The Context Pack tells them what moved and what is blocked, and the only live time they spend is on decisions that are ready. Each one has a yes or no answer, a recommendation, and the alternative it rejects, and each has been walked through with the product lead beforehand so nobody is surprised in the room. In week 8 that is two decisions. Cut 8 kg from the radiator rather than release the reserve, because the reserve is the insurance against the shielding risk still open. Issue the firm-fixed-price titanium order now and qualify a second mill in parallel, rather than trade schedule slack for supplier options. Everything else waits for the monthly review.</p>
   <p>Within 24 hours of the meeting, one note lists each decision, the actions and owners behind it, and the evidence that closes each action. When the matrix row shows the change, the action closes. An action more than three days late lands on the next Critical Path Review on its own. A supplier slip of more than two weeks, or a shielding ask bigger than the reserve, goes to the CPO the same day with a proposed answer, not a problem statement.</p>
 
-  <h2>The first 60 days</h2>
+  <h2 id="days">The first 60 days</h2>
   <table>
     <thead><tr><th>Days</th><th>Work</th></tr></thead>
     <tbody>
@@ -283,12 +277,12 @@ function sparkline(s, w) {
   const W = 120, H = 30, x = i => 2 + (W - 4) * (i - 1) / Math.max(1, P.program.currentWeek - 1), y = v => H - 3 - (H - 6) * (v - lo) / (hi - lo);
   const pts = weeks.map((i, k) => x(i).toFixed(1) + "," + y(vals[k]).toFixed(1)).join(" ");
   const last = vals[vals.length - 1];
-  const color = last > s.allocKg ? "#a3321f" : "#1f6fae";
+  const color = last > s.allocKg ? "var(--bad)" : "var(--blue)";
   return '<svg class="spark" width="' + W + '" height="' + H + '" role="img" aria-label="Mass by week against the budget"><title>' +
     esc(s.name + " mass by week, " + vals.map(kg).join(", ") + " kg. Budget " + kg(s.allocKg) + " kg.") + '</title>' +
-    '<line x1="2" x2="' + (W - 2) + '" y1="' + y(s.allocKg) + '" y2="' + y(s.allocKg) + '" stroke="#cfc8bd" stroke-width="1"/>' +
-    '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
-    '<circle cx="' + x(w) + '" cy="' + y(last) + '" r="3.5" fill="' + color + '" stroke="#fff" stroke-width="1.5"/></svg>';
+    '<line x1="2" x2="' + (W - 2) + '" y1="' + y(s.allocKg) + '" y2="' + y(s.allocKg) + '" style="stroke:var(--chart-line)" stroke-width="1"/>' +
+    '<polyline points="' + pts + '" fill="none" style="stroke:' + color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
+    '<circle cx="' + x(w) + '" cy="' + y(last) + '" r="3.5" style="fill:' + color + ';stroke:var(--paper)" stroke-width="1.5"/></svg>';
 }
 
 function chip(status) {
@@ -446,5 +440,7 @@ async function boot() {
 }
 boot();
 </script>
+<script type="application/json" id="contents">[{"href": "../index.html", "label": "All builds"}, {"href": "../index.html#lunar-reactor-tracker", "label": "About this build"}, {"id": "tool", "label": "The tracker"}, {"id": "pieces", "label": "Four artifacts"}, {"id": "meeting", "label": "One meeting"}, {"id": "leadership", "label": "Leadership"}, {"id": "days", "label": "The first 60 days"}]</script>
+<script src="../site.js" defer></script>
 </body>
 </html>

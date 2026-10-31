@@ -7,32 +7,23 @@
 <meta name="description" content="Type any domain to read its public email security records, see which vendors run its mail, and see what a sales-signal monitor would flag.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:,">
+<script>(function(){try{var t=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<link rel="stylesheet" href="../site.css">
 <style>
-  :root {
-    --ink: #1c1b19; --muted: #5f5b54; --faint: #8b867d; --line: #e4dfd6;
-    --paper: #faf8f4; --card: #ffffff; --accent: #b4532a; --accent-soft: #f4e6dc;
-    --good: #2f6b3f; --good-soft: #e3efe5; --warn: #9a6512; --warn-soft: #f6ecd8;
-    --bad: #a3321f; --bad-soft: #f6e0db; --info-soft: #eeebe5;
-    --sans: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body { margin: 0; background: var(--paper); color: var(--ink);
          font: 17px/1.6 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
-  main { max-width: 980px; margin: 0 auto; padding: 64px 28px 96px; }
+  main { --page-w: 980px; max-width: 980px; margin: 0 auto; padding: 64px 28px 96px; }
   a { color: var(--ink); }
   .back { font: 14px/1 var(--sans); color: var(--muted); text-decoration: none; }
   .back:hover { color: var(--ink); }
   header { border-bottom: 1px solid var(--line); padding: 28px 0 36px; margin-bottom: 36px; }
-  .kicker { font: 600 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase;
-            color: var(--accent); margin: 0 0 18px; }
   h1 { font-size: 44px; line-height: 1.1; margin: 0 0 18px; font-weight: 600; letter-spacing: -.01em; }
   .lede { font-size: 20px; color: var(--muted); max-width: 740px; margin: 0 0 10px; }
   .fine { font: 14px/1.5 var(--sans); color: var(--faint); margin: 0; }
   h2 { font-size: 28px; line-height: 1.2; margin: 0 0 6px; font-weight: 600; }
-  h3 { font: 600 13px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase;
-       color: var(--accent); margin: 0 0 14px; }
+  h3 { font: 600 17px/1.3 var(--sans); color: var(--ink); margin: 0 0 12px; }
   p { margin: 0 0 14px; }
 
   form.check { display: flex; gap: 10px; margin: 0 0 14px; }
@@ -40,7 +31,7 @@
                      border-radius: 10px; background: var(--card); color: var(--ink); }
   form.check input:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
   button { font: 600 15px/1 var(--sans); padding: 12px 18px; border-radius: 10px; border: 1px solid var(--ink);
-           background: var(--ink); color: #fff; cursor: pointer; }
+           background: var(--ink); color: var(--paper); cursor: pointer; }
   button.ghost { background: var(--card); color: var(--ink); border-color: var(--line); font-weight: 500; }
   button.ghost:hover { border-color: var(--ink); }
   button:disabled { opacity: .55; cursor: default; }
@@ -59,7 +50,7 @@
   .summary { font-size: 19px; color: var(--muted); margin: 0 0 22px; max-width: 800px; }
   .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 0 0 34px; }
   .tile { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
-  .tile .lbl { font: 600 11px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  .tile .lbl { font: 600 12px/1 var(--sans); color: var(--faint); }
   .tile b { display: block; font: 600 23px/1.2 var(--sans); margin: 8px 0 4px; letter-spacing: -.01em; }
   .tile small { display: block; font: 13px/1.35 var(--sans); color: var(--muted); }
   .tile.good b { color: var(--good); } .tile.warn b { color: var(--warn); } .tile.bad b { color: var(--bad); }
@@ -78,8 +69,8 @@
   .chip.info { background: var(--info-soft); color: var(--muted); }
   table { width: 100%; border-collapse: collapse; font: 15px/1.45 var(--sans); background: var(--card);
           border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-  th { text-align: left; font-weight: 600; font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
-       color: var(--faint); padding: 10px 14px; border-bottom: 1px solid var(--line); background: #fcfbf8; }
+  th { text-align: left; font-weight: 600; font-size: 13px;
+       color: var(--faint); padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--th-bg); }
   td { padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
   tr:last-child td { border-bottom: 0; }
   td code, .mono { font: 13px/1.45 var(--mono); color: var(--muted); word-break: break-all; }
@@ -122,10 +113,9 @@
 </head>
 <body>
 <main>
-<a class="back" href="../index.html">&larr; All builds</a>
+<a class="back" href="../index.html#scanner">&larr; About this build</a>
 
 <header>
-  <p class="kicker">Email DNS check</p>
   <h1>What a company's email records give away</h1>
   <p class="lede">Every company publishes its email security setup in public DNS. Type a domain and this page reads those records live, names the vendors it can see, and flags the changes a sales team would care about.</p>
   <p class="fine">Runs in your browser against Google's public DNS. Nothing is sent to me or kept on a server.</p>
@@ -959,5 +949,7 @@ renderWatch();
 const initial = new URLSearchParams(location.search).get("d");
 if (initial) runCheck(initial);
 </script>
+<script type="application/json" id="contents">[{"href": "../index.html", "label": "All builds"}, {"href": "../index.html#scanner", "label": "About this build"}, {"id": "form", "label": "Check a domain"}, {"id": "watch", "label": "Watch list"}, {"id": "about", "label": "Where this came from"}]</script>
+<script src="../site.js" defer></script>
 </body>
 </html>

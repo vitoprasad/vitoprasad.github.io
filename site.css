@@ -1,0 +1,102 @@
+/* Shared look for every page on the site: the two themes, the theme switch,
+   the contents sidebar, back to top, focus, and motion. Pages keep their own
+   layout styles and read colours only through these variables. */
+
+:root {
+  --ink: #1c1b19; --muted: #5f5b54; --faint: #8b867d; --line: #e4dfd6;
+  --paper: #faf8f4; --card: #ffffff; --accent: #b4532a; --accent-soft: #f4e6dc; --accent-light: #d9906a;
+  --blue: #1f6fae; --map: #1f6fae;
+  --good: #2f6b3f; --good-soft: #e3efe5; --warn: #9a6512; --warn-soft: #f6ecd8;
+  --bad: #a3321f; --bad-soft: #f6e0db; --info-soft: #eeebe5;
+  --th-bg: #fcfbf8; --row-hover: #fcfaf6; --row-open: #fbf6f1; --bar-hover: #f6f2ec;
+  --chart-grid: #ebe6de; --chart-line: #cfc8bd; --shadow: rgba(0, 0, 0, .06);
+  --sans: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+[data-theme="dark"] {
+  --ink: #ece7df; --muted: #b3aa9d; --faint: #857d72; --line: #302d28;
+  --paper: #161513; --card: #1e1c19; --accent: #d46d43; --accent-soft: #352218; --accent-light: #8f4c33;
+  --blue: #5693cc; --map: #5693cc;
+  --good: #7cbf8c; --good-soft: #1b2b1f; --warn: #dcae57; --warn-soft: #2f2715;
+  --bad: #e07a68; --bad-soft: #35201b; --info-soft: #26231f;
+  --th-bg: #1a1816; --row-hover: #22201c; --row-open: #262219; --bar-hover: #26231f;
+  --chart-grid: #2a2723; --chart-line: #3d3933; --shadow: rgba(0, 0, 0, .4);
+  color-scheme: dark;
+}
+
+html { scroll-behavior: smooth; }
+body { transition: background-color .25s ease, color .25s ease; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+::selection { background: var(--accent-soft); }
+
+/* The theme switch, top right on every page. */
+.theme-switch { position: fixed; top: 18px; right: 22px; z-index: 40; width: 46px; height: 26px; border-radius: 13px;
+                border: 1px solid var(--line); background: var(--card); cursor: pointer; padding: 0; }
+.theme-switch::before { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%;
+                        background: var(--ink); transition: transform .25s ease, background-color .25s ease; }
+[data-theme="dark"] .theme-switch::before { transform: translateX(20px); }
+.theme-switch:hover { border-color: var(--faint); }
+.theme-switch .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* Contents: a sticky list in the left gutter on wide screens. */
+.contents { position: fixed; top: 96px; left: max(20px, calc((100vw - 1180px) / 2)); width: 200px; z-index: 30;
+            font: 14px/1.4 var(--sans); display: none; }
+.contents .ttl { color: var(--faint); margin: 0 0 10px; font-size: 12px; letter-spacing: .02em; }
+.contents ol { list-style: none; margin: 0; padding: 0; }
+.contents li { margin: 0 0 2px; }
+.contents a { display: block; color: var(--muted); text-decoration: none; padding: 5px 0 5px 12px; border-left: 2px solid var(--line);
+              transition: color .15s ease, border-color .15s ease; }
+.contents a:hover { color: var(--ink); }
+.contents a[aria-current="true"] { color: var(--accent); border-left-color: var(--accent); font-weight: 600; }
+.contents .away a, .contents-sheet .away a { color: var(--faint); border-left-color: transparent; }
+.contents .away + li:not(.away) a { margin-top: 10px; }
+.contents .top { display: block; margin-top: 14px; padding-left: 14px; color: var(--faint); text-decoration: none; }
+.contents .top:hover { color: var(--ink); }
+@media (min-width: 1360px) {
+  /* Make room: the content keeps its width where the screen allows, and otherwise
+     gives up a little so the list never sits on top of it. */
+  main { max-width: min(var(--page-w, 1180px), calc(100vw - 240px)) !important;
+         margin-left: max(220px, calc((100vw - var(--page-w, 1180px)) / 2)) !important; margin-right: 0 !important; }
+  .contents.ready { display: block; left: max(20px, calc((100vw - var(--page-w, 1180px)) / 2 - 200px)); width: 180px; }
+}
+
+/* Contents on narrower screens: a button that opens a sheet. */
+.contents-btn, .to-top { position: fixed; bottom: 18px; z-index: 40; font: 600 14px/1 var(--sans); padding: 11px 15px; border-radius: 999px;
+                         border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer;
+                         box-shadow: 0 2px 10px var(--shadow); }
+.contents-btn { right: 18px; }
+.to-top { left: 18px; opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity .2s ease, transform .2s ease; }
+.to-top.show { opacity: 1; pointer-events: auto; transform: none; }
+@media (min-width: 1360px) { .contents-btn.ready { display: none; } .to-top { display: none; } }
+.contents-sheet { position: fixed; inset: auto 12px 66px 12px; z-index: 45; background: var(--card); border: 1px solid var(--line);
+                  border-radius: 14px; padding: 14px 16px 10px; box-shadow: 0 12px 40px var(--shadow); font: 15px/1.4 var(--sans); display: none; }
+.contents-sheet.open { display: block; }
+.contents-sheet .ttl { color: var(--faint); font-size: 12px; margin: 0 0 8px; }
+.contents-sheet ol { list-style: none; margin: 0; padding: 0; }
+.contents-sheet a { display: block; padding: 9px 0; border-top: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+.contents-sheet a[aria-current="true"] { color: var(--accent); font-weight: 600; }
+.contents-sheet li:first-child a { border-top: 0; }
+
+/* A link that looks like a button, for "Try it". */
+.try-btn { display: inline-block; font: 600 14px/1 var(--sans); padding: 10px 14px; border-radius: 10px; background: var(--accent); color: #fff !important;
+           text-decoration: none !important; border: 1px solid var(--accent); transition: transform .15s ease, box-shadow .15s ease; }
+.try-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px var(--shadow); }
+[data-theme="dark"] .try-btn { color: #161513 !important; }
+
+/* Motion: things that reveal once, and only for people who have not asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] { opacity: 0; transform: translateY(8px); transition: opacity .5s ease, transform .5s ease; }
+  [data-reveal].in { opacity: 1; transform: none; }
+  svg.spark polyline { stroke-dasharray: 300; stroke-dashoffset: 300; animation: draw .9s ease-out forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .lift { transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease; }
+  .lift:hover { transform: translateY(-1px); box-shadow: 0 6px 18px var(--shadow); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  body, .theme-switch::before { transition: none; }
+}
+/* On a phone the switch sits in the page header instead of floating over text. */
+@media (max-width: 760px) { .theme-switch { position: absolute; top: 14px; right: 14px; } }
+@media print { .theme-switch, .contents, .contents-btn, .to-top, .contents-sheet { display: none !important; } }

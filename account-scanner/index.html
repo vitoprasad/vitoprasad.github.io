@@ -7,20 +7,14 @@
 <meta name="description" content="Which sales, marketing and AI tools the top startups run, read from public DNS. Filter by tool, spot switches, export the list.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:,">
+<script>(function(){try{var t=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<link rel="stylesheet" href="../site.css">
 <style>
-  :root {
-    --ink: #1c1b19; --muted: #5f5b54; --faint: #8b867d; --line: #e4dfd6;
-    --paper: #faf8f4; --card: #ffffff; --accent: #b4532a; --map: #1f6fae; --accent-soft: #f4e6dc; --accent-light: #d9906a;
-    --good: #2f6b3f; --good-soft: #e3efe5; --warn: #9a6512; --warn-soft: #f6ecd8;
-    --bad: #a3321f; --bad-soft: #f6e0db; --info-soft: #eeebe5;
-    --sans: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body { margin: 0; background: var(--paper); color: var(--ink);
          font: 17px/1.6 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
-  main { max-width: 1180px; margin: 0 auto; padding: 64px 28px 96px; }
+  main { --page-w: 1180px; max-width: 1180px; margin: 0 auto; padding: 64px 28px 96px; }
   a { color: var(--ink); }
   .back { font: 14px/1 var(--sans); color: var(--muted); text-decoration: none; }
   .back:hover { color: var(--ink); }
@@ -30,7 +24,7 @@
   h3 { font: 600 17px/1.3 var(--sans); color: var(--ink); margin: 0 0 14px; }
   p { margin: 0 0 14px; }
   button { font: 600 15px/1 var(--sans); padding: 12px 18px; border-radius: 10px; border: 1px solid var(--ink);
-           background: var(--ink); color: #fff; cursor: pointer; }
+           background: var(--ink); color: var(--paper); cursor: pointer; }
   button.ghost { background: var(--card); color: var(--ink); border-color: var(--line); font-weight: 500; }
   button.ghost:hover { border-color: var(--ink); }
   button:disabled { opacity: .55; cursor: default; }
@@ -63,9 +57,9 @@
   .pill { font: 14px/1 var(--sans); padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--card);
           color: var(--ink); cursor: pointer; font-weight: 500; }
   .pill:hover { border-color: var(--ink); }
-  .pill[aria-pressed=true] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .pill[aria-pressed=true] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
   .pill .n { color: var(--faint); margin-left: 4px; }
-  .pill[aria-pressed=true] .n { color: #d9d4cc; }
+  .pill[aria-pressed=true] .n { color: var(--faint); }
   .lbl-inline { font: 14px/1 var(--sans); color: var(--muted); margin-right: 2px; }
   .views a { font: 14px/1.3 var(--sans); color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); }
   .views a:hover { color: var(--ink); border-color: var(--ink); }
@@ -80,7 +74,7 @@
   .bars { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; }
   .bar { display: grid; grid-template-columns: 220px 1fr 120px; gap: 12px; align-items: center; padding: 5px 6px; border-radius: 8px;
          cursor: pointer; font: 14px/1.3 var(--sans); }
-  .bar:hover, .bar.on { background: #f6f2ec; }
+  .bar:hover, .bar.on { background: var(--bar-hover); }
   .bar .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .bar .track { display: flex; gap: 2px; height: 16px; }
   .bar .seg { height: 16px; }
@@ -91,19 +85,19 @@
   .bar .val b { color: var(--ink); font-weight: 600; }
   .cats { margin-bottom: 12px; }
   .more { font: 14px/1 var(--sans); background: none; border: 0; color: var(--accent); padding: 10px 6px 4px; }
-  .tip { position: fixed; pointer-events: none; background: var(--ink); color: #fff; font: 13px/1.4 var(--sans); padding: 8px 10px;
+  .tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--paper); font: 13px/1.4 var(--sans); padding: 8px 10px;
          border-radius: 8px; max-width: 280px; z-index: 20; display: none; }
 
   /* The company table scrolls sideways inside its box on a phone, not the whole page. */
   #tableWrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font: 14px/1.45 var(--sans); background: var(--card);
           border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-  th { text-align: left; font-weight: 600; font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
-       color: var(--faint); padding: 10px 12px; border-bottom: 1px solid var(--line); background: #fcfbf8; }
+  th { text-align: left; font-weight: 600; font-size: 13px;
+       color: var(--faint); padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--th-bg); }
   td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
   tr.co { cursor: pointer; }
-  tr.co:hover td { background: #fcfaf6; }
-  tr.co.open td { background: #fbf6f1; border-bottom-color: transparent; }
+  tr.co:hover td { background: var(--row-hover); }
+  tr.co.open td { background: var(--row-open); border-bottom-color: transparent; }
   td.who b { display: block; font-weight: 600; }
   td.who small { color: var(--faint); }
   .ranks { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
@@ -121,10 +115,10 @@
   .spf.warn { color: var(--warn); font-weight: 600; } .spf.bad { color: var(--bad); font-weight: 600; }
   .sig { display: block; font-size: 12.5px; color: var(--accent); margin-top: 4px; }
 
-  tr.detail td { background: #fbf6f1; padding: 4px 18px 22px; }
+  tr.detail td { background: var(--row-open); padding: 4px 18px 22px; }
   .dgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 28px; }
   .cat { margin: 14px 0 0; }
-  .cat h4 { font: 600 12px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin: 0 0 8px; }
+  .cat h4 { font: 600 13px/1 var(--sans); color: var(--faint); margin: 0 0 8px; }
   .ev { font: 13.5px/1.45 var(--sans); margin: 0 0 8px; }
   .ev b { font-weight: 600; }
   .ev .why { display: block; color: var(--muted); }
@@ -170,7 +164,7 @@
 </head>
 <body>
 <main>
-<a class="back" href="../index.html">&larr; All builds</a>
+<a class="back" href="../index.html#scanner">&larr; About this build</a>
 
 <article class="story">
   <h1>The newest startups set up Claude before they buy marketing software</h1>
@@ -178,7 +172,7 @@
   <p class="byline">By Vito Prasad. Records read October 29, 2026.</p>
 </article>
 
-<figure class="chart" id="crossover">
+<figure class="chart" id="crossover" data-reveal>
   <p class="chart-title">Claude passes marketing platforms as the lists get newer</p>
   <p class="chart-sub">Share of companies on each list, from the most established list to the newest</p>
   <div class="legend"><span><i style="background:var(--map)"></i>Run a marketing platform</span><span><i style="background:var(--accent)"></i>Set up Claude</span></div>
@@ -202,22 +196,22 @@
   <p>My read is that the newest companies build their go-to-market around AI tools first and buy marketing software later, if at all. For a marketing platform, that makes more than half of the next generation a market still open, or one that may never come.</p>
   <p>Spending data points the same way. On <a href="https://ramp.com/data/ai-index" target="_blank" rel="noopener">Ramp's AI Index</a>, Anthropic took 60.5% of what businesses on Ramp spent on AI tokens in the week ending October 23, 2026. Across all 169 companies here, 128 have set up Claude, 111 ChatGPT and 94 Cursor. The typical company has three AI vendors, not one.</p>
 
-  <h2>33 run two marketing platforms at once</h2>
+  <h2 id="two-platforms">33 run two marketing platforms at once</h2>
   <p>That is usually a switch halfway done, or two teams that never agreed on one tool. OpenAI, Databricks and Notion are among them. Either way the decision is open now, and a sales team that knows can call this month instead of at renewal. <a href="#controls" data-view="two">See all 33</a>.</p>
 
-  <h2>19 are close to breaking their own email</h2>
+  <h2 id="email-limit">19 are close to breaking their own email</h2>
   <p>Every tool that sends mail as a company takes at least one of 10 slots in the record that tells inboxes who may send it. Celonis, ClickUp, Armada and Metropolis are already past 10. Mail from any tool without its own signing key can now fail, and since 2024 Gmail, Yahoo and Outlook junk or reject that mail. Nobody gets a bounce. Replies just stop. 17 of the 19 run a marketing platform, so the sales and marketing tools are what filled the record.</p>
   <p>The fix takes an afternoon. Drop the tools nobody uses. Have every sending tool sign mail with the company's own key, which has no limit. Send marketing mail from a subdomain like mail.company.com, which gets its own 10. Then check the count before connecting the next tool, which is a job for whoever runs GTM or marketing ops. <a href="#controls" data-view="spfrisk">Here are the 19</a>.</p>
 
-  <h2>Anyone can send email as 17 of them</h2>
+  <h2 id="spoofing">Anyone can send email as 17 of them</h2>
   <p>Their DMARC setting watches spoofed mail instead of blocking it, so a fake email from Runway or Hugging Face lands like a real one. Fast-growing, famous companies are the ones scammers copy, with fake recruiter emails to candidates and fake invoices to customers. 15 of the 17 already get the reports and are watching. They usually stop there because blocking can break their own marketing email, and nobody has a full list of the tools that send as them.</p>
   <p>That list is what this scan produces. Make every tool on it sign with the company's own key, then move the setting from watching to blocking over a few weeks. For a startup with a dozen senders it is part-time work, not a project. <a href="#controls" data-view="spoof">Here are the 17</a>.</p>
 
-  <h2>Why public records</h2>
+  <h2 id="why">Why public records</h2>
   <p>A website crawl shows the tags on a company's pages. DNS shows the back office, who sends mail in the company's name and which AI tools it signed everyone into. It changes the day the work happens, before a press release or a job post, and every claim links to a record anyone can check. I built the first version at an AI email security startup, where it told sales which target accounts were changing their email setup, and sales worked those alerts.</p>
 </article>
 
-<section class="explore">
+<section class="explore" id="explore">
   <h2>Every company, every tool</h2>
   <p class="intro">Filter by any tool, find who uses one and not another, open a company to see each record behind it, or download what you see. The table shows the latest read.</p>
   <p class="fine" id="scanned">Loading the scan...</p>
@@ -410,7 +404,7 @@ function renderStoryChart() {
   const x = v => plotL + (plotR - plotL) * (v - lo) / (hi - lo);
   const head = wide ? 22 : 0, rowH = wide ? 58 : 82, axisH = 26;
   const H = head + data.rows.length * rowH + axisH;
-  const halo = ' paint-order="stroke" stroke="#faf8f4" stroke-width="5" stroke-linejoin="round"';
+  const halo = ' paint-order="stroke" style="stroke:var(--paper)" stroke-width="5" stroke-linejoin="round"';
   const gapText = r => {
     const d = pctOf("claude", r) - pctOf("map", r);
     return d === 0 ? "Even" : (d > 0 ? "Claude +" + d : "Marketing +" + (-d));
@@ -418,33 +412,33 @@ function renderStoryChart() {
   let svg = '<svg viewBox="0 0 ' + W + " " + H + '" width="' + W + '" height="' + H + '" role="img" aria-labelledby="crossoverTitle"><title id="crossoverTitle">' +
     esc(data.rows.map(r => r.list + ", marketing platform " + pctOf("map", r) + "%, Claude " + pctOf("claude", r) + "%").join(". ")) + "</title>";
   for (let t = lo; t <= hi; t += wide ? 10 : 20) {
-    svg += '<line x1="' + x(t) + '" x2="' + x(t) + '" y1="' + head + '" y2="' + (H - axisH + 4) + '" stroke="#ebe6de" stroke-width="1"/>' +
-      '<text x="' + x(t) + '" y="' + (H - 6) + '" font-size="11" fill="#8b867d" text-anchor="middle">' + t + "%</text>";
+    svg += '<line x1="' + x(t) + '" x2="' + x(t) + '" y1="' + head + '" y2="' + (H - axisH + 4) + '" style="stroke:var(--chart-grid)" stroke-width="1"/>' +
+      '<text x="' + x(t) + '" y="' + (H - 6) + '" font-size="11" style="fill:var(--faint)" text-anchor="middle">' + t + "%</text>";
   }
   if (wide) {
-    svg += '<text x="0" y="12" font-size="11" fill="#8b867d" letter-spacing=".08em">LIST</text>' +
-      '<text x="' + (W - gapW + 14) + '" y="12" font-size="11" fill="#8b867d" letter-spacing=".08em">GAP</text>';
+    svg += '<text x="0" y="12" font-size="11" style="fill:var(--faint)" letter-spacing=".08em">LIST</text>' +
+      '<text x="' + (W - gapW + 14) + '" y="12" font-size="11" style="fill:var(--faint)" letter-spacing=".08em">GAP</text>';
   }
   data.rows.forEach((r, i) => {
     const y0 = head + i * rowH;
     const y = wide ? y0 + rowH / 2 + 2 : y0 + 58;
     const m = pctOf("map", r), c = pctOf("claude", r);
     if (wide) {
-      svg += '<text x="0" y="' + (y - 3) + '" font-size="14" font-weight="600" fill="#1c1b19">' + esc(r.list) + "</text>" +
-        '<text x="0" y="' + (y + 14) + '" font-size="12" fill="#8b867d">' + r.n + " companies</text>" +
-        '<text x="' + (W - gapW + 14) + '" y="' + (y + 4) + '" font-size="13" fill="#5f5b54">' + gapText(r) + "</text>";
+      svg += '<text x="0" y="' + (y - 3) + '" font-size="14" font-weight="600" style="fill:var(--ink)">' + esc(r.list) + "</text>" +
+        '<text x="0" y="' + (y + 14) + '" font-size="12" style="fill:var(--faint)">' + r.n + " companies</text>" +
+        '<text x="' + (W - gapW + 14) + '" y="' + (y + 4) + '" font-size="13" style="fill:var(--muted)">' + gapText(r) + "</text>";
     } else {
-      svg += '<text x="0" y="' + (y0 + 16) + '" font-size="14" font-weight="600" fill="#1c1b19"' + halo + ">" + esc(r.list) + "</text>" +
-        '<text x="0" y="' + (y0 + 33) + '" font-size="12" fill="#8b867d"' + halo + ">" + r.n + " companies</text>" +
-        '<text x="' + W + '" y="' + (y0 + 33) + '" font-size="12.5" fill="#5f5b54" text-anchor="end"' + halo + ">" + gapText(r) + "</text>";
+      svg += '<text x="0" y="' + (y0 + 16) + '" font-size="14" font-weight="600" style="fill:var(--ink)"' + halo + ">" + esc(r.list) + "</text>" +
+        '<text x="0" y="' + (y0 + 33) + '" font-size="12" style="fill:var(--faint)"' + halo + ">" + r.n + " companies</text>" +
+        '<text x="' + W + '" y="' + (y0 + 33) + '" font-size="12.5" style="fill:var(--muted)" text-anchor="end"' + halo + ">" + gapText(r) + "</text>";
     }
-    svg += '<line x1="' + x(Math.min(m, c)) + '" x2="' + x(Math.max(m, c)) + '" y1="' + y + '" y2="' + y + '" stroke="#cfc8bd" stroke-width="2" stroke-linecap="round"/>';
-    [["map", m, "#1f6fae", r.map + " of " + r.n + " run a marketing platform"],
-     ["claude", c, "#b4532a", r.claude + " of " + r.n + " set up Claude, " + r.chatgpt + " set up ChatGPT"]].forEach(([k, v, hex, tip]) => {
+    svg += '<line x1="' + x(Math.min(m, c)) + '" x2="' + x(Math.max(m, c)) + '" y1="' + y + '" y2="' + y + '" style="stroke:var(--chart-line)" stroke-width="2" stroke-linecap="round"/>';
+    [["map", m, "var(--map)", r.map + " of " + r.n + " run a marketing platform"],
+     ["claude", c, "var(--accent)", r.claude + " of " + r.n + " set up Claude, " + r.chatgpt + " set up ChatGPT"]].forEach(([k, v, hex, tip]) => {
       const before = k === "map" ? m < c : c < m;
       svg += '<g class="dot" data-tip="' + esc(r.list + ". " + tip + ".") + '"><circle cx="' + x(v) + '" cy="' + y + '" r="14" fill="transparent"/>' +
-        '<circle cx="' + x(v) + '" cy="' + y + '" r="7" fill="' + hex + '" stroke="#faf8f4" stroke-width="2"/>' +
-        '<text x="' + (x(v) + (before ? -13 : 13)) + '" y="' + (y + 4) + '" font-size="12.5" fill="#5f5b54" text-anchor="' + (before ? "end" : "start") + '"' + halo + ">" + v + "%</text></g>";
+        '<circle cx="' + x(v) + '" cy="' + y + '" r="7" style="fill:' + hex + ';stroke:var(--paper)" stroke-width="2"/>' +
+        '<text x="' + (x(v) + (before ? -13 : 13)) + '" y="' + (y + 4) + '" font-size="12.5" style="fill:var(--muted)" text-anchor="' + (before ? "end" : "start") + '"' + halo + ">" + v + "%</text></g>";
     });
   });
   plotEl.innerHTML = svg + "</svg>";
@@ -864,5 +858,7 @@ async function boot() {
 }
 boot();
 </script>
+<script type="application/json" id="contents">[{"href": "../index.html", "label": "All builds"}, {"href": "../index.html#scanner", "label": "About this build"}, {"id": "crossover", "label": "The finding"}, {"id": "two-platforms", "label": "Two platforms at once"}, {"id": "email-limit", "label": "Email close to breaking"}, {"id": "spoofing", "label": "Who can be spoofed"}, {"id": "why", "label": "Why public records"}, {"id": "explore", "label": "Every company"}, {"id": "changes", "label": "What changed"}, {"id": "mine", "label": "Scan your own list"}, {"id": "about", "label": "How it reads a stack"}]</script>
+<script src="../site.js" defer></script>
 </body>
 </html>

@@ -7,20 +7,14 @@
 <meta name="description" content="A working readiness tracker for a first-of-a-kind hardware program. Step through the weeks, make something slip, and watch the review agenda and the Friday update write themselves.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:,">
+<script>(function(){try{var t=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<link rel="stylesheet" href="../site.css">
 <style>
-  :root {
-    --ink: #1c1b19; --muted: #5f5b54; --faint: #8b867d; --line: #e4dfd6;
-    --paper: #faf8f4; --card: #ffffff; --accent: #b4532a; --accent-soft: #f4e6dc; --blue: #1f6fae;
-    --good: #2f6b3f; --good-soft: #e3efe5; --warn: #9a6512; --warn-soft: #f6ecd8;
-    --bad: #a3321f; --bad-soft: #f6e0db; --info-soft: #eeebe5;
-    --sans: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body { margin: 0; background: var(--paper); color: var(--ink);
          font: 17px/1.6 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
-  main { max-width: 1180px; margin: 0 auto; padding: 64px 28px 96px; }
+  main { --page-w: 1180px; max-width: 1180px; margin: 0 auto; padding: 64px 28px 96px; }
   a { color: var(--ink); }
   .back { font: 14px/1 var(--sans); color: var(--muted); text-decoration: none; }
   .back:hover { color: var(--ink); }
@@ -41,7 +35,7 @@
   .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--card); }
   .seg button { font: 500 14px/1 var(--sans); border: 0; background: none; padding: 9px 12px; cursor: pointer; color: var(--ink); }
   .seg button + button { border-left: 1px solid var(--line); }
-  .seg button[aria-pressed=true] { background: var(--ink); color: #fff; }
+  .seg button[aria-pressed=true] { background: var(--ink); color: var(--paper); }
   .events { display: flex; flex-wrap: wrap; gap: 8px; }
   .events button { font: 14px/1.2 var(--sans); padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--card);
                    color: var(--ink); cursor: pointer; }
@@ -61,7 +55,7 @@
   .scroll { overflow-x: auto; }
   table.grid { width: 100%; min-width: 900px; border-collapse: collapse; font: 14px/1.45 var(--sans); background: var(--card);
                border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-  table.grid th { text-align: left; font-weight: 600; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--line); background: #fcfbf8; }
+  table.grid th { text-align: left; font-weight: 600; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--th-bg); }
   table.grid td { padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
   table.grid tr:last-child td { border-bottom: 0; }
   td .sub { display: block; color: var(--faint); font-size: 13px; }
@@ -109,7 +103,7 @@
 </head>
 <body>
 <main>
-<a class="back" href="../index.html">&larr; All builds</a>
+<a class="back" href="../index.html#lunar-reactor-tracker">&larr; About this build</a>
 
 <article class="story">
   <h1>Engineering moves in weeks, regulators in quarters, and the launch date does not move</h1>
@@ -147,13 +141,13 @@
 </section>
 
 <article class="story">
-  <h2>Four pieces, each replacing something</h2>
+  <h2 id="pieces">Four pieces, each replacing something</h2>
   <p>The readiness rows replace the three trackers each team already keeps. Engineering tracks weight in design reviews, regulatory tracks its filings in its own sheet, and supply chain tracks lead times in email. Put on one row per part, a license finding that adds weight or a supplier slip that eats the schedule shows up the week it happens. The numbers come from where the work already lives, so nobody types status.</p>
   <p>The decision log stops decisions from being quietly argued again three weeks later. Each entry is one sentence that can be answered yes or no, a short reason, the alternative that was turned down, and the condition that would reopen it. When that condition comes true, the log says so.</p>
   <p>The long-lead countdown measures each slow part against its need-by week. A four-week slip on a part with two weeks of slack is not a four-week problem. It is a missed launch slot.</p>
   <p>The Friday update answers three questions in under a page. What moved, what is blocked and on whom, and what decision lands on leadership's desk in the next two weeks. It exists so leadership can skip the status meeting.</p>
 
-  <h2>One meeting, and it only makes decisions</h2>
+  <h2 id="meeting">One meeting, and it only makes decisions</h2>
   <p>An item gets onto Tuesday's review only if it meets a trigger. A part is on course to break its weight allowance within six weeks. A license input is due within 30 days while an engineering question behind it is still open. A slow part has less than two weeks of slack. Or an agreed action is more than three days late. No general updates. Every item leaves as a decision with an owner and a date, or as an escalation with a written recommendation.</p>
   <table>
     <thead><tr><th>Touchpoint</th><th>How often</th><th>What comes out</th></tr></thead>
@@ -167,7 +161,7 @@
   </table>
   <p>The cap is two hours of standing meetings a week for each team lead. More than that means the written pieces are failing and need fixing, not that the program needs another meeting.</p>
 
-  <h2>The first 60 days</h2>
+  <h2 id="days">The first 60 days</h2>
   <table>
     <thead><tr><th>Days</th><th>Work</th></tr></thead>
     <tbody>
@@ -282,12 +276,12 @@ function sparkline(s, w) {
   const W = 120, H = 30, x = i => 2 + (W - 4) * (i - 1) / Math.max(1, P.program.currentWeek - 1), y = v => H - 3 - (H - 6) * (v - lo) / (hi - lo);
   const pts = weeks.map((i, k) => x(i).toFixed(1) + "," + y(vals[k]).toFixed(1)).join(" ");
   const last = vals[vals.length - 1];
-  const color = last > s.allocKg ? "#a3321f" : "#1f6fae";
+  const color = last > s.allocKg ? "var(--bad)" : "var(--blue)";
   return '<svg class="spark" width="' + W + '" height="' + H + '" role="img" aria-label="Weight by week against the allowance"><title>' +
     esc(s.name + " weight by week, " + vals.map(kg).join(", ") + " kg. Allowance " + s.allocKg + " kg.") + '</title>' +
-    '<line x1="2" x2="' + (W - 2) + '" y1="' + y(s.allocKg) + '" y2="' + y(s.allocKg) + '" stroke="#cfc8bd" stroke-width="1"/>' +
-    '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
-    '<circle cx="' + x(w) + '" cy="' + y(last) + '" r="3.5" fill="' + color + '" stroke="#fff" stroke-width="1.5"/></svg>';
+    '<line x1="2" x2="' + (W - 2) + '" y1="' + y(s.allocKg) + '" y2="' + y(s.allocKg) + '" style="stroke:var(--chart-line)" stroke-width="1"/>' +
+    '<polyline points="' + pts + '" fill="none" style="stroke:' + color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
+    '<circle cx="' + x(w) + '" cy="' + y(last) + '" r="3.5" style="fill:' + color + ';stroke:var(--paper)" stroke-width="1.5"/></svg>';
 }
 
 function chip(status) {
@@ -442,5 +436,7 @@ async function boot() {
 }
 boot();
 </script>
+<script type="application/json" id="contents">[{"href": "../index.html", "label": "All builds"}, {"href": "../index.html#lunar-reactor-tracker", "label": "About this build"}, {"id": "tool", "label": "The tracker"}, {"id": "pieces", "label": "Four pieces"}, {"id": "meeting", "label": "One meeting"}, {"id": "days", "label": "The first 60 days"}]</script>
+<script src="../site.js" defer></script>
 </body>
 </html>
