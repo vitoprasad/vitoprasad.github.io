@@ -27,6 +27,14 @@
 
 html { scroll-behavior: smooth; }
 body { transition: background-color .25s ease, color .25s ease; }
+
+/* Line breaks. Headings and short labels even out their lines, running text avoids a lone
+   last word, and .nobr keeps a hyphenated compound or a number and its unit on one line. */
+h1, h2, h3, h4, caption, summary, .g-title, .chart-title, .stat, .tile .label, .tile .sub, .hname, .cbar .name, .bar .name,
+.feature b, .dec .what, .contents a, .contents-sheet a { text-wrap: balance; }
+p, li, dd, dt, td, th, figcaption, blockquote, footer { text-wrap: pretty; }
+.nobr { white-space: nowrap; }
+
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 ::selection { background: var(--accent-soft); }
 
@@ -99,4 +107,15 @@ body { transition: background-color .25s ease, color .25s ease; }
 }
 /* On a phone the switch sits in the page header instead of floating over text. */
 @media (max-width: 760px) { .theme-switch { position: absolute; top: 14px; right: 14px; } }
+/* On a touch screen every small control answers a 44px tap. Most keep their look and get an invisible
+   tap area around them; the floating buttons simply grow to 44px. */
+@media (pointer: coarse) {
+  .contents-btn, .to-top { min-height: 44px; }
+  .contents-sheet a { padding: 12px 0; }
+  .try-btn, .row a.try, button.chip, .pill, .try a, .views a, .events button, details.table-view summary, .calc-reset, button.reset,
+  .back { position: relative; }
+  .theme-switch::after, .try-btn::after, .row a.try::after, button.chip::after, .pill::after, .try a::after, .views a::after,
+  .events button::after, .marks button::after, details.table-view summary::after, .calc-reset::after, button.reset::after, .back::after {
+    content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
+}
 @media print { .theme-switch, .contents, .contents-btn, .to-top, .contents-sheet { display: none !important; } }

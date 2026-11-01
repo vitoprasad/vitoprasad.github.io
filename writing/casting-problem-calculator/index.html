@@ -19,7 +19,10 @@
   .dek { font-size: 19px; line-height: 1.55; color: var(--muted); margin: 0 0 32px; }
   .sentences p { font-size: 19px; line-height: 1.6; margin: 0 0 14px; }
   .sentences b { font-weight: 600; }
-  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 28px 0 8px; }
+  /* Five tiles, three over two, as in the essay, so none sits alone on a row. */
+  .tiles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin: 28px 0 8px; }
+  .tile { grid-column: span 2; }
+  .tile:nth-child(n+4) { grid-column: span 3; }
   .tile { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
   .tile .label { font: 13px/1.35 var(--sans); color: var(--muted); margin: 0 0 6px; }
   .tile .value { font: 600 26px/1.15 var(--sans); letter-spacing: -.01em; font-variant-numeric: tabular-nums; margin: 0; }
@@ -50,9 +53,12 @@
   table { width: 100%; border-collapse: collapse; font: 14px/1.45 var(--sans); margin-top: 22px; }
   th { text-align: left; font-weight: 600; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); }
   td { padding: 8px 10px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+  th:first-child, td:first-child { padding-left: 0; }
+  td:nth-child(2) { white-space: nowrap; }
   footer { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 56px; font: 14px/1.5 var(--sans); color: var(--faint); }
   footer a { color: var(--muted); }
-  @media (max-width: 700px) { main { padding: 36px 16px 72px; } .grid { grid-template-columns: 1fr; } .bar { grid-template-columns: 1fr; gap: 4px; } h1 { font-size: 28px; } }
+  @media (max-width: 700px) { main { padding: 36px 16px 72px; } .grid { grid-template-columns: 1fr; } .bar { grid-template-columns: 1fr; gap: 4px; } h1 { font-size: 28px; }
+    .tiles { grid-template-columns: 1fr 1fr; } .tile, .tile:nth-child(n+4) { grid-column: auto; } .tile:last-child { grid-column: span 2; } }
   @media (prefers-reduced-motion: reduce) { .bar .fill { transition: none; } }
 </style>
 </head>
@@ -63,17 +69,17 @@
 
 <div class="sentences" aria-live="polite">
   <p><b>A dark gigawatt costs <span id="s-monthly"></span> a month.</b> That is the depreciation on <span id="s-chips"></span> of servers and networking over <span id="s-years"></span>, before a dollar of lost revenue.</p>
-  <p><b>The turbine premium buys back <span id="s-bought"></span>.</b> The turbine for that gigawatt costs <span id="s-turbine"></span> at today's price and <span id="s-base"></span> at the reference price. The difference equals <span id="s-bought2"></span> of idle chips.</p>
-  <p><b>The fuel penalty of the fast turbine is <span id="s-fuel"></span> a year.</b> Simple cycle at <span id="s-sc"></span> against combined cycle at <span id="s-cc"></span>, at <span id="s-gas"></span> gas, running <span id="s-cf"></span> of the time. That is <span id="s-fueldays"></span> of idle chips.</p>
-  <p><b>Count lost revenue and a dark gigawatt gives up <span id="s-revm"></span> a month.</b> That is <span id="s-rev"></span> a watt a year, the price SpaceX quotes for new compute, on top of the depreciation. At that price the fuel penalty is <span id="s-fuelrev"></span> of a year's revenue.</p>
-  <p><b>A turbine delivered a year earlier is worth <span id="s-ceiling"></span> a kilowatt.</b> That is <span id="s-ratio"></span> today's price on depreciation alone, and <span id="s-ceilrev"></span> a kilowatt to a seller earning the quoted revenue at an 80% cash margin. The gap is the margin available to whoever controls the slowest step.</p>
+  <p><b>The fast turbine's premium buys back <span id="s-bought"></span>.</b> A gigawatt of chips needs <span id="s-supply"></span> gigawatts of firm supply. Fast turbines for it cost <span id="s-turbine"></span>, and large ones <span id="s-base"></span>. The difference equals <span id="s-bought2"></span> of idle chips.</p>
+  <p><b>The fuel penalty of the fast turbine is <span id="s-fuel"></span> a year.</b> Simple cycle at <span id="s-sc"></span> against combined cycle at <span id="s-cc"></span>, at <span id="s-gas"></span> gas, running <span id="s-cf"></span> of the time, for the whole firm supply. That is <span id="s-fueldays"></span> of idle chips.</p>
+  <p><b>Count lost revenue instead and a dark gigawatt gives up <span id="s-revm"></span> a month.</b> That is <span id="s-rev"></span> a watt a year. It prices the same dark month as the depreciation, so the two are not added together. At that price the fuel penalty is <span id="s-fuelrev"></span> of a year's revenue.</p>
+  <p><b>A turbine delivered a year earlier is worth <span id="s-ceiling"></span> a kilowatt.</b> That is <span id="s-ratio"></span> the fast turbine's price on depreciation alone, and <span id="s-ceilrev"></span> a kilowatt to a seller of compute earning that revenue at a <span id="s-margin"></span> cash margin. The gap is the margin available to whoever controls the slowest step.</p>
 </div>
 
 <div class="tiles">
   <div class="tile"><p class="label">Idle chips, per month</p><p class="value" id="t-monthly"></p><p class="sub">per gigawatt</p></div>
-  <div class="tile"><p class="label">Delay the turbine premium pays for</p><p class="value" id="t-bought"></p><p class="sub">at today's price against the reference</p></div>
+  <div class="tile"><p class="label">Delay the turbine premium pays for</p><p class="value" id="t-bought"></p><p class="sub">fast turbines over large ones</p></div>
   <div class="tile"><p class="label">Fuel penalty, per year</p><p class="value" id="t-fuel"></p><p class="sub" id="t-fueldays"></p></div>
-  <div class="tile"><p class="label">Lost revenue, per month</p><p class="value" id="t-revm"></p><p class="sub">per dark gigawatt at the quoted price</p></div>
+  <div class="tile"><p class="label">Lost revenue, per month</p><p class="value" id="t-revm"></p><p class="sub">per dark gigawatt at the revenue set</p></div>
   <div class="tile"><p class="label">Ceiling price of a year</p><p class="value" id="t-ceiling"></p><p class="sub" id="t-ratio"></p></div>
 </div>
 
@@ -81,13 +87,13 @@
   <p class="chart-title">What a month of waiting is worth, against what the turbine costs</p>
   <p class="chart-sub">Millions of dollars per gigawatt, one scale</p>
   <div class="bars" id="bars">
-    <div class="bar"><span class="name">One month of lost revenue at the quoted price</span><div class="track"><div class="fill" id="b-revm"></div><span class="val" id="v-revm"></span></div></div>
+    <div class="bar"><span class="name">One month of lost revenue</span><div class="track"><div class="fill" id="b-revm"></div><span class="val" id="v-revm"></span></div></div>
     <div class="bar"><span class="name">One month of idle chips</span><div class="track"><div class="fill" id="b-monthly"></div><span class="val" id="v-monthly"></span></div></div>
-    <div class="bar"><span class="name">Turbine price rise since the reference, once</span><div class="track"><div class="fill" id="b-premium"></div><span class="val" id="v-premium"></span></div></div>
+    <div class="bar"><span class="name">Fast turbine premium over large, once</span><div class="track"><div class="fill" id="b-premium"></div><span class="val" id="v-premium"></span></div></div>
     <div class="bar"><span class="name">One year of extra fuel</span><div class="track"><div class="fill" id="b-fuel"></div><span class="val" id="v-fuel"></span></div></div>
-    <div class="bar"><span class="name">The whole turbine, at today's price</span><div class="track"><div class="fill" id="b-turbine"></div><span class="val" id="v-turbine"></span></div></div>
+    <div class="bar"><span class="name">The fast turbines, whole</span><div class="track"><div class="fill" id="b-turbine"></div><span class="val" id="v-turbine"></span></div></div>
   </div>
-  <figcaption>One scale for all four, so the bars compare directly. The month of idle chips is depreciation only.</figcaption>
+  <figcaption>One scale for all five, so the bars compare directly. The month of idle chips is depreciation only.</figcaption>
 </figure>
 
 <section class="inputs">
@@ -97,13 +103,15 @@
     <div class="ctl"><label for="capex"><span>Capital cost of one gigawatt</span><span id="o-capex"></span></label><input type="range" id="capex" min="20" max="60" step="0.5" value="37.5"><small>Bernstein, $34.6 to $39.5 billion, October 2026</small></div>
     <div class="ctl"><label for="share"><span>Servers and networking share</span><span id="o-share"></span></label><input type="range" id="share" min="40" max="90" step="1" value="69"><small>GB200 cost model, about $26 billion of $37.9 billion</small></div>
     <div class="ctl"><label for="years"><span>Depreciation life of the chips</span><span id="o-years"></span></label><input type="range" id="years" min="3" max="7" step="0.5" value="5"><small>assumption</small></div>
-    <div class="ctl"><label for="price"><span>Turbine price today, equipment only</span><span id="o-price"></span></label><input type="range" id="price" min="200" max="2000" step="10" value="600"><small>Wood Mackenzie, $600 per kW by end of 2027</small></div>
-    <div class="ctl"><label for="base"><span>Reference turbine price</span><span id="o-base"></span></label><input type="range" id="base" min="100" max="600" step="2" value="206"><small>2019 price implied by the 195% rise</small></div>
+    <div class="ctl"><label for="supply"><span>Firm supply per gigawatt of chips</span><span id="o-supply"></span></label><input type="range" id="supply" min="1" max="1.6" step="0.05" value="1.25"><small>assumption, cooling plus a thin reserve</small></div>
+    <div class="ctl"><label for="price"><span>Fast turbine price, equipment only</span><span id="o-price"></span></label><input type="range" id="price" min="500" max="4000" step="50" value="1800"><small>BNP Paribas estimate for aeroderivatives, July 2026</small></div>
+    <div class="ctl"><label for="base"><span>Large turbine price, equipment only</span><span id="o-base"></span></label><input type="range" id="base" min="300" max="2000" step="10" value="950"><small>BNP Paribas estimate for combined cycle turbines, July 2026</small></div>
     <div class="ctl"><label for="sc"><span>Simple cycle efficiency</span><span id="o-sc"></span></label><input type="range" id="sc" min="30" max="45" step="0.5" value="39"><small>Boom's target, typical of aeroderivatives</small></div>
     <div class="ctl"><label for="cc"><span>Combined cycle efficiency</span><span id="o-cc"></span></label><input type="range" id="cc" min="50" max="65" step="0.5" value="60"><small>typical of a modern H class plant</small></div>
     <div class="ctl"><label for="gas"><span>Gas price</span><span id="o-gas"></span></label><input type="range" id="gas" min="1" max="8" step="0.25" value="3.5"><small>EIA 2026 average, Henry Hub</small></div>
     <div class="ctl"><label for="cf"><span>Capacity factor</span><span id="o-cf"></span></label><input type="range" id="cf" min="50" max="100" step="1" value="90"><small>assumption</small></div>
     <div class="ctl"><label for="rev"><span>Revenue per watt, per year, on new compute</span><span id="o-rev"></span></label><input type="range" id="rev" min="5" max="80" step="1" value="50"><small>SpaceX third quarter 2026 call, $30 to $50 and slightly above. Most buyers earn $9 to $20</small></div>
+    <div class="ctl"><label for="margin"><span>Cash margin on that revenue</span><span id="o-margin"></span></label><input type="range" id="margin" min="20" max="95" step="1" value="80"><small>assumption</small></div>
   </div>
   <button class="reset" type="button" id="reset">Back to the essay's numbers</button>
 
@@ -111,34 +119,34 @@
     <thead><tr><th>Result</th><th>Value</th><th>How it is computed</th></tr></thead>
     <tbody>
       <tr><td>Idle chips per month</td><td id="r-monthly"></td><td>capital cost times the servers share, over the depreciation life, per month</td></tr>
-      <tr><td>Turbine premium</td><td id="r-premium"></td><td>today's price less the reference price, times one million kilowatts</td></tr>
+      <tr><td>Turbine premium</td><td id="r-premium"></td><td>fast price less large price, times the firm supply in kilowatts</td></tr>
       <tr><td>Delay the premium pays for</td><td id="r-bought"></td><td>premium divided by idle chips per month</td></tr>
       <tr><td>Extra fuel per megawatt hour</td><td id="r-delta"></td><td>3.412 MMBtu per MWh divided by each efficiency, difference times the gas price</td></tr>
-      <tr><td>Fuel penalty per year</td><td id="r-fuel"></td><td>extra fuel per MWh times 8,760 hours times the capacity factor, for 1,000 MW</td></tr>
-      <tr><td>Ceiling price of a year</td><td id="r-ceiling"></td><td>one year of chip depreciation spread over one million kilowatts</td></tr>
+      <tr><td>Fuel penalty per year</td><td id="r-fuel"></td><td>extra fuel per MWh times 8,760 hours times the capacity factor, for the firm supply in megawatts</td></tr>
+      <tr><td>Ceiling price of a year</td><td id="r-ceiling"></td><td>one year of chip depreciation spread over the firm supply in kilowatts</td></tr>
     </tbody>
   </table>
 </section>
 
-<footer>Vito Prasad, October 2026. Part of <a href="#">The power problem is a casting problem</a>. <a href="../../index.html">See the builds</a>.</footer>
+<footer>Vito Prasad, November 2026. Part of <a href="../the-power-problem-is-a-casting-problem/">The power problem is a casting problem</a>. <a href="../../index.html">See the builds</a>.</footer>
 </main>
 <script>
 (function () {
   "use strict";
-  var ids = ["capex", "share", "years", "price", "base", "sc", "cc", "gas", "cf", "rev"];
+  var ids = ["capex", "share", "years", "supply", "price", "base", "sc", "cc", "gas", "cf", "rev", "margin"];
   var el = {}; ids.forEach(function (k) { el[k] = document.getElementById(k); });
   var defaults = {}; ids.forEach(function (k) { defaults[k] = el[k].getAttribute("value"); });
   function $(id) { return document.getElementById(id); }
   function money(m) { // m in millions of dollars
-    if (Math.abs(m) >= 1000) return "$" + (m / 1000).toFixed(m >= 10000 ? 0 : 1) + " billion";
-    return "$" + Math.round(m) + " million";
+    if (Math.abs(m) >= 1000) return "$" + (m / 1000).toFixed(m >= 10000 ? 0 : 1) + "\u00a0billion";
+    return "$" + Math.round(m) + "\u00a0million";
   }
   function span(months) {
     if (months < 1 / 30) return "about a day";
-    if (months < 0.5) { var d = Math.round(months * 30.4); return d + (d === 1 ? " day" : " days"); }
-    if (months < 2) { var w = Math.round(months * 4.35); return w + (w === 1 ? " week" : " weeks"); }
-    if (months < 24) { var mo = Math.round(months * 10) / 10; return mo + " months"; }
-    return (Math.round(months / 12 * 10) / 10) + " years";
+    if (months < 0.5) { var d = Math.round(months * 30.4); return d + (d === 1 ? "\u00a0day" : "\u00a0days"); }
+    if (months < 2) { var w = Math.round(months * 4.35); return w + (w === 1 ? "\u00a0week" : "\u00a0weeks"); }
+    if (months < 24) { var mo = Math.round(months * 10) / 10; return mo + "\u00a0months"; }
+    return (Math.round(months / 12 * 10) / 10) + "\u00a0years";
   }
   function pct(x) { return x + "%"; }
   function run() {
@@ -146,26 +154,27 @@
     var sc = +el.sc.value / 100, cc = +el.cc.value / 100, gas = +el.gas.value, cf = +el.cf.value / 100;
     var chips = capex * share / 100;                       // $B per GW
     var monthly = chips * 1000 / years / 12;               // $M per month
-    var turbine = price, premium = Math.max(0, price - base); // $M per GW
+    var supply = +el.supply.value, margin = +el.margin.value / 100;
+    var turbine = price * supply, premium = Math.max(0, price - base) * supply; // $M per GW of chips
     var bought = premium / monthly;                        // months
     var delta = 3.412 * (1 / sc - 1 / cc) * gas;           // $ per MWh
-    var fuel = delta * 8760 * cf * 1000 / 1e6;             // $M per year
+    var fuel = delta * 8760 * cf * 1000 * supply / 1e6;    // $M per year
     var fuelMonths = fuel / monthly;
-    var ceiling = chips * 1000 / years;                    // $ per kW (one year of depreciation over 1e6 kW)
+    var ceiling = chips * 1000 / years / supply;           // $ per kW of turbine, one year of depreciation
     var rev = +el.rev.value, revm = rev * 1000 / 12;        // $M per month per GW at $rev per watt per year
-    var ceilrev = rev * 1000 * 0.8;                         // $ per kW, one year of revenue at an 80% cash margin
+    var ceilrev = rev * 1000 * margin / supply;             // $ per kW of turbine, one year of revenue at the cash margin
     var ratio = ceiling / price;
-    $("s-monthly").textContent = money(monthly); $("s-chips").textContent = "$" + chips.toFixed(1) + " billion"; $("s-years").textContent = years + " years";
+    $("s-monthly").textContent = money(monthly); $("s-chips").textContent = "$" + chips.toFixed(1) + "\u00a0billion"; $("s-years").textContent = years + "\u00a0years";
     $("s-bought").textContent = span(bought); $("s-bought2").textContent = span(bought);
-    $("s-turbine").textContent = money(turbine); $("s-base").textContent = money(base);
+    $("s-turbine").textContent = money(turbine); $("s-base").textContent = money(base * supply); $("s-supply").textContent = supply.toFixed(2); $("s-margin").textContent = pct(el.margin.value);
     $("s-fuel").textContent = money(fuel); $("s-sc").textContent = pct(el.sc.value); $("s-cc").textContent = pct(el.cc.value);
     $("s-gas").textContent = "$" + gas.toFixed(2); $("s-cf").textContent = pct(el.cf.value); $("s-fueldays").textContent = span(fuelMonths);
     $("s-revm").textContent = money(revm); $("s-rev").textContent = "$" + rev; $("s-fuelrev").textContent = (100 * fuel / (rev * 1000)).toFixed(1) + "%";
     $("s-ceilrev").textContent = "$" + Math.round(ceilrev).toLocaleString(); $("t-revm").textContent = money(revm);
-    $("s-ceiling").textContent = "$" + Math.round(ceiling).toLocaleString(); $("s-ratio").textContent = (Math.round(ratio * 10) / 10) + " times";
+    $("s-ceiling").textContent = "$" + Math.round(ceiling).toLocaleString(); $("s-ratio").textContent = (Math.round(ratio * 10) / 10) + "\u00a0times";
     $("t-monthly").textContent = money(monthly); $("t-bought").textContent = span(bought);
     $("t-fuel").textContent = money(fuel); $("t-fueldays").textContent = span(fuelMonths) + " of idle chips";
-    $("t-ceiling").textContent = "$" + Math.round(ceiling).toLocaleString() + "/kW"; $("t-ratio").textContent = (Math.round(ratio * 10) / 10) + " times today's price";
+    $("t-ceiling").textContent = "$" + Math.round(ceiling).toLocaleString() + "/kW"; $("t-ratio").textContent = (Math.round(ratio * 10) / 10) + " times the fast turbine's price";
     var vals = { revm: revm, monthly: monthly, premium: premium, fuel: fuel, turbine: turbine };
     var max = Math.max(revm, monthly, premium, fuel, turbine, 1);
     Object.keys(vals).forEach(function (k) {
@@ -177,7 +186,7 @@
     $("r-delta").textContent = "$" + delta.toFixed(1) + " per MWh"; $("r-fuel").textContent = money(fuel); $("r-ceiling").textContent = "$" + Math.round(ceiling).toLocaleString() + " per kW";
     $("o-capex").textContent = "$" + capex.toFixed(1) + "B"; $("o-share").textContent = pct(share); $("o-years").textContent = years + " yr";
     $("o-price").textContent = "$" + price + "/kW"; $("o-base").textContent = "$" + base + "/kW"; $("o-sc").textContent = pct(el.sc.value); $("o-cc").textContent = pct(el.cc.value);
-    $("o-gas").textContent = "$" + gas.toFixed(2) + "/MMBtu"; $("o-cf").textContent = pct(el.cf.value); $("o-rev").textContent = "$" + rev + "/W";
+    $("o-gas").textContent = "$" + gas.toFixed(2) + "/MMBtu"; $("o-cf").textContent = pct(el.cf.value); $("o-rev").textContent = "$" + rev + "/W"; $("o-supply").textContent = supply.toFixed(2) + " GW"; $("o-margin").textContent = pct(el.margin.value);
   }
   ids.forEach(function (k) { el[k].addEventListener("input", run); });
   document.getElementById("reset").addEventListener("click", function () { ids.forEach(function (k) { el[k].value = defaults[k]; }); run(); });

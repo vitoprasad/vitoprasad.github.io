@@ -28,6 +28,7 @@
   .story table { width: 100%; border-collapse: collapse; font: 15px/1.45 var(--sans); margin: 6px 0 24px; }
   .story th { text-align: left; font-weight: 600; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); }
   .story td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .story th:first-child, .story td:first-child { padding-left: 0; }
 
   section.tool { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 30px 0 34px; margin: 10px 0 30px; }
   .bar { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; margin-bottom: 14px; font: 14px/1.3 var(--sans); }
@@ -92,10 +93,12 @@
   .dec .flag { grid-column: 2; color: var(--bad); font-size: 14px; font-weight: 600; }
   footer { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 64px; font: 14px/1.5 var(--sans); color: var(--faint); }
   footer a { color: var(--muted); }
+  @media (pointer: coarse) { .seg button { padding-top: 15px; padding-bottom: 15px; min-width: 44px; } .tabs button { padding-top: 14px; padding-bottom: 14px; } }
   @media (max-width: 760px) {
     main { padding: 36px 16px 72px; }
     .story h1 { font-size: 31px; } .story .dek { font-size: 18px; } .story p { font-size: 17.5px; }
-    .summary { font-size: 17px; }
+    .summary { font-size: 17px; grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+    .summary dd + dt { margin-top: 10px; }
     .memo { padding: 18px; }
     .dec { grid-template-columns: 1fr; } .dec .meta, .dec .line, .dec .flag, .dec .st { grid-column: 1; grid-row: auto; }
   }
@@ -107,7 +110,7 @@
 
 <article class="story">
   <h1>Hardware iterates in weeks, the NRC moves in quarters, and the landing slot does not move at all</h1>
-  <p class="dek">A lunar reactor program slips when those three clocks drift apart and nobody sees it until a design review. I framed a hypothetical program around it for a product operations take-home in April 2026, integrating the heat rejection system for the LR-1 lunar reactor ahead of the SR-1 orbital test, then built the operating system I proposed so it runs.</p>
+  <p class="dek">A lunar reactor program slips when those three clocks drift apart and nobody sees it until a design review. I framed a hypothetical program around it for a product operations take-home in April 2026, integrating the heat rejection system for the <span class="nobr">LR-1</span> lunar reactor ahead of the <span class="nobr">SR-1</span> orbital test, then built the operating system I proposed so it runs.</p>
   <p class="byline">By Vito Prasad. Built on public news about lunar surface power. The program status, its problems and its people are made up.</p>
   <p>The system has to put out 100 kWe, reject heat in a vacuum, survive the 14-day lunar night, meet NRC Category II requirements, and fit a 15-tonne heavy-class lander. Every part trades against every other. A shielding change from regulatory eats kilograms that were set aside for radiator area, which was sized against a titanium tubing lead time. Step to week 7 and the tubing slip is already on the review. At week 8 the radiator is flagged six weeks before it would break its mass budget. Then make something happen and watch the review agenda and the Context Pack change.</p>
 </article>
@@ -138,7 +141,7 @@
   <h2 id="pieces">Four artifacts, each replacing something</h2>
   <p>The Cross-Functional Readiness Matrix replaces the three trackers each team already keeps. Engineering tracks heat pipe and radiator maturity in design review notes, regulatory tracks its NRC dependencies in a separate tracker, and supply chain tracks fuel and titanium lead times in procurement email. On one row per subsystem, read the same week, a shielding change that adds mass shows up before engineering commits to a radiator geometry. Mass and maturity are pulled from the design and mass budget tools, not typed in.</p>
   <p>The Critical Path Decision Log stops decisions from being quietly argued again three weeks later, after the hardware has moved on. Each entry is one sentence with a yes or no answer, a short reason, the dissenting view, and the data that would reopen it. When that condition comes true, the log says so.</p>
-  <p>The Long-Lead Procurement Burndown keys the ten slowest items to their need-by dates. A four-week tubing slip late in the year is not a four-week problem when it lands on the SR-1 test, because the 2030 landing slot does not wait.</p>
+  <p>The Long-Lead Procurement Burndown keys the ten slowest items to their need-by dates. A four-week tubing slip late in the year is not a four-week problem when it lands on the <span class="nobr">SR-1</span> test, because the 2030 landing slot does not wait.</p>
   <p>The Weekly Context Pack replaces the status meeting. It answers three questions in under a page. What moved, with numbers from the matrix rather than narrative. What is blocked, and on whom. What decision reaches leadership in the next 14 days. Nobody writes status for it. It is built from the matrix changes, the decision log, and a short read of the week's design reviews and regulatory notes.</p>
 
   <h2 id="meeting">One meeting, and it only makes decisions</h2>
@@ -146,11 +149,11 @@
   <table>
     <thead><tr><th>Touchpoint</th><th>How often</th><th>What comes out</th></tr></thead>
     <tbody>
-      <tr><td>Critical Path Review</td><td>Weekly, 45 minutes</td><td>Decision log entries, nothing else</td></tr>
-      <tr><td>Regulatory sync</td><td>Every two weeks, 30 minutes</td><td>NRC design inputs settled ahead of the design, not behind it</td></tr>
-      <tr><td>Supplier and milestone review</td><td>Every two weeks, 30 minutes</td><td>Fuel and titanium lead times checked against the burndown</td></tr>
+      <tr><td>Critical Path Review</td><td>Weekly, 45&nbsp;minutes</td><td>Decision log entries, nothing else</td></tr>
+      <tr><td>Regulatory sync</td><td>Every two weeks, 30&nbsp;minutes</td><td>NRC design inputs settled ahead of the design, not behind it</td></tr>
+      <tr><td>Supplier and milestone review</td><td>Every two weeks, 30&nbsp;minutes</td><td>Fuel and titanium lead times checked against the burndown</td></tr>
       <tr><td>Context Pack</td><td>Fridays, written</td><td>The one page leadership reads</td></tr>
-      <tr><td>Monthly program review</td><td>Monthly, 60 minutes</td><td>A new baseline, and a look back at decisions</td></tr>
+      <tr><td>Monthly program review</td><td>Monthly, 60&nbsp;minutes</td><td>A new baseline, and a look back at decisions</td></tr>
     </tbody>
   </table>
   <p>Standing meetings stay under two hours a week for each functional lead. More than that means the written artifacts are failing and need fixing, not that the program needs another meeting.</p>
@@ -163,10 +166,10 @@
   <table>
     <thead><tr><th>Days</th><th>Work</th></tr></thead>
     <tbody>
-      <tr><td>1 to 14</td><td>Meet each functional lead twice, sit in on two design reviews, one NRC engagement prep and one supplier call without talking, list every tracker that already exists, and build one working matrix row for the heat pipe assembly.</td></tr>
-      <tr><td>15 to 30</td><td>Fill in the whole subsystem tree, start the decision log by writing down the last 60 days of decisions, run the first Critical Path Review, and send the first Context Pack.</td></tr>
-      <tr><td>31 to 45</td><td>Run a practice drill on one named risk, a late Category II finding that adds 20 kg of shielding, and retire one tracker or meeting the new setup made redundant.</td></tr>
-      <tr><td>46 to 60</td><td>Make it work without me. A lead back from a week off should be current in 20 minutes from the matrix, the log and the last two Context Packs.</td></tr>
+      <tr><td>1&nbsp;to&nbsp;14</td><td>Meet each functional lead twice, sit in on two design reviews, one NRC engagement prep and one supplier call without talking, list every tracker that already exists, and build one working matrix row for the heat pipe assembly.</td></tr>
+      <tr><td>15&nbsp;to&nbsp;30</td><td>Fill in the whole subsystem tree, start the decision log by writing down the last 60 days of decisions, run the first Critical Path Review, and send the first Context Pack.</td></tr>
+      <tr><td>31&nbsp;to&nbsp;45</td><td>Run a practice drill on one named risk, a late Category II finding that adds 20 kg of shielding, and retire one tracker or meeting the new setup made redundant.</td></tr>
+      <tr><td>46&nbsp;to&nbsp;60</td><td>Make it work without me. A lead back from a week off should be current in 20 minutes from the matrix, the log and the last two Context Packs.</td></tr>
     </tbody>
   </table>
   <p>The test at day 60 is simple. The first real mass breach or regulatory slip should show up in the matrix and land on the Critical Path Review before anyone finds it in a design review or in NRC correspondence.</p>
@@ -396,6 +399,24 @@ function renderSummary(rows, nItems, w) {
       (red.length ? " Red. " + esc(red.join(", ")) + "." : ""));
 }
 
+/* Keep a hyphenated name, and a number with its unit, on one line wherever the tracker writes them. */
+function keepTogether(root) {
+  const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT,
+    { acceptNode: n => n.parentElement.closest("svg, .nobr, button") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+  const nodes = [];
+  while (walk.nextNode()) nodes.push(walk.currentNode);
+  nodes.forEach(n => {
+    const parts = n.data.replace(/(\d) (?=(kg|days?|weeks?|minutes|items?)\b)/g, "$1\u00a0").split(/(\S+-\S+)/);
+    const f = document.createDocumentFragment();
+    parts.forEach((t, i) => {
+      if (!t) return;
+      if (i % 2) { const b = document.createElement("span"); b.className = "nobr"; b.textContent = t; f.appendChild(b); }
+      else f.appendChild(document.createTextNode(t));
+    });
+    n.replaceWith(f);
+  });
+}
+
 function render() {
   const w = state.week;
   const rows = P.subsystems.map(s => rowAt(s, w));
@@ -406,6 +427,7 @@ function render() {
   renderPack(rows, decs, actions, w);
   renderDecisions(decs);
   renderSummary(rows, n, w);
+  keepTogether(document.getElementById("tool"));
   document.querySelectorAll("#weeks button").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.week) === w)));
   document.querySelectorAll("#events button[data-event]").forEach(b => b.setAttribute("aria-pressed", String(state.events.has(b.dataset.event))));
 }

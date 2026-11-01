@@ -37,6 +37,9 @@
   h2 { font-size: 32px; line-height: 1.2; margin: 0 0 12px; font-weight: 600; }
   .one-line { font-size: 19px; color: var(--muted); margin: 0 0 28px; max-width: 760px; }
   .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 0 0 30px; }
+  /* No tile left alone on a row. Four go two by two on a mid-size screen, and on a phone the tiles stack. */
+  @media (min-width: 561px) and (max-width: 900px) { .stats:has(> .stat:nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .stats { grid-template-columns: minmax(0, 1fr); } }
   .stat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
   .stat b { display: block; font: 600 26px/1.15 -apple-system, "Segoe UI", Arial, sans-serif; letter-spacing: -.01em; }
   .stat small { font: 13px/1.35 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--muted); }
@@ -56,10 +59,14 @@
   .before { border-top: 1px solid var(--line); padding-top: 48px; }
   .before ul { padding-left: 20px; margin: 0; }
   .before li { margin: 0 0 10px; }
-  .open { font: 500 16px/1.7 -apple-system, "Segoe UI", Arial, sans-serif; }
-  .open a { color: var(--accent); }
+  .before a { color: var(--accent); }
+  /* Scoped to the paragraph: the phone contents sheet also takes the class "open" while it is showing. */
+  p.open { font: 500 16px/1.7 -apple-system, "Segoe UI", Arial, sans-serif; }
+  p.open a { color: var(--accent); }
   .index { margin-top: 30px; }
-  .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 16px; }
+  /* The label sits beside its chips, and chips that wrap line up under the first chip, not under the label. */
+  .filters { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin: 0 0 16px; }
+  .filters .chips { display: flex; flex-wrap: wrap; gap: 8px; flex: 1 1 0; min-width: 0; }
   .flabel { font: 600 12px/1 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--faint); min-width: 74px; }
   .filters + .filters { margin-top: -6px; }
   .chip { font: 500 14px/1 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--ink); background: var(--card);
@@ -68,8 +75,10 @@
   .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
   .chip .c { color: var(--faint); margin-left: 6px; }
   .chip[aria-pressed="true"] .c { color: inherit; opacity: .7; }
+  /* The last column has a fixed width, so a row without a Try it button keeps the columns of the header and of the rows with one. */
   .builds-head, ol.builds .row { display: grid; gap: 14px; align-items: baseline;
-    grid-template-columns: 30px minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr) auto; }
+    grid-template-columns: 30px minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr) 60px; }
+  ol.builds .row > .name, ol.builds .row > .meta { text-wrap: balance; }
   .builds-head { font: 600 11px/1 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--faint); padding: 0 6px 10px; }
   ol.builds { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
   ol.builds li { margin: 0; border-bottom: 1px solid var(--line); }
@@ -83,6 +92,7 @@
   .row a.try { font: 600 13px/1 var(--sans); background: var(--accent); color: #fff; padding: 7px 10px; border-radius: 8px; justify-self: end; align-self: start;
                 text-decoration: none; white-space: nowrap; }
   .row a.try:hover { filter: brightness(1.08); }
+  [data-theme="dark"] .row a.try { color: var(--paper); }
   .row .try { text-align: right; }
   .row { cursor: pointer; }
   .index-foot { display: flex; justify-content: space-between; gap: 12px; margin: 12px 0 0;
@@ -118,13 +128,13 @@
     .contact a, .contact .loc { display: table; margin-bottom: 6px; }
     .contact span { display: none; }
     .builds-head { display: none; }
-    ol.builds .row { grid-template-columns: 26px minmax(0, 1fr) auto; gap: 2px 10px; }
+    ol.builds .row { grid-template-columns: 26px minmax(0, 1fr) 60px; gap: 2px 10px; }
     .row .n { grid-column: 1; grid-row: 1 / span 4; }
     .row .name, .row .meta { grid-column: 2; }
     .row a.try { font: 600 13px/1 var(--sans); background: var(--accent); color: #fff; padding: 7px 10px; border-radius: 8px; justify-self: end; align-self: start;
                 text-decoration: none; white-space: nowrap; }
   .row a.try:hover { filter: brightness(1.08); }
-  .row .try { grid-column: 3; grid-row: 1; }
+  .row .try { grid-column: 3; grid-row: 1 / span 2; }
     .row .meta { font-size: 14px; }
     .row .meta.data { display: none; }
     .flabel { min-width: 0; width: 100%; }
@@ -144,23 +154,25 @@
   <div class="index" id="builds">
     <div class="filters" role="group" aria-label="Filter the builds">
       <span class="flabel">Industry</span>
+      <span class="chips">
       <button class="chip" type="button" data-industry-filter="all" aria-pressed="true">All<span class="c">5</span></button>
       <button class="chip" type="button" data-industry-filter="software" aria-pressed="false">Software and AI<span class="c">2</span></button>
       <button class="chip" type="button" data-industry-filter="hardware" aria-pressed="false">Hardware manufacturing<span class="c">1</span></button>
       <button class="chip" type="button" data-industry-filter="aerospace" aria-pressed="false">Aerospace<span class="c">1</span></button>
       <button class="chip" type="button" data-industry-filter="defense" aria-pressed="false">Defense and government<span class="c">1</span></button>
+      </span>
     </div>
     <div class="filters">
       <span class="flabel">Show</span>
-      <button class="chip" type="button" data-try-filter aria-pressed="false">Only what you can try<span class="c">3</span></button>
+      <span class="chips"><button class="chip" type="button" data-try-filter aria-pressed="false">Only what you can try<span class="c">3</span></button></span>
     </div>
     <div class="builds-head" aria-hidden="true"><span></span><span>Build</span><span>Industry</span><span>Use</span><span>Data</span><span></span></div>
     <ol class="builds">
-      <li data-industry="software" data-try="yes"><div class="row lift" data-href="#scanner"><span class="n">01</span><a class="name" href="#scanner">Account-list scanner</a><span class="meta">Software and AI</span><span class="meta">Account research for sales and marketing</span><span class="meta data">Public DNS records</span><a class="try" href="account-scanner/">Try it</a></div></li>
-      <li data-industry="hardware" data-try="yes"><div class="row lift" data-href="#issue-scribe"><span class="n">02</span><a class="name" href="#issue-scribe">Issue Scribe</a><span class="meta">Hardware manufacturing</span><span class="meta">AI-assisted quality management</span><span class="meta data">Sample data</span><a class="try" href="issue-scribe/">Try it</a></div></li>
+      <li data-industry="software" data-try="yes"><div class="row lift" data-href="#scanner"><span class="n">01</span><a class="name" href="#scanner"><span class="nobr">Account-list</span> scanner</a><span class="meta">Software and AI</span><span class="meta">Account research for sales and marketing</span><span class="meta data">Public DNS records</span><a class="try" href="account-scanner/">Try it</a></div></li>
+      <li data-industry="hardware" data-try="yes"><div class="row lift" data-href="#issue-scribe"><span class="n">02</span><a class="name" href="#issue-scribe">Issue Scribe</a><span class="meta">Hardware manufacturing</span><span class="meta"><span class="nobr">AI-assisted</span> quality management</span><span class="meta data">Sample data</span><a class="try" href="issue-scribe/">Try it</a></div></li>
       <li data-industry="aerospace" data-try="yes"><div class="row lift" data-href="#lunar-reactor-tracker"><span class="n">03</span><a class="name" href="#lunar-reactor-tracker">Lunar reactor readiness tracker</a><span class="meta">Aerospace</span><span class="meta">Program operations for a hardware program</span><span class="meta data">Hypothetical program</span><a class="try" href="lunar-reactor-tracker/">Try it</a></div></li>
-      <li data-industry="defense" data-try="no"><div class="row lift" data-href="#federal"><span class="n">04</span><a class="name" href="#federal">Federal-contract pipeline</a><span class="meta">Defense and government</span><span class="meta">Opportunity pipeline for business development</span><span class="meta data">SAM.gov daily file</span></div></li>
-      <li data-industry="software" data-try="no"><div class="row lift" data-href="#crm"><span class="n">05</span><a class="name" href="#crm">Onboarding CRM</a><span class="meta">Software and AI</span><span class="meta">Customer onboarding and follow-up</span><span class="meta data">Team tracker and Slack</span></div></li>
+      <li data-industry="defense" data-try="no"><div class="row lift" data-href="#federal"><span class="n">04</span><a class="name" href="#federal"><span class="nobr">Federal-contract</span> pipeline</a><span class="meta">Defense and government</span><span class="meta">Opportunity pipeline for business development</span><span class="meta data">SAM.gov daily file</span></div></li>
+      <li data-industry="software" data-try="no"><div class="row lift" data-href="#crm"><span class="n">05</span><a class="name" href="#crm">Onboarding CRM</a><span class="meta">Software and AI</span><span class="meta">Customer onboarding and <span class="nobr">follow-up</span></span><span class="meta data">Team tracker and Slack</span></div></li>
     </ol>
     <p class="index-foot"><span><span id="shown">All 5 builds.</span> <button class="linkish" type="button" id="show-all" hidden>Show all</button></span><span class="links"><a href="#how">How I build</a><a href="writing/">Writing and ideas</a></span></p>
   </div>
@@ -265,7 +277,7 @@
   <div class="cols">
     <div>
       <h3>What it does</h3>
-      <p>For a product operations take-home in April 2026, I framed a hypothetical program from public news about lunar surface power. It integrates the heat rejection system for the LR-1 lunar reactor ahead of the SR-1 orbital test, inside a 15-tonne lander. I proposed how to run it across engineering, regulatory and supply chain, then built the proposal so it runs.</p>
+      <p>For a product operations take-home in April 2026, I framed a hypothetical program from public news about lunar surface power. It integrates the heat rejection system for the <span class="nobr">LR-1</span> lunar reactor ahead of the <span class="nobr">SR-1</span> orbital test, inside a 15-tonne lander. I proposed how to run it across engineering, regulatory and supply chain, then built the proposal so it runs.</p>
       <p>Step to week 7 and the titanium tubing slip is already on the review. At week 8 the radiator is flagged six weeks before it breaks its budget. Ask for more shielding and the reserve decision reopens. Approve the two leadership decisions and their actions close on their own once the matrix shows the change.</p>
       <p class="open"><a class="try-btn" href="lunar-reactor-tracker/">Open the tracker</a>, step through weeks 4 to 8, then make something happen.</p>
     </div>
@@ -330,7 +342,7 @@
   <div class="stats">
     <div class="stat"><b>1,100+</b><small>signups synced from the team's tracker</small></div>
     <div class="stat"><b>6</b><small>action queues, from "invite" to "tell them the bug is fixed"</small></div>
-    <div class="stat"><b>~1 cent</b><small>for an LLM-drafted follow-up</small></div>
+    <div class="stat"><b>~1 cent</b><small>for an <span class="nobr">LLM-drafted</span> follow-up</small></div>
   </div>
   <div class="cols">
     <div>

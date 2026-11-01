@@ -162,7 +162,7 @@
   <table class="rules">
     <thead><tr><th>Level</th><th>Change between two reads</th></tr></thead>
     <tbody>
-      <tr><td><span class="chip critical">Critical</span></td><td>DMARC policy goes up (none to quarantine, or to reject) within 14 days. Or two or more changes inside 30 days, which looks like firefighting.</td></tr>
+      <tr><td><span class="chip critical">Critical</span></td><td>DMARC policy goes up (none to quarantine, or to reject) within 14&nbsp;days. Or two or more changes inside 30&nbsp;days, which looks like firefighting.</td></tr>
       <tr><td><span class="chip high">High</span></td><td>DMARC turned on for the first time. Mail routing or the DMARC report vendor switches, which usually means a new vendor. A policy rolled back, which usually means mail broke.</td></tr>
       <tr><td><span class="chip medium">Medium</span></td><td>Sending services added or removed from SPF. SPF tightened or loosened. DKIM keys added or removed. Enforcement percentage changed.</td></tr>
     </tbody>
@@ -704,7 +704,7 @@ async function compareAndRecord(domain, read, a, onProgress) {
   const recentEvents = new Set(store.log.filter(l => l.domain === domain && l.severity !== "info" &&
                                  daysBetween(l.at, now) <= 30).map(l => l.at)).size;
   if (alerts.length && recentEvents + 1 >= 2) {
-    alerts.unshift(["critical", "Firefighting", (recentEvents + 1) + " separate changes in 30 days."]);
+    alerts.unshift(["critical", "Firefighting", (recentEvents + 1) + " separate changes in 30\u00a0days."]);
   }
   unstable.forEach(k => alerts.push(["info", "Ignored a change that did not hold", "The " + FIELD_NAMES[k] + " read differently twice in a row, so it was not counted."]));
   alerts.slice().reverse().forEach(x => store.log.unshift({ at: now, domain: domain, severity: x[0], title: x[1], detail: x[2] }));
