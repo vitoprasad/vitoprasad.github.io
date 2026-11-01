@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The power problem is a casting problem, Vito Prasad</title>
+<meta name="description" content="Gas turbine makers are sold out to 2031 and the price of a turbine has nearly tripled since 2019. Work backward from the chips and the constraint turns out to be a foundry, and the arithmetic says time is worth far more than efficiency. Part one of two. Part two is about who gets the blades.">
+<link rel="icon" href="data:,">
+<script>(function(){try{var t=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<link rel="stylesheet" href="../../site.css">
+<style>
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font: 17px/1.6 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
+  main { --page-w: 760px; max-width: 760px; margin: 0 auto; padding: 64px 28px 96px; }
+  a { color: var(--ink); }
+  .back { font: 14px/1 var(--sans); color: var(--muted); text-decoration: none; }
+  .back:hover { color: var(--ink); }
+  .story { max-width: 660px; margin: 0 auto; }
+  .story h1 { font-size: 44px; line-height: 1.12; margin: 28px 0 22px; font-weight: 600; letter-spacing: -.015em; }
+  .story .dek { font-size: 21px; line-height: 1.55; color: var(--muted); margin: 0 0 18px; }
+  .story .byline { font: 14px/1.5 var(--sans); color: var(--faint); margin: 0 0 40px; }
+  .story > p { font-size: 19px; line-height: 1.65; margin: 0 0 20px; }
+  .story > h2 { font-size: 27px; line-height: 1.25; margin: 52px 0 14px; font-weight: 600; }
+  .story a { color: var(--accent); }
+  .story > ol, .story > ul { font-size: 19px; line-height: 1.6; padding-left: 26px; margin: 0 0 20px; }
+  .story > ol > li { margin: 0 0 12px; }
+  .sources { border-top: 1px solid var(--line); padding-top: 28px; margin-top: 56px; font-family: var(--sans); color: var(--muted); }
+  .sources h2 { font: 600 17px/1.3 var(--sans); color: var(--ink); margin: 0 0 6px; }
+  .sources h2 + p.group { margin-top: 14px; }
+  .sources h2.later { margin-top: 30px; }
+  .sources p, .sources ul, .sources li { font-size: 15px; line-height: 1.5; }
+  .sources p.group { font-weight: 600; color: var(--ink); margin: 18px 0 6px; }
+  .sources ul { padding-left: 18px; margin: 0 0 8px; }
+  .sources li { margin: 0 0 6px; }
+  .sources a { word-break: break-word; }
+  footer { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 64px; font: 14px/1.5 var(--sans); color: var(--faint); }
+  footer a { color: var(--muted); }
+  @media (max-width: 860px) {
+    main { padding: 36px 16px 72px; }
+    .story h1 { font-size: 32px; } .story .dek { font-size: 18px; } .story > p, .story > ol, .story > ul { font-size: 17.5px; }
+    .story > h2 { font-size: 24px; margin-top: 44px; }
+  }
+
+/* The graphics, pull quotes and tables of the essay pages. Built into each page by
+   build_essay_pages.py. Colours come only from the variables in site.css, so both
+   themes work. Marks are thin, data ends are rounded 4px, labels wear text colours. */
+
+/* ---------- Shared frame ---------- */
+.story .graphic { margin: 38px 0 30px; font-family: var(--sans); position: relative; }
+.graphic p { margin: 0; }
+.graphic .g-title { font: 600 16px/1.35 var(--sans); color: var(--ink); margin: 0 0 3px; }
+.graphic .g-sub { font: 13.5px/1.45 var(--sans); color: var(--muted); margin: 0 0 18px; }
+.graphic figcaption { font: 14px/1.5 var(--sans); color: var(--muted); margin: 16px 0 0; }
+.graphic .g-src { font: 12.5px/1.5 var(--sans); color: var(--faint); margin: 6px 0 0; }
+.graphic .g-src a { color: var(--muted); }
+.graphic + .table-wrap { margin-top: -6px; }
+
+/* ---------- Tooltip ---------- */
+.g-tip { position: absolute; z-index: 20; max-width: 300px; background: var(--card); color: var(--ink); border: 1px solid var(--line);
+         border-radius: 10px; padding: 10px 12px; box-shadow: 0 8px 26px var(--shadow); font: 13px/1.45 var(--sans); pointer-events: none; }
+.g-tip[hidden] { display: none; }
+.g-tip b { display: block; font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+.g-tip .k { display: block; color: var(--muted); }
+.g-tip .row { display: block; margin-top: 6px; }
+.g-tip .row span { display: block; color: var(--faint); font-size: 12px; }
+.tipsrc { display: none; }
+
+/* ---------- Horizontal bars on one axis (the constraint chain, the turbine gap) ---------- */
+.hplot { position: relative; padding-bottom: 26px; }
+.hgrid { position: absolute; left: 0; right: 0; top: 0; bottom: 26px; pointer-events: none; }
+.hgrid span { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--chart-grid); left: calc(var(--at) / var(--max) * 100%); }
+.hgrid span.zero { background: var(--chart-line); }
+.hrow { position: relative; padding: 8px 0 10px; border-radius: 6px; outline-offset: 2px; }
+.hrow:focus-visible { outline: 2px solid var(--accent); }
+.hlabel { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; font: 14px/1.35 var(--sans); margin: 0 0 6px; position: relative; }
+.hname { color: var(--ink); font-weight: 600; }
+.hval { color: var(--muted); font-variant-numeric: tabular-nums; }
+.htag { color: var(--faint); font-style: italic; }
+.htrack { position: relative; height: 14px; }
+.hbar { position: absolute; top: 0; bottom: 0; left: calc(var(--lo) / var(--max) * 100%); width: calc((var(--hi) - var(--lo)) / var(--max) * 100%);
+        background: var(--accent); border-radius: 4px; transform-origin: left center; }
+.hbar.from-zero { border-radius: 0 4px 4px 0; }
+.hbar.solid-part { border-radius: 0; }
+.hbar.range-part { background: var(--accent-light); border-radius: 0 4px 4px 0; margin-left: 2px; width: calc((var(--hi) - var(--lo)) / var(--max) * 100% - 2px); }
+.hbar.neutral { background: var(--faint); }
+.hbar.ghost { background: var(--info-soft); border: 1.5px dashed var(--faint); }
+.hmark { position: absolute; top: 50%; left: calc(var(--at) / var(--max) * 100%); width: 14px; height: 14px; border-radius: 50%;
+         transform: translate(-50%, -50%); background: var(--paper); border: 3px solid var(--accent); box-shadow: 0 0 0 2px var(--paper); }
+.haxis { position: absolute; left: 0; right: 0; bottom: 0; height: 18px; font: 12px/18px var(--sans); color: var(--faint); font-variant-numeric: tabular-nums; }
+.haxis span { position: absolute; left: calc(var(--at) / var(--max) * 100%); transform: translateX(-50%); white-space: nowrap; }
+.haxis span.first { transform: none; }
+.haxis span.last { transform: translateX(-100%); }
+.hrow:hover .hbar, .hrow:focus-visible .hbar { filter: brightness(1.08); }
+.hrow:hover .hname { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+
+/* ---------- The turbine gap: slider and sentence ---------- */
+.gap-ctl { font: 14px/1.4 var(--sans); margin: 0 0 16px; }
+.gap-ctl label { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; color: var(--ink); }
+.gap-ctl output { font-weight: 600; font-variant-numeric: tabular-nums; }
+.gap-ctl input[type=range] { width: 100%; accent-color: var(--accent); margin: 0; }
+.gap-ctl .marks { position: relative; height: 18px; font: 12px/18px var(--sans); color: var(--faint); margin: 2px 9px 0; }
+.gap-ctl .marks button { position: absolute; left: calc((var(--at) - 40) / 60 * 100%); transform: translateX(-50%); font: inherit; color: inherit;
+                         background: none; border: 0; padding: 0 2px; cursor: pointer; white-space: nowrap; }
+.gap-ctl .marks button:hover { color: var(--ink); text-decoration: underline; }
+.gap-ctl .marks button:first-child { transform: translateX(-20%); }
+.gap-ctl .marks button:last-child { transform: translateX(-85%); }
+.gap-ctl .note { color: var(--faint); font-size: 12.5px; margin: 6px 0 0; }
+.story .graphic .gap-sentence { font: 17.5px/1.55 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; color: var(--ink); margin: 0 0 18px; }
+.gap-sentence b { font-weight: 600; }
+
+/* ---------- Vertical columns (the backlog) ---------- */
+.backlog-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.vplot { --h: 128px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: end; height: calc(var(--h) + 22px);
+         border-bottom: 1px solid var(--chart-line); }
+.vcol { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; border-radius: 6px; outline-offset: 2px; }
+.vcol:focus-visible { outline: 2px solid var(--accent); }
+.vval { font: 600 13px/1 var(--sans); color: var(--ink); margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.vbar { width: 24px; height: calc(var(--v) / var(--max) * var(--h)); background: var(--accent); border-radius: 4px 4px 0 0; transform-origin: bottom center; }
+.vcol:hover .vbar, .vcol:focus-visible .vbar { filter: brightness(1.08); }
+.vlabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); font: 12px/1.3 var(--sans); color: var(--muted); text-align: center; margin-top: 6px; }
+.wait { border-left: 1px solid var(--line); padding-left: 22px; }
+.wait dl { margin: 10px 0 0; font: 14px/1.4 var(--sans); }
+.wait dt { color: var(--ink); font-weight: 600; margin: 12px 0 1px; }
+.wait dt:first-child { margin-top: 0; }
+.wait dd { margin: 0; color: var(--ink); }
+.wait dd a { display: block; color: var(--faint); font-size: 12px; margin-top: 1px; }
+
+/* ---------- Table views ---------- */
+.table-wrap { margin: 10px 0 30px; }
+.story table { width: 100%; border-collapse: collapse; font: 14px/1.45 var(--sans); }
+.story th { text-align: left; font-weight: 600; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: bottom; }
+.story td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; font-variant-numeric: tabular-nums; }
+.story th:first-child, .story td:first-child { padding-left: 0; }
+.story td:first-child { color: var(--ink); font-weight: 600; }
+details.table-view { margin: 18px 0 0; font: 13.5px/1.45 var(--sans); }
+details.table-view summary { cursor: pointer; color: var(--muted); }
+details.table-view summary:hover { color: var(--ink); }
+details.table-view table { margin-top: 10px; font-size: 13.5px; }
+details.table-view td:first-child { font-weight: 400; }
+
+/* ---------- The calculator ---------- */
+.calc { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 28px 0 30px; }
+.story .graphic .calc-sentences p { font: 17.5px/1.55 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; color: var(--ink); margin: 0 0 12px; }
+.calc-sentences b { font-weight: 600; }
+/* Five tiles, three over two. */
+.tiles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin: 22px 0 6px; }
+.tile { grid-column: span 2; }
+.tile:nth-child(n+4) { grid-column: span 3; }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 13px; }
+.story .graphic .tile .label { font: 12.5px/1.35 var(--sans); color: var(--muted); margin: 0 0 6px; }
+.story .graphic .tile .value { font: 600 22px/1.15 var(--sans); letter-spacing: -.01em; margin: 0; }
+.story .graphic .tile .sub { font: 12px/1.4 var(--sans); color: var(--faint); margin: 4px 0 0; }
+.calc-bars { margin: 28px 0 0; }
+.cbars { display: grid; gap: 10px; }
+.cbar { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 12px; align-items: center; font: 13.5px/1.3 var(--sans); }
+.cbar .name { color: var(--ink); }
+.cbar .track { position: relative; height: 16px; }
+.cbar .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 0 4px 4px 0; min-width: 2px; transition: width .25s ease; }
+.cbar .val { position: absolute; left: calc(var(--w) + 8px); top: 0; line-height: 16px; font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+.cbar .val.inside { left: auto; right: calc(100% - var(--w) + 8px); color: var(--paper); font-weight: 600; }
+.calc-inputs { border-top: 1px solid var(--line); margin-top: 30px; padding-top: 24px; }
+.story .graphic .calc-inputs h3 { font: 600 16px/1.3 var(--sans); margin: 0 0 4px; }
+.story .graphic .calc-inputs .intro { font: 13.5px/1.5 var(--sans); color: var(--muted); margin: 0 0 18px; }
+.cgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 30px; }
+.ctl { font: 14px/1.4 var(--sans); }
+.ctl label { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.ctl label span:last-child { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; white-space: nowrap; }
+.ctl input[type=range] { width: 100%; accent-color: var(--accent); margin: 0; }
+.ctl small { display: block; color: var(--faint); font-size: 12px; line-height: 1.45; margin-top: 3px; }
+.ctl small .essay { color: var(--muted); }
+.calc-reset { font: 600 14px/1 var(--sans); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+              cursor: pointer; margin-top: 20px; }
+.calc-reset:hover { border-color: var(--ink); }
+.calc table { margin-top: 24px; }
+.calc td:first-child { font-weight: 400; }
+.story .graphic .calc-open { font: 14px/1.5 var(--sans); margin: 18px 0 0; }
+.calc-open a { color: var(--accent); }
+@media (min-width: 900px) {
+  /* The inputs may use the page's full width, 50px past the story column on each side. */
+  .calc-inputs { margin-left: -50px; margin-right: -50px; }
+}
+
+/* ---------- Pull quote and the embedded post ---------- */
+.pull { margin: 34px 0 36px; padding: 2px 0 2px 24px; border-left: 3px solid var(--accent); }
+.pull blockquote { margin: 0; }
+.story .pull blockquote p { font-size: 25px; line-height: 1.38; letter-spacing: -.005em; color: var(--ink); margin: 0 0 12px; }
+.pull figcaption { font: 14px/1.5 var(--sans); color: var(--muted); }
+.pull figcaption a { color: var(--muted); }
+.x-post { margin: 30px 0 34px; display: flex; justify-content: center; }
+.x-post > * { margin-left: auto !important; margin-right: auto !important; }
+/* The post's frame declares no colour scheme. Matching it keeps the browser from painting a white backdrop behind it in the dark theme. */
+.x-post iframe { color-scheme: normal; }
+.story blockquote.twitter-tweet { margin: 0; max-width: 550px; width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+                                  padding: 16px 20px; font: 15px/1.5 var(--sans); color: var(--muted); }
+.story blockquote.twitter-tweet p { font: 17px/1.5 var(--sans); color: var(--ink); margin: 0 0 10px; }
+.story blockquote.twitter-tweet a { color: var(--accent); }
+
+/* ---------- Motion, only for people who have not asked for less ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .graphic.anim .hbar, .graphic.anim .hmark { transition: transform .6s cubic-bezier(.2, .7, .2, 1), opacity .4s ease; }
+  .graphic.anim .vbar { transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+  .graphic.anim:not(.shown) .hbar { transform: scaleX(0); }
+  .graphic.anim:not(.shown) .hmark { opacity: 0; }
+  .graphic.anim:not(.shown) .vbar { transform: scaleY(0); }
+  .gap .hbar { transition: width .25s ease, transform .6s cubic-bezier(.2, .7, .2, 1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cbar .fill { transition: none; }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 640px) {
+  .backlog-grid { grid-template-columns: 1fr; gap: 22px; }
+  .wait { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 16px; }
+  .cgrid { grid-template-columns: 1fr; }
+  .tiles { grid-template-columns: 1fr 1fr; }
+  .tile, .tile:nth-child(n+4) { grid-column: auto; }
+  .tile:last-child { grid-column: span 2; }
+  .haxis span.odd { display: none; }
+  .cbar { grid-template-columns: 1fr; gap: 4px; }
+  .story .pull blockquote p { font-size: 21px; }
+  .pull { padding-left: 18px; }
+  /* Tables become one card per row, each cell keeping its column name. */
+  .story .table-wrap table, .story .table-wrap tbody, .story .table-wrap tr, .story .table-wrap td { display: block; width: 100%; }
+  .story .table-wrap thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .story .table-wrap tr { border-bottom: 1px solid var(--line); padding: 10px 0 8px; }
+  .story .table-wrap tr:first-child { border-top: 1px solid var(--line); }
+  .story .table-wrap td { border: 0; padding: 2px 0; }
+  .story .table-wrap td::before { content: attr(data-label); display: block; font-size: 12px; font-weight: 400; color: var(--faint); }
+  .story .table-wrap td:first-child::before { display: none; }
+  .story .table-wrap td:first-child { font-size: 15px; padding-bottom: 4px; }
+}
+@media print { .g-tip { display: none !important; } }
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../">&larr; Writing and ideas</a>
+
+<article class="story">
+  <h1>The power problem is a casting problem</h1>
+  <p class="dek">Gas turbine makers are sold out to 2031 and the price of a turbine has nearly tripled since 2019. Work backward from the chips and the constraint turns out to be a foundry, and the arithmetic says time is worth far more than efficiency. Part one of two. Part two is about who gets the blades.</p>
+  <p class="byline">By Vito Prasad. November 1, 2026.</p>
+  <p>If you are buying power for a gigawatt of AI chips, the price of a gas turbine has almost nothing to do with what it costs to make, and you should pay it anyway. A gigawatt of idle chips costs more than $400 million a month in depreciation alone. Against that, the whole rise in turbine prices since 2019 buys back about one month, and the fuel penalty of the fast, inefficient turbine is less than a week. Time is the thing being priced, and the price of a turbine is being set by the chips waiting on it.</p>
+  <p>Work backward from the chips and the constraint is a foundry. Turbines need single crystal blades, a handful of plants can cast them, and a new one takes four to six years. That is the slowest step on the path a buyer controls.</p>
+  <p>This is the first of two pieces. This one works out the constraint and the arithmetic that prices it. The second follows the two companies building foundries to get around it, SpaceX and Boom, and asks whose chips wait when they succeed. The numbers are shown so you can check the reasoning rather than take my word for it.</p>
+  <h2 id="what-happened">What happened</h2>
+  <p><strong>The turbine makers are sold out into the next decade.</strong> GE Vernova ended the third quarter with 122 gigawatts of gas turbine backlog and slot reservations, which are deposits that hold a place in the production line, up from 83 at the start of the year, and said its full year order pricing per kilowatt is running about 50% above 2025. Siemens Energy's firm backlog is near 70 gigawatts. Mitsubishi Power told a Singapore audience on October 27 that a large utility-scale turbine ordered now arrives around 2031. Wood Mackenzie counts 110 gigawatts of orders against 60 to 70 gigawatts a year of manufacturing capacity, and expects the turbine itself to reach $600 per kilowatt by the end of 2027, up 195% from 2019.</p>
+  <figure class="graphic backlog grows" id="turbine-backlog" aria-label="GE Vernova gas turbine backlog plus slot reservations, by quarter"><div class="backlog-grid"><div class="backlog-chart"><p class="g-title">GE Vernova's gas turbine backlog plus slot reservations</p><p class="g-sub">Gigawatts, at the end of 2025 and of each quarter of 2026</p><div class="vplot" style="--max:122"><div class="vcol" tabindex="0" data-tip><span class="vval">83</span><span class="vbar" style="--v:83"></span><span class="tipsrc"><b>End of 2025</b><span class="k">83 GW at the end of 2025</span><span class="row"><span>Where it comes from</span>GE Vernova 8-K, filed January 28, 2026</span></span></div><div class="vcol" tabindex="0" data-tip><span class="vval">100</span><span class="vbar" style="--v:100"></span><span class="tipsrc"><b>First quarter</b><span class="k">100 GW at the first quarter of 2026, up 17 from the quarter before</span><span class="row"><span>Where it comes from</span>GE Vernova 8-K, filed April 22, 2026</span></span></div><div class="vcol" tabindex="0" data-tip><span class="vval">116</span><span class="vbar" style="--v:116"></span><span class="tipsrc"><b>Second quarter</b><span class="k">116 GW at the second quarter of 2026, up 16 from the quarter before</span><span class="row"><span>Where it comes from</span>GE Vernova 8-K, filed July 22, 2026</span></span></div><div class="vcol" tabindex="0" data-tip><span class="vval">122</span><span class="vbar" style="--v:122"></span><span class="tipsrc"><b>Third quarter</b><span class="k">122 GW at the third quarter of 2026, up 6 from the quarter before</span><span class="row"><span>Where it comes from</span>GE Vernova 8-K, filed October 28, 2026</span></span></div></div><div class="vlabs" aria-hidden="true"><span>End of 2025</span><span>First quarter</span><span>Second quarter</span><span>Third quarter</span></div><p class="g-src">GE Vernova 8-K filings, 2026. Filed <a href="https://www.sec.gov/Archives/edgar/data/1996810/000199681026000012/gevpressrelease4q25.htm" target="_blank" rel="noopener">January 28</a>, <a href="https://www.sec.gov/Archives/edgar/data/1996810/000199681026000063/gevpressrelease1q26.htm" target="_blank" rel="noopener">April 22</a>, <a href="https://www.sec.gov/Archives/edgar/data/1996810/000199681026000147/gevpressrelease2q26.htm" target="_blank" rel="noopener">July 22</a>, <a href="https://www.sec.gov/Archives/edgar/data/0001996810/000199681026000162/gev3q2026form8-k10282026.pdf" target="_blank" rel="noopener">October 28</a>.</p></div><div class="wait"><p class="g-title">Earliest delivery for a new large turbine ordered today</p><dl><dt>GE Vernova</dt><dd>2031, and it has started selling 2032<a href="https://www.fool.com/earnings/call-transcripts/2026/10/28/ge-vernova-gev-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">GE Vernova third quarter 2026 call</a></dd><dt>Siemens Energy</dt><dd>Three years or more<a href="https://www.utilitydive.com/news/siemens-gas-turbine-backlog-nears-70-gw-as-company-expands-manufacturing/827390/" target="_blank" rel="noopener">Utility Dive, August 2026</a></dd><dt>Mitsubishi Power</dt><dd>About 2031<a href="https://www.energyconnects.com/news/renewables/2026/october/high-demand-for-gas-turbines-is-pushing-out-deliveries-to-2031-mitsubishi-power-says/" target="_blank" rel="noopener">Bloomberg, October 27, 2026</a></dd></dl></div></div><details class="table-view"><summary>The chart as a table</summary><table><thead><tr><th>At</th><th>Gigawatts</th><th>Source</th></tr></thead><tbody><tr><td>The end of 2025</td><td>83</td><td><a href="https://www.sec.gov/Archives/edgar/data/1996810/000199681026000012/gevpressrelease4q25.htm" target="_blank" rel="noopener">8-K, January 28, 2026</a></td></tr><tr><td>The first quarter of 2026</td><td>100</td><td><a href="https://www.sec.gov/Archives/edgar/data/1996810/000199681026000063/gevpressrelease1q26.htm" target="_blank" rel="noopener">8-K, April 22, 2026</a></td></tr><tr><td>The second quarter of 2026</td><td>116</td><td><a href="https://www.sec.gov/Archives/edgar/data/1996810/000199681026000147/gevpressrelease2q26.htm" target="_blank" rel="noopener">8-K, July 22, 2026</a></td></tr><tr><td>The third quarter of 2026</td><td>122</td><td><a href="https://www.sec.gov/Archives/edgar/data/0001996810/000199681026000162/gev3q2026form8-k10282026.pdf" target="_blank" rel="noopener">8-K, October 28, 2026</a></td></tr></tbody></table></details></figure>
+  <p><strong>The blade is the bottleneck inside the bottleneck.</strong> The hottest part of a gas turbine runs at 3,000 to 3,600 degrees Fahrenheit, above the melting point of the nickel alloy the blades are made of. They survive because each blade is grown as a single crystal around internal cooling channels, then coated. Howmet and Precision Castparts control roughly 80% of the world's capacity for those castings, and Howmet alone holds more than half of the industrial gas turbine blade market. On its October 29 call Howmet said blade capacity is sold out into the early 2030s for some customers, that capacity committed today ships in 2028, and that in a new casting furnace "what you see above the ground is only half of the machine."</p>
+  <p><strong>The biggest buyer has started building the slow step itself.</strong> SpaceX confirmed in August that it will cast turbine blades and vanes at a plant in Bastrop, Texas. On its October 20 earnings call Elon Musk said turbine makers can deliver everything except the blades and vanes 12 to 18 months before they can deliver the blades and vanes. Boom Supersonic announced a single crystal foundry of its own on October 22, the day it opened a turbine factory and a month after losing the customer it built the factory for. Part two takes up both companies.</p>
+  <p><strong>And the blade is now being sold separately from the turbine.</strong> Howmet's chief executive said on the same October 29 call that the plant SpaceX is installing in Southaven, Mississippi, just across the state line from Memphis, 33 Solar Titan turbines and 10 ProEnergy units, all runs on Howmet blades, and that "one Asian turbine manufacturing company has agreed to supply turbines without the blades" so SpaceX can fit its own, possibly derated until the castings match the original. I have not seen SpaceX confirm that. If it is right, a turbine has become a kit, and the kit is missing the one part nobody can make fast.</p>
+  <h2 id="work-backward-from-the-chips">Work backward from the chips</h2>
+  <p>Start with what physically limits each step, and how fast each step can grow.</p>
+  <p>A gigawatt of AI chips needs more than a gigawatt of firm power once cooling is counted. The grid cannot supply it on the buyer's schedule, because a new generator in the largest US power market now waits about eight years for its interconnection. So the buyer builds power on site. Cleanview counts about 82 gigawatts of such projects announced since the start of 2025, with roughly 2 gigawatts actually running by the middle of this year, most of it SpaceX's.</p>
+  <p>On-site firm power at that scale means gas turbines. A turbine's output is set by how hot you can run its first stage, and how hot you can run the first stage is set by the blade. Every other part of a turbine, the compressor, the combustor, the casing, the generator, is ordinary heavy industry with many suppliers. The single crystal blade is not. It is grown in a vacuum furnace from a ceramic mould that is destroyed after one use, at yields, the share of castings that come out usable, that fall as the blade gets bigger, in a handful of plants, to a specification the turbine maker has to qualify. Large land-based blades are the hardest case. Patent filings for the biggest single-piece castings report yields under 20%.</p>
+  <p><strong>So the chain is chips, then firm megawatts, then turbines, then blades, and the blade is the slowest step on the path a buyer controls.</strong> The grid is slower still, at about eight years for an interconnection, which is why the buyer left it. On the path that remains, a turbine maker can add assembly capacity in two to three years. A blade line takes two years to install before a multi-year ramp, the vacuum furnaces alone take 18 months to two years to procure, and a foundry built from nothing takes four to six years and then has to be qualified by the turbine maker. The time to add blade capacity is about the same as the lead time the shortage creates. That is the signature of a constraint that cannot fix itself.</p>
+  <figure class="graphic chain grows" id="constraint-chain" aria-label="Years to add capacity at each step, as a range for each"><p class="g-title">Years to add capacity at each step</p><p class="g-sub">Each bar runs from the quickest estimate to the slowest. Hover or tap a step for who supplies it and the source.</p><div class="hplot" style="--max:8"><div class="hgrid" aria-hidden="true"><span class="zero" style="--at:0"></span><span style="--at:1"></span><span style="--at:2"></span><span style="--at:3"></span><span style="--at:4"></span><span style="--at:5"></span><span style="--at:6"></span><span style="--at:7"></span><span style="--at:8"></span></div><div class="hrow" tabindex="0" data-tip><p class="hlabel"><span class="hname">Grid connection</span><span class="hval">about 8 years</span><span class="htag">left behind</span></p><div class="htrack"><span class="hbar ghost from-zero" style="--lo:0;--hi:8"></span></div><span class="tipsrc"><b>Grid connection</b><span class="k">about 8 years in the largest US market</span><span class="row"><span>Who supplies it</span>utilities and grid operators</span><span class="row"><span>Where it comes from</span>RMI, via Modo Energy</span></span></div><div class="hrow" tabindex="0" data-tip><p class="hlabel"><span class="hname">Turbine assembly</span><span class="hval">2 to 3 years</span></p><div class="htrack"><span class="hbar neutral" style="--lo:2;--hi:3"></span></div><span class="tipsrc"><b>Turbine assembly</b><span class="k">2 to 3 years, GE Vernova goes from 20 GW a year to 24 by 2028</span><span class="row"><span>Who supplies it</span>GE Vernova, Siemens Energy, Mitsubishi</span><span class="row"><span>Where it comes from</span>GE Vernova, Q3 2026</span></span></div><div class="hrow" tabindex="0" data-tip><p class="hlabel"><span class="hname">Cast blades</span><span class="hval">2 years to install a line, 4 to 6 for a new foundry</span></p><div class="htrack"><span class="hbar" style="--lo:2;--hi:6"></span><span class="hmark" style="--at:2"></span></div><span class="tipsrc"><b>Cast blades</b><span class="k">2 years to install a line, 4 to 6 for a new foundry</span><span class="row"><span>Who supplies it</span>Howmet, Precision Castparts</span><span class="row"><span>Where it comes from</span>Howmet calls, casting industry</span></span></div><div class="hrow" tabindex="0" data-tip><p class="hlabel"><span class="hname">Chips</span><span class="hval">2 to 3 years</span></p><div class="htrack"><span class="hbar neutral" style="--lo:2;--hi:3"></span></div><span class="tipsrc"><b>Chips</b><span class="k">2 to 3 years for a memory fab to reach volume</span><span class="row"><span>Who supplies it</span>TSMC and the memory makers</span><span class="row"><span>Where it comes from</span>SK Hynix, Samsung, Micron</span></span></div><div class="haxis" aria-hidden="true"><span class="first" style="--at:0">0</span><span class="odd" style="--at:1">1</span><span style="--at:2">2</span><span class="odd" style="--at:3">3</span><span style="--at:4">4</span><span class="odd" style="--at:5">5</span><span style="--at:6">6</span><span class="odd" style="--at:7">7</span><span class="last" style="--at:8">8 years</span></div></div><figcaption>The blade is the slowest step on the path a buyer controls.</figcaption></figure><div class="table-wrap"><table><thead><tr><th>Step</th><th>Who supplies it</th><th>Time to add capacity</th><th>Where it comes from</th></tr></thead><tbody><tr><td data-label="Step">Grid connection</td><td data-label="Who supplies it">utilities and grid operators</td><td data-label="Time to add capacity">about 8 years in the largest US market</td><td data-label="Where it comes from">RMI, via Modo Energy</td></tr><tr><td data-label="Step">Turbine assembly</td><td data-label="Who supplies it">GE Vernova, Siemens Energy, Mitsubishi</td><td data-label="Time to add capacity">2 to 3 years, GE Vernova goes from 20 GW a year to 24 by 2028</td><td data-label="Where it comes from">GE Vernova, Q3 2026</td></tr><tr><td data-label="Step">Cast blades</td><td data-label="Who supplies it">Howmet, Precision Castparts</td><td data-label="Time to add capacity">2 years to install a line, 4 to 6 for a new foundry</td><td data-label="Where it comes from">Howmet calls, casting industry</td></tr><tr><td data-label="Step">Chips</td><td data-label="Who supplies it">TSMC and the memory makers</td><td data-label="Time to add capacity">2 to 3 years for a memory fab to reach volume</td><td data-label="Where it comes from">SK Hynix, Samsung, Micron</td></tr></tbody></table></div>
+  <h2 id="the-arithmetic-of-waiting">The arithmetic of waiting</h2>
+  <p>Then ask who pays, and what they will pay. The arithmetic below is mine. The inputs are public and sit in the table at the end of this section, and on the site the table is a calculator, so move an input if you think it is wrong.</p>
+  <p><strong>A dark gigawatt costs more than $400 million a month.</strong> Bernstein puts a one gigawatt AI data center at $35 to $40 billion, of which servers and networking are about $26 billion. Depreciate that over five years and the chips alone cost about $430 million a month whether or not they have power, before a dollar of lost revenue.</p>
+  <p><strong>Count lost revenue and the number is ten times larger.</strong> SpaceX's finance chief said on October 20 that new compute is pricing slightly above $50 a watt, which I read as a year of revenue, so a gigawatt of chips left dark gives up about $4 billion a month on top of what it loses to depreciation. The depreciation figure is the floor, and every buyer shares it. The revenue figure is what the highest bidder sees, and the two together decide who wins the queue.</p>
+  <p><strong>The entire rise in turbine prices since 2019 buys back one month.</strong> The turbine for that gigawatt costs about $600 million at the price Wood Mackenzie expects, and about $200 million at the 2019 price. The $400 million difference is less than one month of idle chips. A buyer who can get a turbine a month sooner by paying double is right to pay double.</p>
+  <p><strong>Efficiency is worth almost nothing right now.</strong> The fast options are simple cycle machines, which burn the fuel once and throw the exhaust heat away. Aeroderivatives, which are jet engines rebuilt as generators, and used airliner engines bolted to trailers both run that way, at about 39% efficiency. A combined cycle plant captures the exhaust heat in a steam turbine and runs near 60%. At $3.50 gas the difference is about $11 per megawatt hour, which comes to about $85 million a year for a gigawatt running flat out. That is less than a week of idle chips. For as long as delivery time is the constraint, the inefficient turbine wins, and the market will look as if it has forgotten everything it knew about heat rate. It has not. It has done this sum.</p>
+  <p><strong>That sets the ceiling price.</strong> If a turbine delivered a year earlier is worth a year of chip depreciation, it is worth about $5 billion a gigawatt, or $5,000 a kilowatt. To a seller earning $30 to $50 a watt, the same year is worth $24,000 to $40,000 a kilowatt at an 80% cash margin, and that arithmetic is mine too. Today's turbine sells for $600. The clearing price of a fast turbine is set by the chips. The gap between that price and the cost of building the turbine is the margin available to whoever controls the slowest step. That is why turbine prices keep rising into a sold-out book, and why a company would spend a few hundred million dollars on a foundry.</p>
+  <figure class="graphic calc" id="calculator" aria-label="Calculator for the arithmetic of waiting">
+<p class="g-title">The arithmetic of waiting, with every input exposed</p>
+<p class="g-sub">Per gigawatt of AI chips. The defaults are the essay's numbers. Move an input and the sums recompute.</p>
+<div class="calc-sentences" aria-live="polite">
+  <p><b>A dark gigawatt costs <span id="calc-s-monthly"></span> a month.</b> That is the depreciation on <span id="calc-s-chips"></span> of servers and networking over <span id="calc-s-years"></span>, before a dollar of lost revenue.</p>
+  <p><b>The turbine premium buys back <span id="calc-s-bought"></span>.</b> The turbine for that gigawatt costs <span id="calc-s-turbine"></span> at today's price and <span id="calc-s-base"></span> at the reference price. The difference equals <span id="calc-s-bought2"></span> of idle chips.</p>
+  <p><b>The fuel penalty of the fast turbine is <span id="calc-s-fuel"></span> a year.</b> Simple cycle at <span id="calc-s-sc"></span> against combined cycle at <span id="calc-s-cc"></span>, at <span id="calc-s-gas"></span> gas, running <span id="calc-s-cf"></span> of the time. That is <span id="calc-s-fueldays"></span> of idle chips.</p>
+  <p><b>Count lost revenue and a dark gigawatt gives up <span id="calc-s-revm"></span> a month.</b> That is <span id="calc-s-rev"></span> a watt a year, the price SpaceX quotes for new compute, on top of the depreciation. At that price the fuel penalty is <span id="calc-s-fuelrev"></span> of a year's revenue.</p>
+  <p><b>A turbine delivered a year earlier is worth <span id="calc-s-ceiling"></span> a kilowatt.</b> That is <span id="calc-s-ratio"></span> today's price on depreciation alone, and <span id="calc-s-ceilrev"></span> a kilowatt to a seller earning the quoted revenue at an 80% cash margin. The gap is the margin available to whoever controls the slowest step.</p>
+</div>
+<div class="tiles">
+  <div class="tile"><p class="label">Idle chips, per month</p><p class="value" id="calc-t-monthly"></p><p class="sub">per gigawatt</p></div>
+  <div class="tile"><p class="label">Delay the turbine premium pays for</p><p class="value" id="calc-t-bought"></p><p class="sub">at today's price against the reference</p></div>
+  <div class="tile"><p class="label">Fuel penalty, per year</p><p class="value" id="calc-t-fuel"></p><p class="sub" id="calc-t-fueldays"></p></div>
+  <div class="tile"><p class="label">Lost revenue, per month</p><p class="value" id="calc-t-revm"></p><p class="sub">per dark gigawatt at the quoted price</p></div>
+  <div class="tile"><p class="label">Ceiling price of a year</p><p class="value" id="calc-t-ceiling"></p><p class="sub" id="calc-t-ratio"></p></div>
+</div>
+<div class="calc-bars">
+  <p class="g-title">What a month of waiting is worth, against what the turbine costs</p>
+  <p class="g-sub">Millions of dollars per gigawatt, one scale</p>
+  <div class="cbars">
+    <div class="cbar"><span class="name">One month of lost revenue at the quoted price</span><div class="track"><div class="fill" id="calc-b-revm"></div><span class="val" id="calc-v-revm"></span></div></div>
+    <div class="cbar"><span class="name">One month of idle chips</span><div class="track"><div class="fill" id="calc-b-monthly"></div><span class="val" id="calc-v-monthly"></span></div></div>
+    <div class="cbar"><span class="name">Turbine price rise since the reference, once</span><div class="track"><div class="fill" id="calc-b-premium"></div><span class="val" id="calc-v-premium"></span></div></div>
+    <div class="cbar"><span class="name">One year of extra fuel</span><div class="track"><div class="fill" id="calc-b-fuel"></div><span class="val" id="calc-v-fuel"></span></div></div>
+    <div class="cbar"><span class="name">The whole turbine, at today's price</span><div class="track"><div class="fill" id="calc-b-turbine"></div><span class="val" id="calc-v-turbine"></span></div></div>
+  </div>
+  <p class="g-src">One scale for all five, so the bars compare directly. The month of idle chips is depreciation only.</p>
+</div>
+<section class="calc-inputs">
+  <h3>Inputs</h3>
+  <p class="intro">Each input starts at the essay's number and names where that number comes from.</p>
+  <div class="cgrid"><div class="ctl"><label for="calc-capex"><span>Capital cost of one gigawatt</span><span id="calc-o-capex"></span></label><input type="range" id="calc-capex" min="20" max="60" step="0.5" value="37.5"><small>Bernstein, October 2026. <span class="essay">The essay uses $35 to $40 billion.</span></small></div><div class="ctl"><label for="calc-share"><span>Servers and networking share</span><span id="calc-o-share"></span></label><input type="range" id="calc-share" min="40" max="90" step="1" value="69"><small>GB200 cost model, 2026. <span class="essay">The essay uses about $26 billion.</span></small></div><div class="ctl"><label for="calc-years"><span>Depreciation life of the chips</span><span id="calc-o-years"></span></label><input type="range" id="calc-years" min="3" max="7" step="0.5" value="5"><small>My assumption. <span class="essay">The essay uses 5 years.</span></small></div><div class="ctl"><label for="calc-price"><span>Turbine price today, equipment only</span><span id="calc-o-price"></span></label><input type="range" id="calc-price" min="200" max="2000" step="10" value="600"><small>Wood Mackenzie. <span class="essay">The essay uses $600 per kW by end 2027, about $206 in 2019.</span></small></div><div class="ctl"><label for="calc-base"><span>Reference turbine price, 2019</span><span id="calc-o-base"></span></label><input type="range" id="calc-base" min="100" max="600" step="2" value="206"><small>Wood Mackenzie. <span class="essay">The essay uses $600 per kW by end 2027, about $206 in 2019.</span></small></div><div class="ctl"><label for="calc-sc"><span>Simple cycle efficiency</span><span id="calc-o-sc"></span></label><input type="range" id="calc-sc" min="30" max="45" step="0.5" value="39"><small>Boom&#x27;s own target, typical of aeroderivatives. <span class="essay">The essay uses 39%.</span></small></div><div class="ctl"><label for="calc-cc"><span>Combined cycle efficiency</span><span id="calc-o-cc"></span></label><input type="range" id="calc-cc" min="50" max="65" step="0.5" value="60"><small>Typical of a modern large combined cycle plant. <span class="essay">The essay uses 60%.</span></small></div><div class="ctl"><label for="calc-gas"><span>Gas price</span><span id="calc-o-gas"></span></label><input type="range" id="calc-gas" min="1" max="8" step="0.25" value="3.5"><small>EIA 2026 average. <span class="essay">The essay uses $3.50 per MMBtu.</span></small></div><div class="ctl"><label for="calc-cf"><span>Capacity factor</span><span id="calc-o-cf"></span></label><input type="range" id="calc-cf" min="50" max="100" step="1" value="90"><small>My assumption. <span class="essay">The essay uses 90%.</span></small></div><div class="ctl"><label for="calc-rev"><span>Revenue per watt, per year, on new compute</span><span id="calc-o-rev"></span></label><input type="range" id="calc-rev" min="5" max="80" step="1" value="50"><small>SpaceX third quarter 2026 call. <span class="essay">The essay uses about $50 a year.</span> Most buyers earn $9 to $20.</small></div></div>
+  <button class="calc-reset" type="button" id="calc-reset">Back to the essay's numbers</button>
+</section>
+<div class="table-wrap calc-results"><table>
+  <thead><tr><th>Result</th><th>Value</th><th>How it is computed</th></tr></thead>
+  <tbody>
+    <tr><td>Idle chips per month</td><td data-label="Value" id="calc-r-monthly"></td><td data-label="How it is computed">capital cost times the servers share, over the depreciation life, per month</td></tr>
+    <tr><td>Turbine premium</td><td data-label="Value" id="calc-r-premium"></td><td data-label="How it is computed">today's price less the reference price, times one million kilowatts</td></tr>
+    <tr><td>Delay the premium pays for</td><td data-label="Value" id="calc-r-bought"></td><td data-label="How it is computed">premium divided by idle chips per month</td></tr>
+    <tr><td>Extra fuel per megawatt hour</td><td data-label="Value" id="calc-r-delta"></td><td data-label="How it is computed">3.412 MMBtu per MWh divided by each efficiency, difference times the gas price</td></tr>
+    <tr><td>Fuel penalty per year</td><td data-label="Value" id="calc-r-fuel"></td><td data-label="How it is computed">extra fuel per MWh times 8,760 hours times the capacity factor, for 1,000 MW</td></tr>
+    <tr><td>Ceiling price of a year</td><td data-label="Value" id="calc-r-ceiling"></td><td data-label="How it is computed">one year of chip depreciation spread over one million kilowatts</td></tr>
+  </tbody>
+</table></div>
+<p class="calc-open"><a href="../casting-problem-calculator/">Open the calculator on its own page</a></p>
+</figure>
+  <h2 id="why-the-shortage-persists">Why the shortage persists</h2>
+  <p>If the ceiling price is eight times the current price, why is nobody adding casting capacity fast?</p>
+  <p><strong>Because the people who own the capacity are being prudent, and they have been right before.</strong> Howmet and Precision Castparts built ahead of demand in earlier cycles and wrote it down. Aerospace blades carry longer contracts and better margins than land turbine blades, so an aero order crowds out a turbine order in a fixed pool. And the orders they are being asked to build for can cancel. Crusoe, a data center developer, cancelled a $1.25 billion turbine order nine months after signing it, a story part two tells in full. A foundry is a two to six year bet placed against an order that can disappear in nine months. The rational supplier adds capacity slowly, and the shortage is the sum of rational decisions.</p>
+  <p><strong>Memory chips are the same story with a different ending.</strong> High bandwidth memory, the stacked DRAM beside every AI accelerator, is made by three companies. SK Hynix has over half the market, Samsung and Micron about a quarter each. SK Hynix and Micron cut capital spending hard in the 2023 downturn, all three are now sold out, SK Hynix through 2029 by its own account, and new fabs do not reach volume until 2027 or 2028. The product has the same crowding-out effect too. A gigabyte of high bandwidth memory takes three to four times the wafer capacity of ordinary DRAM, so ordinary DRAM contract prices roughly doubled in the first quarter of 2026 and kept rising, the way aero blade orders crowd land turbine blades out of the same furnaces. What differs is the fix. Nobody building accelerators built a memory fab. The buyers signed multi-year supply agreements instead, Micron has more than 75% of next year's output locked across 26 of them, and the suppliers expanded against committed demand. That works when the supplier is large enough to fund the fab once the demand is firm. Howmet's entire gas turbine business is about a billion dollars of revenue, and the order it would expand against can be cancelled in nine months. When the owner of the slowest step cannot or will not fund it, the buyer has two choices, commit capital to the supplier or build the step itself. Memory makers got the commitments, and casting is getting the buyer's own foundry.</p>
+  <p><strong>The way to make a foundry a safe bet is to own the demand on both sides of it.</strong> A captive customer for the turbines on one side, a captive use for the castings on the other. That is a narrow description, and a rocket company and a supersonic airplane company happen to fit it, which is the subject of part two.</p>
+  <p>The foundry is the asset. The turbine is the reason to build one. If you can cast the blade, you can sell it to turbine makers who have everything except blades, which is exactly the arrangement Howmet described. If you cannot, you are a turbine assembler standing in the same queue as everyone else. Howmet's chief executive made the point without meaning to when he noted that the Southaven bypass fleet runs on his blades.</p>
+  <h2 id="the-case-against">The case against</h2>
+  <p><strong>GE Vernova says turbines are not the gate.</strong> Its chief executive argues that permitting is, and that 80% of its backlog is utilities replacing old plants, not data centers. If he is right, this is a utility replacement cycle that data centers happen to be bidding into. I think both are true. The utility backlog fills the factories, and the data center buyer is the marginal customer who sets the price, which is how prices rise 50% in a year while the customer mix barely moves. On permits, one tracker counts $68 billion of data center projects blocked by local opposition in the second quarter alone, and a gas plant on site needs an air permit. If the permit takes longer than the blade, the blade is not the constraint.</p>
+  <p><strong>The slow step may not be the blade at all.</strong> When Musk posted in August that about 15 gigawatts of the compute built in 2027 would stay dark, a figure he called a consensus estimate, he blamed transformers, wiring, liquid cooling, chillers and networking as much as power. A transformer could turn out to be the step that expands slowest, in which case a foundry speeds up the wrong thing.</p>
+  <p><strong>Fifty dollars a watt may not last.</strong> Every number above the depreciation floor rests on SpaceX's own price for new compute. Most buyers earn far less from a watt, roughly $9 to $20 by the banks' and the buyers' own figures. If the price falls to what the average buyer earns, the ceiling on a fast turbine falls with it, and the depreciation floor is what is left.</p>
+  <p><strong>The demand could stop.</strong> This is the strongest objection. Every number in the arithmetic rests on chips being worth $26 billion a gigawatt and depreciating over five years. Bernstein's own warning was that depreciation, not construction, is the risk. If chip spending slows, the ceiling price collapses toward cost, new foundries are stranded, and the prudent incumbents will have been right again. Howmet's caution is the memory of exactly that cycle. The reason I still lean the other way is the asymmetry. A foundry that also casts rocket parts has a floor under it that a pure turbine foundry does not.</p>
+  <h2 id="what-would-change-my-mind">What would change my mind</h2>
+  <ol><li><strong>Howmet raises its gas turbine outlook in February and announces a greenfield single crystal line.</strong> That would mean the incumbents have stopped being cautious, and the opening for entrants closes.</li><li><strong>Turbine prices stop rising while lead times stay at five years.</strong> That would mean price is not clearing on the value of time, and the ceiling argument is wrong.</li><li><strong>A large buyer discloses a transformer or chiller lead time longer than its turbine lead time.</strong> That would move the slowest step, and the argument with it.</li><li><strong>A hyperscaler cuts its chip spending guidance.</strong> That removes the numerator from every sum above.</li></ol>
+  <h2 id="the-slowest-step-sets-the-price">The slowest step sets the price</h2>
+  <p>The question for any hard tech company right now is what it can make that nobody else can make fast, because that is where the price goes when time is the constraint. In data center power that step is a nickel blade grown as a single crystal, and every buyer of power, the turbine makers included, is waiting on the same furnace. Who gets out of the queue first, and who waits, is <a href="../who-waits-for-the-blades/">part two</a>.</p>
+  <section class="sources">
+    <h2 id="sources">Sources</h2>
+    <p class="group">Turbine makers</p>
+    <ul><li><a href="https://www.sec.gov/Archives/edgar/data/0001996810/000199681026000162/gev3q2026form8-k10282026.pdf" target="_blank" rel="noopener">GE Vernova third quarter 2026 results, 8-K</a></li><li><a href="https://naturalgasintel.com/news/natural-gas-turbines-arent-gating-data-center-buildouts-ge-vernova-says/" target="_blank" rel="noopener">GE Vernova says turbines are not gating data centers</a></li><li><a href="https://www.utilitydive.com/news/siemens-gas-turbine-backlog-nears-70-gw-as-company-expands-manufacturing/827390/" target="_blank" rel="noopener">Siemens Energy backlog nears 70 GW</a></li><li><a href="https://www.energyconnects.com/news/renewables/2026/october/high-demand-for-gas-turbines-is-pushing-out-deliveries-to-2031-mitsubishi-power-says/" target="_blank" rel="noopener">Mitsubishi Power deliveries stretch to 2031</a></li><li><a href="https://www.power-eng.com/gas/turbines/gas-turbine-prices-climb-195-as-supply-crunch-reshapes-power-development/" target="_blank" rel="noopener">Wood Mackenzie on turbine prices up 195%</a></li><li><a href="https://www.datacenterfrontier.com/energy/article/55358731/aeroderivative-turbines-move-to-the-center-of-ai-data-center-power-strategy" target="_blank" rel="noopener">Aeroderivatives at the center of data center power</a></li></ul>
+    <p class="group">Blades and foundries</p>
+    <ul><li><a href="https://www.fool.com/earnings/call-transcripts/2026/10/29/howmet-aerospace-hwm-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">Howmet third quarter 2026 call transcript</a></li><li><a href="https://www.investing.com/news/transcripts/howmet-at-jefferies-global-industrials-conference-2026-demand-outruns-capacity-93CH-4894227" target="_blank" rel="noopener">Howmet at the Jefferies conference, demand outruns capacity</a></li><li><a href="https://www.benzinga.com/news/26/10/62372946/transcript-howmet-aerospace-q2-2026-earnings-conference-call" target="_blank" rel="noopener">Howmet second quarter 2026 call</a></li><li><a href="https://frontiermap.substack.com/p/single-crystal-inside-the-gas-turbine" target="_blank" rel="noopener">Single crystal, inside the gas turbine blade</a></li><li><a href="https://rapidprecisioncastings.com/why-spacex-s-single-crystal-turbine-blade-plan-runs-into-the-hardest-wall-in-manufacturing/" target="_blank" rel="noopener">Why SpaceX's single crystal plan runs into the hardest wall in manufacturing</a></li><li><a href="https://finance.yahoo.com/technology/ai/articles/spacex-building-turbine-blade-foundry-133507334.html" target="_blank" rel="noopener">SpaceX building a turbine blade foundry</a></li><li><a href="https://www.fool.com/earnings/call-transcripts/2026/10/20/spacex-spcx-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">SpaceX third quarter 2026 earnings call</a></li><li><a href="https://boomsupersonic.com/press-release/superpower-superfactory" target="_blank" rel="noopener">Boom turbine core, superfactory and digital foundry</a></li></ul>
+    <p class="group">Memory</p>
+    <ul><li><a href="https://247wallst.com/investing/2026/10/27/the-memory-bottleneck-divide-sk-hynix-sells-out-to-tier-1s-micron-absorbs-the-spills/" target="_blank" rel="noopener">SK Hynix sells out through 2029</a></li><li><a href="https://startupfortune.com/samsung-joins-sk-hynix-and-micron-declaring-ai-memory-sold-out-for-years/" target="_blank" rel="noopener">Samsung, SK Hynix and Micron declare AI memory sold out</a></li><li><a href="https://www.avnet.com/integrated/resources/article/2026-memory-shortage-ai-supercycle/" target="_blank" rel="noopener">The 2026 memory shortage and HBM's share of wafers</a></li></ul>
+    <p class="group">Costs and the grid</p>
+    <ul><li><a href="https://www.tokenpost.com/news/technology/29509" target="_blank" rel="noopener">Bernstein, $34.6 to $39.5 billion per gigawatt</a></li><li><a href="https://www.investing.com/news/stock-market-news/how-much-does-a-gw-of-data-center-capacity-actually-cost-4314046" target="_blank" rel="noopener">GB200 cost model, $37.9 billion per gigawatt</a></li><li><a href="https://techcrunch.com/2026/04/27/data-center-demand-drives-66-surge-in-natural-gas-power-plant-costs/" target="_blank" rel="noopener">BloombergNEF on combined cycle costs</a></li><li><a href="https://fred.stlouisfed.org/series/DHHNGSP" target="_blank" rel="noopener">EIA short-term outlook, gas prices</a></li><li><a href="https://modoenergy.com/research/en/bring-your-own-power-data-centers-explainer" target="_blank" rel="noopener">Interconnection wait of eight years, Modo Energy</a></li><li><a href="https://cleanview.co/reports/behind-the-meter-data-centers" target="_blank" rel="noopener">Behind-the-meter data centers, Cleanview</a></li><li><a href="https://exencialrp.substack.com/p/bofa-puts-hyperscaler-cost-of-capital" target="_blank" rel="noopener">Bank of America on the economics of the buildout, summary</a></li><li><a href="https://finance.yahoo.com/technology/ai/articles/oracle-targets-225b-revenue-2030-010408600.html" target="_blank" rel="noopener">Oracle on revenue per gigawatt</a></li><li><a href="https://x.com/elonmusk/status/2093810234141634702" target="_blank" rel="noopener">Musk on 15 gigawatts that cannot be switched on in 2027</a></li></ul>
+    <h2 id="things-i-could-not-pin-down" class="later">Things I could not pin down</h2>
+    <ul><li>Whether the Asian turbine maker supplying SpaceX turbines without blades is confirmed by SpaceX. Howmet's chief executive said it on the October 29 call. Nothing from SpaceX.</li><li>The yield figure under 20% comes from patent filings for the largest single-piece blades, not from a foundry's disclosure.</li><li>Whether "$30 to $50 per watt" is a year of revenue. SpaceX's finance chief did not say the period. A payback of under a year, which he also claimed, only works if it is annual.</li></ul>
+  </section>
+</article>
+
+<footer>Vito Prasad, November 1, 2026. <a href="../who-waits-for-the-blades/">Read part two, <em>Who waits for the blades</em></a>. <a href="../">All writing</a>. <a href="../../index.html">See the builds</a>.</footer>
+</main>
+<script>
+/* Behaviour for the essay graphics: tooltips, the grow-in on first view, the
+   turbine-gap slider, the calculator, and keeping the embedded post in the
+   page's theme. Built into each page by build_essay_pages.py. Each part only
+   runs when its graphic is on the page. */
+(function () {
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  function $(id) { return document.getElementById(id); }
+
+  /* ---------- Tooltips: hover, focus, or tap a mark that has a .tipsrc ---------- */
+  document.querySelectorAll(".graphic").forEach(function (fig) {
+    var marks = fig.querySelectorAll("[data-tip]");
+    if (!marks.length) return;
+    var tip = document.createElement("div");
+    tip.className = "g-tip"; tip.hidden = true; tip.setAttribute("role", "tooltip");
+    fig.appendChild(tip);
+    var pinned = null, byMouse = false;
+    function show(mark, x, y) {
+      var src = mark.querySelector(".tipsrc");
+      if (!src) return;
+      tip.replaceChildren.apply(tip, Array.prototype.map.call(src.childNodes, function (n) { return n.cloneNode(true); }));
+      tip.hidden = false;
+      var f = fig.getBoundingClientRect(), m = mark.getBoundingClientRect();
+      if (x === undefined) { x = m.left + Math.min(m.width / 2, 160); y = m.bottom; }
+      var w = tip.offsetWidth, h = tip.offsetHeight;
+      var left = Math.max(0, Math.min(x - f.left + 14, f.width - w));
+      var top = y - f.top + 14;
+      if (y + h + 24 > window.innerHeight) top = m.top - f.top - h - 8;
+      tip.style.left = left + "px"; tip.style.top = top + "px";
+    }
+    function hide() { tip.hidden = true; pinned = null; }
+    marks.forEach(function (mark) {
+      mark.addEventListener("pointermove", function (e) { if (e.pointerType === "mouse") { byMouse = true; show(mark, e.clientX, e.clientY); } });
+      mark.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse" && pinned !== mark) tip.hidden = true; });
+      mark.addEventListener("focus", function () { byMouse = false; show(mark); });
+      mark.addEventListener("blur", function () { if (pinned !== mark) tip.hidden = true; });
+      mark.addEventListener("click", function (e) {
+        if (pinned === mark) { hide(); return; }
+        pinned = mark; show(mark, e.pointerType === "mouse" ? e.clientX : undefined, e.pointerType === "mouse" ? e.clientY : undefined);
+      });
+    });
+    document.addEventListener("click", function (e) { if (pinned && !fig.contains(e.target)) hide(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") hide(); });
+    window.addEventListener("scroll", function () { if (!pinned && byMouse) tip.hidden = true; }, { passive: true });
+  });
+
+  /* ---------- Grow in once, when first seen, unless less motion was asked for ---------- */
+  if (!reduce.matches && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("shown"); io.unobserve(e.target); } });
+    }, { threshold: 0.35 });
+    document.querySelectorAll(".graphic.grows").forEach(function (fig) { fig.classList.add("anim"); io.observe(fig); });
+  }
+
+  /* ---------- Thirteen gigawatts against the fast-turbine market ---------- */
+  var gap = $("turbine-gap");
+  if (gap) {
+    var M = JSON.parse($("turbine-model").textContent);
+    var slider = $("gas-share"), out = $("gas-share-out");
+    var one = function (x) { return (Math.round(x * 10) / 10).toFixed(1).replace(/\.0$/, ""); };
+    var dec = function (x) { return (Math.round(x * 10) / 10).toFixed(1); };
+    function model(share) {
+      // The same sums as the essay's table. Round the need to a tenth first, as the table does.
+      var need = Math.round(M.new_compute_gw * M.firm_per_compute * share / 100 * 10) / 10;
+      var gapLo = Math.max(0, Math.round((need - M.disclosed_gw[1]) * 10) / 10), gapHi = Math.round((need - M.disclosed_gw[0]) * 10) / 10;
+      return { need: need, gapLo: gapLo, gapHi: gapHi,
+               unitsLo: Math.round(gapLo * 1000 / M.machine_mw), unitsHi: Math.round(gapHi * 1000 / M.machine_mw),
+               xLo: need / M.fast_makers_gw[1], xHi: need / M.fast_makers_gw[0] };
+    }
+    function update() {
+      var s = +slider.value, r = model(s);
+      out.textContent = s + "%";
+      $("gap-share").textContent = s + "%";
+      $("gap-need").textContent = one(r.need);
+      $("gap-times").textContent = "between " + dec(r.xLo) + " and " + dec(r.xHi) + " times";
+      $("gap-gap").textContent = one(r.gapLo) + " to " + one(r.gapHi);
+      $("gap-units").textContent = r.unitsLo.toLocaleString("en-US") + " to " + r.unitsHi.toLocaleString("en-US");
+      var bar = $("gap-need-bar");
+      bar.style.setProperty("--hi", r.need);
+      $("gap-need-val").textContent = one(r.need) + " GW";
+      $("gap-need-tip").textContent = M.new_compute_gw + " GW of new compute, times " + M.firm_per_compute + " for firm supply, times " + s +
+        "% gas, is " + one(r.need) + " GW. After what SpaceX has disclosed or been linked to, " + one(r.gapLo) + " to " + one(r.gapHi) +
+        " GW are left, about " + r.unitsLo + " to " + r.unitsHi + " machines of the " + M.machine_mw + " megawatt class.";
+    }
+    slider.addEventListener("input", update);
+    gap.querySelectorAll("[data-share]").forEach(function (b) {
+      b.addEventListener("click", function () { slider.value = b.dataset.share; update(); });
+    });
+    update();
+  }
+
+  /* ---------- The calculator (the same sums as the standalone page) ---------- */
+  var calc = $("calculator");
+  if (calc) {
+    var ids = ["capex", "share", "years", "price", "base", "sc", "cc", "gas", "cf", "rev"];
+    var el = {}; ids.forEach(function (k) { el[k] = $("calc-" + k); });
+    var defaults = {}; ids.forEach(function (k) { defaults[k] = el[k].getAttribute("value"); });
+    var set = function (id, text) { $("calc-" + id).textContent = text; };
+    var money = function (m) { // m in millions of dollars
+      if (Math.abs(m) >= 1000) return "$" + (m / 1000).toFixed(m >= 10000 ? 0 : 1) + " billion";
+      return "$" + Math.round(m) + " million";
+    };
+    var span = function (months) {
+      if (months < 1 / 30) return "about a day";
+      if (months < 0.5) { var d = Math.round(months * 30.4); return d + (d === 1 ? " day" : " days"); }
+      if (months < 2) { var w = Math.round(months * 4.35); return w + (w === 1 ? " week" : " weeks"); }
+      if (months < 24) { var mo = Math.round(months * 10) / 10; return mo + " months"; }
+      return (Math.round(months / 12 * 10) / 10) + " years";
+    };
+    var pct = function (x) { return x + "%"; };
+    var run = function () {
+      var capex = +el.capex.value, share = +el.share.value, years = +el.years.value, price = +el.price.value, base = +el.base.value;
+      var sc = +el.sc.value / 100, cc = +el.cc.value / 100, gas = +el.gas.value, cf = +el.cf.value / 100, rev = +el.rev.value;
+      var chips = capex * share / 100;                          // $B per GW
+      var monthly = chips * 1000 / years / 12;                  // $M per month
+      var premium = Math.max(0, price - base);                  // $M per GW
+      var bought = premium / monthly;                           // months
+      var delta = 3.412 * (1 / sc - 1 / cc) * gas;              // $ per MWh
+      var fuel = delta * 8760 * cf * 1000 / 1e6;                // $M per year
+      var fuelMonths = fuel / monthly;
+      var ceiling = chips * 1000 / years;                       // $ per kW, one year of depreciation over 1e6 kW
+      var revm = rev * 1000 / 12;                               // $M per month per GW at $rev per watt per year
+      var ceilrev = rev * 1000 * 0.8;                           // $ per kW, a year of revenue at an 80% cash margin
+      var ratio = ceiling / price;
+      set("s-monthly", money(monthly)); set("s-chips", "$" + chips.toFixed(1) + " billion"); set("s-years", years + " years");
+      set("s-bought", span(bought)); set("s-bought2", span(bought)); set("s-turbine", money(price)); set("s-base", money(base));
+      set("s-fuel", money(fuel)); set("s-sc", pct(el.sc.value)); set("s-cc", pct(el.cc.value)); set("s-gas", "$" + gas.toFixed(2));
+      set("s-cf", pct(el.cf.value)); set("s-fueldays", span(fuelMonths)); set("s-revm", money(revm)); set("s-rev", "$" + rev);
+      set("s-fuelrev", (100 * fuel / (rev * 1000)).toFixed(1) + "%"); set("s-ceilrev", "$" + Math.round(ceilrev).toLocaleString("en-US"));
+      set("s-ceiling", "$" + Math.round(ceiling).toLocaleString("en-US")); set("s-ratio", (Math.round(ratio * 10) / 10) + " times");
+      set("t-monthly", money(monthly)); set("t-bought", span(bought)); set("t-fuel", money(fuel)); set("t-fueldays", span(fuelMonths) + " of idle chips");
+      set("t-revm", money(revm)); set("t-ceiling", "$" + Math.round(ceiling).toLocaleString("en-US") + "/kW");
+      set("t-ratio", (Math.round(ratio * 10) / 10) + " times today's price");
+      var vals = { revm: revm, monthly: monthly, premium: premium, fuel: fuel, turbine: price };
+      var max = Math.max(revm, monthly, premium, fuel, price, 1);
+      Object.keys(vals).forEach(function (k) {
+        var w = Math.max(0.3, 100 * vals[k] / max), v = $("calc-v-" + k);
+        $("calc-b-" + k).style.width = w + "%"; v.style.setProperty("--w", w + "%"); v.textContent = money(vals[k]);
+        v.classList.toggle("inside", w > 80);
+      });
+      set("r-monthly", money(monthly)); set("r-premium", money(premium)); set("r-bought", span(bought));
+      set("r-delta", "$" + delta.toFixed(1) + " per MWh"); set("r-fuel", money(fuel)); set("r-ceiling", "$" + Math.round(ceiling).toLocaleString("en-US") + " per kW");
+      set("o-capex", "$" + capex.toFixed(1) + "B"); set("o-share", pct(share) + ", $" + chips.toFixed(1) + "B"); set("o-years", years + " yr");
+      set("o-price", "$" + price + "/kW"); set("o-base", "$" + base + "/kW"); set("o-sc", pct(el.sc.value)); set("o-cc", pct(el.cc.value));
+      set("o-gas", "$" + gas.toFixed(2) + "/MMBtu"); set("o-cf", pct(el.cf.value)); set("o-rev", "$" + rev + "/W");
+    };
+    ids.forEach(function (k) { el[k].addEventListener("input", run); });
+    $("calc-reset").addEventListener("click", function () { ids.forEach(function (k) { el[k].value = defaults[k]; }); run(); });
+    run();
+  }
+
+  /* ---------- The embedded post follows the page's theme ---------- */
+  var posts = document.querySelectorAll(".x-post");
+  if (posts.length) {
+    var theme = function () { return document.documentElement.dataset.theme === "dark" ? "dark" : "light"; };
+    var originals = [];
+    posts.forEach(function (box) {
+      var q = box.querySelector("blockquote.twitter-tweet");
+      if (q) { q.setAttribute("data-theme", theme()); originals.push([box, q.cloneNode(true)]); }
+    });
+    new MutationObserver(function () {
+      originals.forEach(function (pair) {
+        var box = pair[0], waiting = box.querySelector("blockquote.twitter-tweet");
+        // Not drawn yet: the platform script reads the theme when it draws.
+        if (waiting) { waiting.setAttribute("data-theme", theme()); return; }
+        // Already drawn: draw it again from the original quote in the new theme.
+        if (!window.twttr || !window.twttr.widgets) return;
+        var fresh = pair[1].cloneNode(true);
+        fresh.setAttribute("data-theme", theme());
+        box.replaceChildren(fresh);
+        window.twttr.widgets.load(box);
+      });
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  }
+})();
+</script>
+<script type="application/json" id="contents">[{"href": "../../index.html", "label": "All builds"}, {"href": "../", "label": "Writing and ideas"}, {"id": "what-happened", "label": "What happened"}, {"id": "work-backward-from-the-chips", "label": "Work backward from the chips"}, {"id": "the-arithmetic-of-waiting", "label": "The arithmetic of waiting"}, {"id": "why-the-shortage-persists", "label": "Why the shortage persists"}, {"id": "the-case-against", "label": "The case against"}, {"id": "what-would-change-my-mind", "label": "What would change my mind"}, {"id": "the-slowest-step-sets-the-price", "label": "The slowest step sets the price"}, {"href": "../who-waits-for-the-blades/", "label": "Read part two"}, {"id": "sources", "label": "Sources"}]</script>
+<script src="../../site.js" defer></script>
+</body>
+</html>

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vito Prasad, builds</title>
 <meta name="description" content="Working tools Vito Prasad built in October 2026 by directing AI coding agents, across sales, marketing, product operations and hardware quality.">
+<link rel="icon" href="data:,">
 <script>(function(){try{var t=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=t}catch(e){}})()</script>
 <link rel="stylesheet" href="site.css">
 <style>
@@ -97,6 +98,17 @@
   .feature b { display: block; font: 600 15px/1.3 -apple-system, "Segoe UI", Arial, sans-serif; margin: 0 0 6px; }
   .feature p { font-size: 16px; line-height: 1.5; margin: 0; }
   .assist { margin: 0 0 30px; }
+  ol.pieces { list-style: none; padding: 0; margin: 4px 0 0; border-top: 1px solid var(--line); max-width: 760px; }
+  ol.pieces li { margin: 0; padding: 18px 0 20px; border-bottom: 1px solid var(--line); }
+  ol.pieces .piece { font-size: 22px; line-height: 1.3; font-weight: 600; color: var(--ink); text-decoration: none; }
+  ol.pieces .piece:hover { text-decoration: underline; text-decoration-color: var(--faint); text-underline-offset: 4px; }
+  ol.pieces .when { display: block; font: 13px/1.4 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--faint); margin: 5px 0 8px; }
+  ol.pieces p { font-size: 17px; line-height: 1.55; color: var(--muted); margin: 0; }
+  ol.pieces.compact li { padding: 12px 0 13px; }
+  ol.pieces.compact .piece { font-size: 19px; }
+  ol.pieces.compact .when { display: inline; margin: 0 0 0 12px; }
+  .one-line a { color: var(--accent); }
+  .index-foot .links a + a { margin-left: 18px; }
   footer { border-top: 1px solid var(--line); padding-top: 28px; margin-top: 72px;
            font: 14px/1.5 -apple-system, "Segoe UI", Arial, sans-serif; color: var(--faint); }
   @media (max-width: 760px) {
@@ -150,7 +162,7 @@
       <li data-industry="defense" data-try="no"><div class="row lift" data-href="#federal"><span class="n">04</span><a class="name" href="#federal">Federal-contract pipeline</a><span class="meta">Defense and government</span><span class="meta">Opportunity pipeline for business development</span><span class="meta data">SAM.gov daily file</span></div></li>
       <li data-industry="software" data-try="no"><div class="row lift" data-href="#crm"><span class="n">05</span><a class="name" href="#crm">Onboarding CRM</a><span class="meta">Software and AI</span><span class="meta">Customer onboarding and follow-up</span><span class="meta data">Team tracker and Slack</span></div></li>
     </ol>
-    <p class="index-foot"><span><span id="shown">All 5 builds.</span> <button class="linkish" type="button" id="show-all" hidden>Show all</button></span><a href="#how">How I build</a></p>
+    <p class="index-foot"><span><span id="shown">All 5 builds.</span> <button class="linkish" type="button" id="show-all" hidden>Show all</button></span><span class="links"><a href="#how">How I build</a><a href="writing/">Writing and ideas</a></span></p>
   </div>
 </header>
 
@@ -355,7 +367,18 @@
   </div>
 </section>
 
-<footer>Vito Prasad, San Francisco Bay Area. Updated October 29, 2026. Screenshots taken October 28 and 29.</footer>
+<section class="build before" id="writing">
+  <h2>Writing and ideas</h2>
+  <p class="one-line">Writing on hard tech, energy, defense and the markets that finance them, worked from the step that physically limits a system and the invoice that pays for it. <a href="writing/">All writing</a>.</p>
+  <!-- writing-list:start, built by build_essay_pages.py -->
+  <ol class="pieces compact">
+    <li><a class="piece" href="writing/who-waits-for-the-blades/">Who waits for the blades</a><span class="when">November 1, 2026</span></li>
+    <li><a class="piece" href="writing/the-power-problem-is-a-casting-problem/">The power problem is a casting problem</a><span class="when">November 1, 2026</span></li>
+  </ol>
+  <!-- writing-list:end -->
+</section>
+
+<footer>Vito Prasad, San Francisco Bay Area. Updated November 1, 2026. Screenshots taken October 28 and 29.</footer>
 </main>
 <script>
 (function () {
@@ -392,7 +415,7 @@
   document.getElementById("show-all").addEventListener("click", function () { industry = "all"; tryOnly = false; apply(); });
 })();
 </script>
-<script type="application/json" id="contents">[{"id": "scanner", "label": "Account-list scanner"}, {"id": "issue-scribe", "label": "Issue Scribe"}, {"id": "lunar-reactor-tracker", "label": "Lunar reactor tracker"}, {"id": "federal", "label": "Federal-contract pipeline"}, {"id": "crm", "label": "Onboarding CRM"}, {"id": "how", "label": "How I build"}]</script>
+<script type="application/json" id="contents">[{"id": "scanner", "label": "Account-list scanner"}, {"id": "issue-scribe", "label": "Issue Scribe"}, {"id": "lunar-reactor-tracker", "label": "Lunar reactor tracker"}, {"id": "federal", "label": "Federal-contract pipeline"}, {"id": "crm", "label": "Onboarding CRM"}, {"id": "how", "label": "How I build"}, {"id": "writing", "label": "Writing and ideas"}]</script>
 <script src="site.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who waits for the blades, Vito Prasad</title>
+<meta name="description" content="SpaceX says it will end 2027 with 13 gigawatts of compute, and it is building a blade foundry to get there. Boom built a turbine factory and lost the customer it built it for. Run the numbers and the blade shortage does not stop the highest bidder. It decides whose chips sit dark. Part two of two.">
+<link rel="icon" href="data:,">
+<script>(function(){try{var t=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<link rel="stylesheet" href="../../site.css">
+<style>
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font: 17px/1.6 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
+  main { --page-w: 760px; max-width: 760px; margin: 0 auto; padding: 64px 28px 96px; }
+  a { color: var(--ink); }
+  .back { font: 14px/1 var(--sans); color: var(--muted); text-decoration: none; }
+  .back:hover { color: var(--ink); }
+  .story { max-width: 660px; margin: 0 auto; }
+  .story h1 { font-size: 44px; line-height: 1.12; margin: 28px 0 22px; font-weight: 600; letter-spacing: -.015em; }
+  .story .dek { font-size: 21px; line-height: 1.55; color: var(--muted); margin: 0 0 18px; }
+  .story .byline { font: 14px/1.5 var(--sans); color: var(--faint); margin: 0 0 40px; }
+  .story > p { font-size: 19px; line-height: 1.65; margin: 0 0 20px; }
+  .story > h2 { font-size: 27px; line-height: 1.25; margin: 52px 0 14px; font-weight: 600; }
+  .story a { color: var(--accent); }
+  .story > ol, .story > ul { font-size: 19px; line-height: 1.6; padding-left: 26px; margin: 0 0 20px; }
+  .story > ol > li { margin: 0 0 12px; }
+  .sources { border-top: 1px solid var(--line); padding-top: 28px; margin-top: 56px; font-family: var(--sans); color: var(--muted); }
+  .sources h2 { font: 600 17px/1.3 var(--sans); color: var(--ink); margin: 0 0 6px; }
+  .sources h2 + p.group { margin-top: 14px; }
+  .sources h2.later { margin-top: 30px; }
+  .sources p, .sources ul, .sources li { font-size: 15px; line-height: 1.5; }
+  .sources p.group { font-weight: 600; color: var(--ink); margin: 18px 0 6px; }
+  .sources ul { padding-left: 18px; margin: 0 0 8px; }
+  .sources li { margin: 0 0 6px; }
+  .sources a { word-break: break-word; }
+  footer { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 64px; font: 14px/1.5 var(--sans); color: var(--faint); }
+  footer a { color: var(--muted); }
+  @media (max-width: 860px) {
+    main { padding: 36px 16px 72px; }
+    .story h1 { font-size: 32px; } .story .dek { font-size: 18px; } .story > p, .story > ol, .story > ul { font-size: 17.5px; }
+    .story > h2 { font-size: 24px; margin-top: 44px; }
+  }
+
+/* The graphics, pull quotes and tables of the essay pages. Built into each page by
+   build_essay_pages.py. Colours come only from the variables in site.css, so both
+   themes work. Marks are thin, data ends are rounded 4px, labels wear text colours. */
+
+/* ---------- Shared frame ---------- */
+.story .graphic { margin: 38px 0 30px; font-family: var(--sans); position: relative; }
+.graphic p { margin: 0; }
+.graphic .g-title { font: 600 16px/1.35 var(--sans); color: var(--ink); margin: 0 0 3px; }
+.graphic .g-sub { font: 13.5px/1.45 var(--sans); color: var(--muted); margin: 0 0 18px; }
+.graphic figcaption { font: 14px/1.5 var(--sans); color: var(--muted); margin: 16px 0 0; }
+.graphic .g-src { font: 12.5px/1.5 var(--sans); color: var(--faint); margin: 6px 0 0; }
+.graphic .g-src a { color: var(--muted); }
+.graphic + .table-wrap { margin-top: -6px; }
+
+/* ---------- Tooltip ---------- */
+.g-tip { position: absolute; z-index: 20; max-width: 300px; background: var(--card); color: var(--ink); border: 1px solid var(--line);
+         border-radius: 10px; padding: 10px 12px; box-shadow: 0 8px 26px var(--shadow); font: 13px/1.45 var(--sans); pointer-events: none; }
+.g-tip[hidden] { display: none; }
+.g-tip b { display: block; font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+.g-tip .k { display: block; color: var(--muted); }
+.g-tip .row { display: block; margin-top: 6px; }
+.g-tip .row span { display: block; color: var(--faint); font-size: 12px; }
+.tipsrc { display: none; }
+
+/* ---------- Horizontal bars on one axis (the constraint chain, the turbine gap) ---------- */
+.hplot { position: relative; padding-bottom: 26px; }
+.hgrid { position: absolute; left: 0; right: 0; top: 0; bottom: 26px; pointer-events: none; }
+.hgrid span { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--chart-grid); left: calc(var(--at) / var(--max) * 100%); }
+.hgrid span.zero { background: var(--chart-line); }
+.hrow { position: relative; padding: 8px 0 10px; border-radius: 6px; outline-offset: 2px; }
+.hrow:focus-visible { outline: 2px solid var(--accent); }
+.hlabel { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; font: 14px/1.35 var(--sans); margin: 0 0 6px; position: relative; }
+.hname { color: var(--ink); font-weight: 600; }
+.hval { color: var(--muted); font-variant-numeric: tabular-nums; }
+.htag { color: var(--faint); font-style: italic; }
+.htrack { position: relative; height: 14px; }
+.hbar { position: absolute; top: 0; bottom: 0; left: calc(var(--lo) / var(--max) * 100%); width: calc((var(--hi) - var(--lo)) / var(--max) * 100%);
+        background: var(--accent); border-radius: 4px; transform-origin: left center; }
+.hbar.from-zero { border-radius: 0 4px 4px 0; }
+.hbar.solid-part { border-radius: 0; }
+.hbar.range-part { background: var(--accent-light); border-radius: 0 4px 4px 0; margin-left: 2px; width: calc((var(--hi) - var(--lo)) / var(--max) * 100% - 2px); }
+.hbar.neutral { background: var(--faint); }
+.hbar.ghost { background: var(--info-soft); border: 1.5px dashed var(--faint); }
+.hmark { position: absolute; top: 50%; left: calc(var(--at) / var(--max) * 100%); width: 14px; height: 14px; border-radius: 50%;
+         transform: translate(-50%, -50%); background: var(--paper); border: 3px solid var(--accent); box-shadow: 0 0 0 2px var(--paper); }
+.haxis { position: absolute; left: 0; right: 0; bottom: 0; height: 18px; font: 12px/18px var(--sans); color: var(--faint); font-variant-numeric: tabular-nums; }
+.haxis span { position: absolute; left: calc(var(--at) / var(--max) * 100%); transform: translateX(-50%); white-space: nowrap; }
+.haxis span.first { transform: none; }
+.haxis span.last { transform: translateX(-100%); }
+.hrow:hover .hbar, .hrow:focus-visible .hbar { filter: brightness(1.08); }
+.hrow:hover .hname { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+
+/* ---------- The turbine gap: slider and sentence ---------- */
+.gap-ctl { font: 14px/1.4 var(--sans); margin: 0 0 16px; }
+.gap-ctl label { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; color: var(--ink); }
+.gap-ctl output { font-weight: 600; font-variant-numeric: tabular-nums; }
+.gap-ctl input[type=range] { width: 100%; accent-color: var(--accent); margin: 0; }
+.gap-ctl .marks { position: relative; height: 18px; font: 12px/18px var(--sans); color: var(--faint); margin: 2px 9px 0; }
+.gap-ctl .marks button { position: absolute; left: calc((var(--at) - 40) / 60 * 100%); transform: translateX(-50%); font: inherit; color: inherit;
+                         background: none; border: 0; padding: 0 2px; cursor: pointer; white-space: nowrap; }
+.gap-ctl .marks button:hover { color: var(--ink); text-decoration: underline; }
+.gap-ctl .marks button:first-child { transform: translateX(-20%); }
+.gap-ctl .marks button:last-child { transform: translateX(-85%); }
+.gap-ctl .note { color: var(--faint); font-size: 12.5px; margin: 6px 0 0; }
+.story .graphic .gap-sentence { font: 17.5px/1.55 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; color: var(--ink); margin: 0 0 18px; }
+.gap-sentence b { font-weight: 600; }
+
+/* ---------- Vertical columns (the backlog) ---------- */
+.backlog-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.vplot { --h: 128px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: end; height: calc(var(--h) + 22px);
+         border-bottom: 1px solid var(--chart-line); }
+.vcol { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; border-radius: 6px; outline-offset: 2px; }
+.vcol:focus-visible { outline: 2px solid var(--accent); }
+.vval { font: 600 13px/1 var(--sans); color: var(--ink); margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.vbar { width: 24px; height: calc(var(--v) / var(--max) * var(--h)); background: var(--accent); border-radius: 4px 4px 0 0; transform-origin: bottom center; }
+.vcol:hover .vbar, .vcol:focus-visible .vbar { filter: brightness(1.08); }
+.vlabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); font: 12px/1.3 var(--sans); color: var(--muted); text-align: center; margin-top: 6px; }
+.wait { border-left: 1px solid var(--line); padding-left: 22px; }
+.wait dl { margin: 10px 0 0; font: 14px/1.4 var(--sans); }
+.wait dt { color: var(--ink); font-weight: 600; margin: 12px 0 1px; }
+.wait dt:first-child { margin-top: 0; }
+.wait dd { margin: 0; color: var(--ink); }
+.wait dd a { display: block; color: var(--faint); font-size: 12px; margin-top: 1px; }
+
+/* ---------- Table views ---------- */
+.table-wrap { margin: 10px 0 30px; }
+.story table { width: 100%; border-collapse: collapse; font: 14px/1.45 var(--sans); }
+.story th { text-align: left; font-weight: 600; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: bottom; }
+.story td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; font-variant-numeric: tabular-nums; }
+.story th:first-child, .story td:first-child { padding-left: 0; }
+.story td:first-child { color: var(--ink); font-weight: 600; }
+details.table-view { margin: 18px 0 0; font: 13.5px/1.45 var(--sans); }
+details.table-view summary { cursor: pointer; color: var(--muted); }
+details.table-view summary:hover { color: var(--ink); }
+details.table-view table { margin-top: 10px; font-size: 13.5px; }
+details.table-view td:first-child { font-weight: 400; }
+
+/* ---------- The calculator ---------- */
+.calc { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 28px 0 30px; }
+.story .graphic .calc-sentences p { font: 17.5px/1.55 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; color: var(--ink); margin: 0 0 12px; }
+.calc-sentences b { font-weight: 600; }
+/* Five tiles, three over two. */
+.tiles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin: 22px 0 6px; }
+.tile { grid-column: span 2; }
+.tile:nth-child(n+4) { grid-column: span 3; }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 13px; }
+.story .graphic .tile .label { font: 12.5px/1.35 var(--sans); color: var(--muted); margin: 0 0 6px; }
+.story .graphic .tile .value { font: 600 22px/1.15 var(--sans); letter-spacing: -.01em; margin: 0; }
+.story .graphic .tile .sub { font: 12px/1.4 var(--sans); color: var(--faint); margin: 4px 0 0; }
+.calc-bars { margin: 28px 0 0; }
+.cbars { display: grid; gap: 10px; }
+.cbar { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 12px; align-items: center; font: 13.5px/1.3 var(--sans); }
+.cbar .name { color: var(--ink); }
+.cbar .track { position: relative; height: 16px; }
+.cbar .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 0 4px 4px 0; min-width: 2px; transition: width .25s ease; }
+.cbar .val { position: absolute; left: calc(var(--w) + 8px); top: 0; line-height: 16px; font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+.cbar .val.inside { left: auto; right: calc(100% - var(--w) + 8px); color: var(--paper); font-weight: 600; }
+.calc-inputs { border-top: 1px solid var(--line); margin-top: 30px; padding-top: 24px; }
+.story .graphic .calc-inputs h3 { font: 600 16px/1.3 var(--sans); margin: 0 0 4px; }
+.story .graphic .calc-inputs .intro { font: 13.5px/1.5 var(--sans); color: var(--muted); margin: 0 0 18px; }
+.cgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 30px; }
+.ctl { font: 14px/1.4 var(--sans); }
+.ctl label { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.ctl label span:last-child { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; white-space: nowrap; }
+.ctl input[type=range] { width: 100%; accent-color: var(--accent); margin: 0; }
+.ctl small { display: block; color: var(--faint); font-size: 12px; line-height: 1.45; margin-top: 3px; }
+.ctl small .essay { color: var(--muted); }
+.calc-reset { font: 600 14px/1 var(--sans); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+              cursor: pointer; margin-top: 20px; }
+.calc-reset:hover { border-color: var(--ink); }
+.calc table { margin-top: 24px; }
+.calc td:first-child { font-weight: 400; }
+.story .graphic .calc-open { font: 14px/1.5 var(--sans); margin: 18px 0 0; }
+.calc-open a { color: var(--accent); }
+@media (min-width: 900px) {
+  /* The inputs may use the page's full width, 50px past the story column on each side. */
+  .calc-inputs { margin-left: -50px; margin-right: -50px; }
+}
+
+/* ---------- Pull quote and the embedded post ---------- */
+.pull { margin: 34px 0 36px; padding: 2px 0 2px 24px; border-left: 3px solid var(--accent); }
+.pull blockquote { margin: 0; }
+.story .pull blockquote p { font-size: 25px; line-height: 1.38; letter-spacing: -.005em; color: var(--ink); margin: 0 0 12px; }
+.pull figcaption { font: 14px/1.5 var(--sans); color: var(--muted); }
+.pull figcaption a { color: var(--muted); }
+.x-post { margin: 30px 0 34px; display: flex; justify-content: center; }
+.x-post > * { margin-left: auto !important; margin-right: auto !important; }
+/* The post's frame declares no colour scheme. Matching it keeps the browser from painting a white backdrop behind it in the dark theme. */
+.x-post iframe { color-scheme: normal; }
+.story blockquote.twitter-tweet { margin: 0; max-width: 550px; width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+                                  padding: 16px 20px; font: 15px/1.5 var(--sans); color: var(--muted); }
+.story blockquote.twitter-tweet p { font: 17px/1.5 var(--sans); color: var(--ink); margin: 0 0 10px; }
+.story blockquote.twitter-tweet a { color: var(--accent); }
+
+/* ---------- Motion, only for people who have not asked for less ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .graphic.anim .hbar, .graphic.anim .hmark { transition: transform .6s cubic-bezier(.2, .7, .2, 1), opacity .4s ease; }
+  .graphic.anim .vbar { transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+  .graphic.anim:not(.shown) .hbar { transform: scaleX(0); }
+  .graphic.anim:not(.shown) .hmark { opacity: 0; }
+  .graphic.anim:not(.shown) .vbar { transform: scaleY(0); }
+  .gap .hbar { transition: width .25s ease, transform .6s cubic-bezier(.2, .7, .2, 1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cbar .fill { transition: none; }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 640px) {
+  .backlog-grid { grid-template-columns: 1fr; gap: 22px; }
+  .wait { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 16px; }
+  .cgrid { grid-template-columns: 1fr; }
+  .tiles { grid-template-columns: 1fr 1fr; }
+  .tile, .tile:nth-child(n+4) { grid-column: auto; }
+  .tile:last-child { grid-column: span 2; }
+  .haxis span.odd { display: none; }
+  .cbar { grid-template-columns: 1fr; gap: 4px; }
+  .story .pull blockquote p { font-size: 21px; }
+  .pull { padding-left: 18px; }
+  /* Tables become one card per row, each cell keeping its column name. */
+  .story .table-wrap table, .story .table-wrap tbody, .story .table-wrap tr, .story .table-wrap td { display: block; width: 100%; }
+  .story .table-wrap thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .story .table-wrap tr { border-bottom: 1px solid var(--line); padding: 10px 0 8px; }
+  .story .table-wrap tr:first-child { border-top: 1px solid var(--line); }
+  .story .table-wrap td { border: 0; padding: 2px 0; }
+  .story .table-wrap td::before { content: attr(data-label); display: block; font-size: 12px; font-weight: 400; color: var(--faint); }
+  .story .table-wrap td:first-child::before { display: none; }
+  .story .table-wrap td:first-child { font-size: 15px; padding-bottom: 4px; }
+}
+@media print { .g-tip { display: none !important; } }
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../">&larr; Writing and ideas</a>
+
+<article class="story">
+  <h1>Who waits for the blades</h1>
+  <p class="dek">SpaceX says it will end 2027 with 13 gigawatts of compute, and it is building a blade foundry to get there. Boom built a turbine factory and lost the customer it built it for. Run the numbers and the blade shortage does not stop the highest bidder. It decides whose chips sit dark. Part two of two.</p>
+  <p class="byline">By Vito Prasad. November 1, 2026.</p>
+  <p><a href="../the-power-problem-is-a-casting-problem/">Part one</a> worked out why the price of a fast gas turbine is set by the chips waiting on it, and why the slowest step on the path a buyer controls is a cast nickel blade. This piece follows the two companies that decided to make the blade themselves, and the data center developer that walked away from one of them, because between them they show what the constraint does to the people inside it.</p>
+  <h2 id="two-foundries">Two foundries</h2>
+  <p><strong>SpaceX is building its own.</strong> In late August Elon Musk confirmed that SpaceX will cast blades and vanes for natural gas turbines at a plant in Bastrop, Texas, next to its Starlink factory, on about 830 acres it bought quietly over the spring. His reason, in his words, was that "the limiting factor for nat gas turbine production is casting the blades &amp; vanes." He claimed it could bring turbines online 18 months sooner. xAI, now inside SpaceX, runs about 1.7 gigawatts of gas turbines at Southaven, Mississippi, and has disclosed about $2.8 billion of turbine purchases, a $925 million agreement running through 2029 and a $2 billion purchase of mobile turbines in April. On SpaceX's October 20 earnings call Musk said turbine makers can deliver everything except the blades and vanes 12 to 18 months before they can deliver the blades and vanes, which is the gap he says the Bastrop foundry will close. The buyer of the turbines is building the part the turbines wait on.</p>
+  <figure class="pull"><blockquote cite="https://www.fool.com/earnings/call-transcripts/2026/10/20/spacex-spcx-q3-2026-earnings-call-transcript/"><p>[Turbine makers] can deliver everything except the blades and vanes 12 to 18 months before they can deliver the blades and vanes.</p></blockquote><figcaption><a href="https://www.fool.com/earnings/call-transcripts/2026/10/20/spacex-spcx-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">Elon Musk, SpaceX third quarter 2026 earnings call, October 20, 2026</a></figcaption></figure>
+  <p><strong>Boom is building one too, and lost its customer.</strong> On September 25 Crusoe ended the launch order for 29 of Boom Supersonic's 42 megawatt Superpower turbines. Crusoe said its plans had not changed and it still intends to use turbines, "just not Boom's." On October 22 Boom opened a $150 million turbine factory in Colorado anyway, shipped its first complete turbine core to a test site, and announced an all-digital single crystal foundry of its own, with first castings expected in 2027. It has not named a replacement customer. Boom had already placed firm orders with Baker Hughes for 31 generators to pair with the turbines Crusoe no longer wants.</p>
+  <p><strong>Both fit the one description that makes a foundry a safe bet.</strong> Part one said the way to build a foundry against orders that can cancel is to own the demand on both sides of it. SpaceX already casts superalloy parts for Raptor turbopumps, and Morgan Stanley's Adam Jonas noted in August that the rocket castings and the turbine airfoils use the same alloys and the same furnaces. SpaceX also owns xAI, the largest single buyer of on-site turbines in the country. The foundry has a captive customer on one side and a captive supplier on the other. Boom's version is the same shape. Symphony, its airliner engine, shares about 80% of its hardware with the Superpower turbine, so one blade line serves both.</p>
+  <h2 id="thirteen-gigawatts-against-the-fast-turbine-market">Thirteen gigawatts against the fast-turbine market</h2>
+  <p><strong>Musk's own plan runs straight into the constraint.</strong> He said on the October 20 call that he would be surprised to end 2027 with less than 13 gigawatts of compute, about 10 more than SpaceX expects to have this December. SpaceX counts compute by the chips' own draw, which leaves out cooling, so a gigawatt of it needs about 1.25 gigawatts of firm supply by my assumption. Colossus 2 runs about 87% on its own gas today. At that share, 10 more gigawatts of compute is roughly 11 gigawatts of new turbines inside a single year. The arithmetic is mine, and the inputs are in the table.</p>
+  <figure class="graphic gap grows" id="turbine-gap" aria-label="Turbines SpaceX needs in 2027 against what the fast-turbine makers build in a year"><p class="g-title">Thirteen gigawatts against the fast-turbine market</p><p class="g-sub">Gigawatts on one scale. Where a figure is a range, the lighter end of the bar covers it.</p><div class="gap-ctl"><label for="gas-share"><span>Gas share of SpaceX's new supply</span><output id="gas-share-out" for="gas-share">87%</output></label><input type="range" id="gas-share" min="40" max="100" step="1" value="87"><div class="marks"><button type="button" data-share="40" style="--at:40" aria-label="Set the gas share to 40%">40%</button><button type="button" data-share="87" style="--at:87" aria-label="Set the gas share to 87%">87%</button><button type="button" data-share="100" style="--at:100" aria-label="Set the gas share to 100%">100%</button></div></div><p class="gap-sentence" aria-live="polite">At <b id="gap-share">87%</b> gas, SpaceX needs about <b><span id="gap-need">10.9</span> gigawatts</b> of new turbines in 2027, <span id="gap-times">between 1.4 and 2.2 times</span> what the fast-turbine makers build in a year. After the 2 to 4.5 gigawatts it has disclosed or been linked to, <span id="gap-gap">6.4 to 8.9</span> gigawatts are left, about <b><span id="gap-units">183 to 254</span> machines</b> of the 35 megawatt class.</p><div class="hplot" style="--max:22"><div class="hgrid" aria-hidden="true"><span class="zero" style="--at:0"></span><span style="--at:5"></span><span style="--at:10"></span><span style="--at:15"></span><span style="--at:20"></span></div><div class="hrow" tabindex="0" data-tip><p class="hlabel"><span class="hname">Turbines SpaceX needs in 2027</span><span class="hval"><span id="gap-need-val">10.9 GW</span></span></p><div class="htrack"><span class="hbar from-zero" id="gap-need-bar" style="--lo:0;--hi:10.9"></span></div><span class="tipsrc"><b>Turbines SpaceX needs in 2027</b><span class="k" id="gap-need-tip"></span><span class="row"><span>Where it comes from</span>SpaceX third quarter 2026 call for the 10 gigawatts. Colossus 2 runs about 87% on its own gas. The 1.25 is my assumption.</span></span></div><div class="hrow" tabindex="0" data-tip><p class="hlabel"><span class="hname">Disclosed or linked to SpaceX</span><span class="hval">2 to 4.5 GW</span></p><div class="htrack"><span class="hbar from-zero solid-part" style="--lo:0;--hi:2"></span><span class="hbar range-part" style="--lo:2;--hi:4.5"></span></div><span class="tipsrc"><b>Disclosed or linked to SpaceX</b><span class="k">2 to 4.5 GW of turbines</span><span class="row"><span>In the essay</span>SpaceX&#x27;s disclosed turbine spending, $2 billion plus $925 million, buys about 1.5 to 3 gigawatts at today&#x27;s prices.</span></span></div><div class="hrow" tabindex="0" data-tip><p class="hlabel"><span class="hname">What the fast-turbine makers build in a year</span><span class="hval">5 to 8 GW</span></p><div class="htrack"><span class="hbar from-zero solid-part" style="--lo:0;--hi:5"></span><span class="hbar range-part" style="--lo:5;--hi:8"></span></div><span class="tipsrc"><b>What the fast-turbine makers build in a year</b><span class="k">5 to 8 GW between them</span><span class="row"><span>By maker</span>GE Vernova&#x27;s aeroderivatives about 2 a year at the third quarter&#x27;s pace, Solar Turbines about 0.6, ProEnergy about 1, FTAI&#x27;s converted airliner engines about 2.5 at full ramp</span><span class="row"><span>Where it comes from</span>GE Vernova, Caterpillar, ProEnergy and FTAI, third quarter 2026</span></span></div><div class="hrow" tabindex="0" data-tip><p class="hlabel"><span class="hname">GE Vernova&#x27;s large-frame output in a year</span><span class="hval">20 GW</span><span class="htag">for scale, sold out to 2031</span></p><div class="htrack"><span class="hbar from-zero neutral" style="--lo:0;--hi:20"></span></div><span class="tipsrc"><b>GE Vernova&#x27;s large-frame output in a year</b><span class="k">20 GW a year, 24 by 2028</span><span class="row"><span>Why it is here</span>For scale. Large utility turbines are sold out to 2031, so none of this is free for 2027.</span><span class="row"><span>Where it comes from</span>GE Vernova, second and third quarter 2026</span></span></div><div class="haxis" aria-hidden="true"><span class="first" style="--at:0">0</span><span class="odd" style="--at:5">5</span><span style="--at:10">10</span><span class="odd" style="--at:15">15</span><span style="--at:20">20 GW</span></div></div><figcaption>New compute of 10 gigawatts, times 1.25 for firm supply, times the gas share. The 1.25 is my assumption.</figcaption><script type="application/json" id="turbine-model">{"new_compute_gw": 10, "firm_per_compute": 1.25, "default_share": 87, "share_range": [40, 100], "disclosed_gw": [2, 4.5], "fast_makers_gw": [5, 8], "ge_large_frame_gw": 20, "machine_mw": 35}</script></figure><div class="table-wrap"><table><thead><tr><th>Gas share of the new supply</th><th>Turbines needed</th><th>Gap after the 2 to 4.5 GW SpaceX has disclosed or been linked to</th><th>Machines of the 35 megawatt class</th></tr></thead><tbody><tr><td data-label="Gas share of the new supply">40%, the split Brian Wang proposed on a recent podcast</td><td data-label="Turbines needed">5 GW</td><td data-label="Gap after the 2 to 4.5 GW SpaceX has disclosed or been linked to">0.5 to 3 GW</td><td data-label="Machines of the 35 megawatt class">14 to 86</td></tr><tr><td data-label="Gas share of the new supply">87%, Colossus 2 today</td><td data-label="Turbines needed">11 GW</td><td data-label="Gap after the 2 to 4.5 GW SpaceX has disclosed or been linked to">6.4 to 8.9 GW</td><td data-label="Machines of the 35 megawatt class">183 to 254</td></tr><tr><td data-label="Gas share of the new supply">100%, if the grid gives nothing</td><td data-label="Turbines needed">12.5 GW</td><td data-label="Gap after the 2 to 4.5 GW SpaceX has disclosed or been linked to">8 to 10.5 GW</td><td data-label="Machines of the 35 megawatt class">229 to 300</td></tr></tbody></table></div>
+  <p><strong>The fast-turbine makers build about 5 to 8 gigawatts a year between them.</strong> GE Vernova's aeroderivative line shipped 13 units in the third quarter, about 2 gigawatts a year at that pace. Solar Turbines builds roughly 0.6 gigawatts and Caterpillar plans to multiply that by two and a half. ProEnergy's rebuilt jet engines run to about a gigawatt. FTAI's conversions of airliner engines reach about 2.5 gigawatts at full ramp, and more than a hundred of them are already under contract for 2027 and 2028. Caterpillar is quoting late 2028 for new orders. Large utility turbines are sold out to 2031. So the plan needs between 1.4 and 2.2 times everything the fast makers build in a year, and SpaceX's disclosed turbine spending, $2 billion plus $925 million, buys about 1.5 to 3 gigawatts of it at today's prices. Musk called the rest of the plan "highly proprietary."</p>
+  <p><strong>There are four ways it still happens.</strong> SpaceX already holds machines for most of the gap and has not said so. The grid supplies about 40% of the new load, which is 4 to 5 gigawatts of new utility service in 14 months against a record of about half a gigawatt in two years from TVA and the Memphis utility. Engines and fuel cells, which need no blades, fill the gap, though they are booked into 2028 and 2029 too. Or SpaceX buys most of the world's 2027 output of fast turbines plus whatever used fleets are for sale, which is what the April purchase and the acquisition of APR Energy's fleet look like the start of.</p>
+  <p><strong>If it is the fourth, the blade does not stop the highest bidder. It decides whose chips wait.</strong> At $30 to $50 a watt of revenue, SpaceX is the highest bidder by a wide margin, and the figure Musk posted in August, which he called a consensus estimate, was that about 15 gigawatts of the compute built in 2027 cannot be switched on in 2027. The constraint holds for the market and shows up as other people's dark chips. The connection is mine.</p>
+  <div class="x-post"><blockquote class="twitter-tweet" data-dnt="true" data-theme="light"><p lang="en" dir="ltr">Consensus estimate is that ~15GW of AI compute produced in 2027 cannot be turned on in 2027. <br><br>This is harder than just finding power, as you also need to build out all the transformers, wiring, liquid-cooling, (massive) chillers &amp; complex networking. <a href="https://t.co/cRXJ1Wrkri">grok.com/share/bGVnYWN5…</a></p>Elon Musk (@elonmusk), <a href="https://x.com/elonmusk/status/2093810234141634702?ref_src=twsrc%5Etfw">August 29, 2026</a></blockquote></div>
+  <p><strong>Baseload eats blades.</strong> Aeroderivatives were built for peaking duty. Run flat out, a hot section lasts about 25,000 hours, a little over three years at 90% of the time, so a fleet of 200 to 300 of them needs roughly 5,000 to 8,000 new first-stage blades a year just to keep running. That is my inference from the service intervals, and it gives the Bastrop foundry a captive replacement market even if new turbine orders stop. It is a floor under the foundry beyond rocket parts.</p>
+  <h2 id="what-turned-out-differently">What turned out differently</h2>
+  <p><strong>A contracted backlog is still a milestone.</strong> Hard tech investors have spent three years learning to pay for artifacts rather than milestones, a part with a number that a customer with a budget pays for this year, and in September Boom's $1.25 billion of contracted turbine orders from Crusoe looked like the cleanest artifact in the sector. On September 25 Crusoe cancelled the order. It had been an option Crusoe held on a future where turbines were its primary power, and Crusoe's sites already had GE aeroderivatives and Caterpillar turbines for backup. When that future did not arrive, Crusoe let the option lapse. Boom, meanwhile, had placed firm orders on generators against it. As <a href="https://nodiligence.substack.com/p/the-buyer-kept-the-option-the-supplier" target="_blank" rel="noopener">one write-up of the deal</a> put it, the buyer kept the option and the supplier had already placed the order.</p>
+  <p>The tighter definition is that an artifact is something you have delivered to a customer who has paid. Everything before that is a milestone with better paperwork, and the better the paperwork, the easier it is to mistake for revenue.</p>
+  <p><strong>SpaceX now sits on the supplier's side of the Crusoe trade.</strong> Anthropic, about a third of SpaceX's revenue last quarter, can cancel its SpaceX compute on 90 days' notice once the first terms end in early 2027, while its $110 billion commitment to Amazon cannot be cancelled. SpaceX's own turbine agreements run to 2029.</p>
+  <p><strong>Buyers pay for certainty when time is the constraint.</strong> Boom's turbine was priced around $1,030 a kilowatt including the generator and maintenance, against roughly $1,800 for a GE aeroderivative package by one industry estimate. Crusoe stayed with the incumbent. It is not alone. NextEra has booked four gigawatts of GE Vernova turbine slots for its data center customers, and Crusoe itself is in a venture with Engine No. 1 to procure 4.5 gigawatts from GE Vernova and Chevron. When a month of delay costs $430 million, a turbine that has never run costs more than its discount once the delay is priced in. The core Boom shipped on October 22 has not fired yet. It is due to fire before Thanksgiving. Until it does, Boom is selling a delivery date, and Crusoe has just put a price on a startup's delivery date.</p>
+  <h2 id="the-case-against">The case against</h2>
+  <p><strong>SpaceX's 18 months may be a decade.</strong> Howmet's scale, yields and technology took decades. The furnaces take two years to get. A greenfield foundry is four to six years plus qualification, and large land-based blades are the hardest castings there are. Casting a turbopump part is not casting a single crystal airfoil the length of a forearm. If the bladeless machines Howmet described are the 380 megawatt Doosan units linked to SpaceX, their first-stage blades are the largest single crystal castings made, which is the hardest case for Bastrop, not the easiest. A SpaceX blade spinning in a data center turbine is 2028 at the earliest, and the early 2030s if the yields behave the way yields usually behave.</p>
+  <p><strong>Musk may simply get the turbines.</strong> The four ways above are not exclusive, and the man has a record of buying his way out of queues. If he does, the 13 gigawatts arrive and the constraint is invisible on his balance sheet. It is only visible on everyone else's, as the chips that August estimate expects to stay dark, and a reader who only watches SpaceX will conclude the blade was never the problem.</p>
+  <p><strong>The permit may be the slowest step after all.</strong> Southaven shows what happens when a buyer treats permitting as optional. SpaceX is in federal court over turbines it ran there without permits and has agreed to remove them by July 2027. On October 30 the judge refused to dismiss the NAACP's case, ruling that calling the turbines temporary does not exempt them from clean air permits. A request to shut them down until they are permitted is still pending. The hyperscalers have signed a White House pledge not to push power costs onto ratepayers, and local opposition is now blocking projects by the tens of billions a quarter. If the permit takes longer than the blade, SpaceX will have built a foundry to speed up a step that was never the slow one.</p>
+  <h2 id="what-would-change-my-mind">What would change my mind</h2>
+  <ol><li><strong>A SpaceX-cast blade runs in a qualified turbine before 2029.</strong> That would mean greenfield casting is faster than the industry believes.</li><li><strong>SpaceX ends 2027 at 13 gigawatts, mostly on its own gas, with no other large buyer reporting chips it could not power.</strong> That would mean the fast-turbine market was deeper than the public numbers show, and the "whose chips wait" claim is wrong.</li><li><strong>Boom names a paying customer and delivers 250 megawatts in 2027.</strong> That would mean the market does pay a startup for a date after all.</li><li><strong>Anthropic exercises its 90-day exit.</strong> That would mean $50 a watt did not last, and the ceiling in part one falls to the depreciation floor.</li></ol>
+  <h2 id="who-waits">Who waits</h2>
+  <p>The question for a hard tech company used to be what it could sell before the hard part works. The question that matters now is what it can make that nobody else can make fast, because that is where the price goes when time is the constraint. It is also the test I would put to the physical AI companies raising money now. Most of them are science fair projects with better funding until they can name the step they will own, and what the older hard tech companies did to get across the SBIR valley of death, the gap between a funded prototype and a factory, is a preview of what is coming for them. In data center power that step is a nickel blade grown as a single crystal, and the two companies building furnaces for it are the two that already cast engines for a living. Everyone else, including the turbine makers, is waiting on the same furnace.</p>
+  <section class="sources">
+    <h2 id="sources">Sources</h2>
+    <p class="group">SpaceX and xAI</p>
+    <ul><li><a href="https://www.fool.com/earnings/call-transcripts/2026/10/20/spacex-spcx-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">SpaceX third quarter 2026 earnings call</a></li><li><a href="https://www.fool.com/earnings/call-transcripts/2026/08/11/spacex-spcx-q2-2026-earnings-call-transcript/" target="_blank" rel="noopener">SpaceX second quarter 2026 earnings call</a></li><li><a href="https://www.sec.gov/Archives/edgar/data/1181412/000162828026066880/spcx-20260930.htm" target="_blank" rel="noopener">SpaceX 10-Q for the third quarter of 2026</a></li><li><a href="https://www.sec.gov/Archives/edgar/data/1181412/000162828026042639/spaceexplorationtechnologi.htm" target="_blank" rel="noopener">SpaceX prospectus, June 2026</a></li><li><a href="https://finance.yahoo.com/technology/ai/articles/spacex-building-turbine-blade-foundry-133507334.html" target="_blank" rel="noopener">SpaceX building a turbine blade foundry</a></li><li><a href="https://www.tomshardware.com/tech-industry/data-centers/spacex-starts-in-house-turbine-blade-manufacturing-to-boost-gas-powered-generator-output-for-elons-ai-data-centers-new-manufacturing-strategy-cuts-generator-delays-by-18-months" target="_blank" rel="noopener">SpaceX in-house blade manufacturing, 18 months</a></li><li><a href="https://techcrunch.com/2026/08/30/musks-faster-path-to-more-gas-turbines-comes-with-pollution-problem/" target="_blank" rel="noopener">Musk's faster path to turbines and its pollution problem</a></li><li><a href="https://x.com/elonmusk/status/2093810234141634702" target="_blank" rel="noopener">Musk on 15 gigawatts that cannot be switched on in 2027</a></li><li><a href="https://newsletter.semianalysis.com/p/spacex-10gw-in-2027-why-its-real" target="_blank" rel="noopener">SemiAnalysis, SpaceX 10 GW in 2027</a></li><li><a href="https://www.datacenterdynamics.com/en/news/musks-xai-gets-go-ahead-for-41-natural-gas-turbines-in-mississippi-to-power-colossus-data-centers/" target="_blank" rel="noopener">xAI's 41 turbines approved in Mississippi</a></li><li><a href="https://www.mississippifreepress.org/mississippi-permit-board-grants-xais-request-for-41-southaven-gas-turbines-to-power-memphis-data-center/" target="_blank" rel="noopener">The Southaven permit and turbine mix</a></li><li><a href="https://www.selc.org/news/xai-built-an-illegal-power-plant-to-power-its-data-center/" target="_blank" rel="noopener">xAI's unpermitted plant, SELC</a></li><li><a href="https://desotocountynews.com/mississippi-news/xai-southaven-turbines-motion-denied" target="_blank" rel="noopener">Judge refuses to dismiss the Southaven turbine case</a></li><li><a href="https://techcrunch.com/2026/05/20/musks-xai-is-being-sued-over-its-data-center-generators-now-its-buying-2-8b-more/" target="_blank" rel="noopener">TechCrunch on the $2.8 billion of turbines</a></li><li><a href="https://electrek.co/2026/07/14/musk-buys-gas-turbine-company-apr-energy-grok/" target="_blank" rel="noopener">Musk buys APR Energy's turbine fleet</a></li><li><a href="https://en.sedaily.com/finance/2026/10/06/doosan-enerbility-ships-first-gas-turbine-to-us-for-spacexai" target="_blank" rel="noopener">Doosan ships its first turbine to SpaceXAI</a></li><li><a href="https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm" target="_blank" rel="noopener">Anthropic S-1, October 2026</a></li><li><a href="https://www.gurufocus.com/news/9159098/spacex-relies-on-anthropic-for-a-third-of-its-revenue" target="_blank" rel="noopener">Bloomberg on Anthropic's share of SpaceX revenue, via GuruFocus</a></li><li><a href="https://www.fool.com/earnings/call-transcripts/2026/10/29/howmet-aerospace-hwm-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">Howmet third quarter 2026 call transcript</a></li></ul>
+    <p class="group">The fast-turbine makers</p>
+    <ul><li><a href="https://www.turbomachinerymag.com/view/ge-vernova-q3-2026-gas-power-backlog-122-gw-trench-acquisition" target="_blank" rel="noopener">GE Vernova third quarter 2026, 13 aeroderivatives shipped</a></li><li><a href="https://www.solarturbines.com/en_US/products/power-generation-packages/titan-350-38mw.html" target="_blank" rel="noopener">Solar Turbines Titan 350</a></li><li><a href="https://www.fool.com/earnings/call-transcripts/2026/10/29/caterpillar-cat-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">Caterpillar third quarter 2026 call</a></li><li><a href="https://www.datacenterdynamics.com/en/news/proenergy-offers-repurposed-jet-engines-to-data-cent/" target="_blank" rel="noopener">ProEnergy's rebuilt jet engines for data centers</a></li><li><a href="https://ir.ftaiaviation.com/news-releases/news-release-details/ftai-aviation-ltd-reports-strong-third-quarter-2026-performance" target="_blank" rel="noopener">FTAI third quarter 2026</a></li><li><a href="https://www.fool.com/earnings/call-transcripts/2026/10/27/innio-inio-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">INNIO third quarter 2026 call</a></li><li><a href="https://www.powermag.com/gas-turbine-supply-chain-bottlenecks-could-reshape-the-generation-mix-in-2030-and-beyond/" target="_blank" rel="noopener">Turbines shipped without blades, POWER</a></li><li><a href="https://www.bakerhughes.com/gas-turbines/aeroderivative-technology/lm6000pf" target="_blank" rel="noopener">LM6000 service intervals, Baker Hughes</a></li></ul>
+    <p class="group">Boom and Crusoe</p>
+    <ul><li><a href="https://techcrunch.com/2026/09/25/crusoe-abandons-1-25b-plan-to-use-boom-turbines-at-ai-data-centers/" target="_blank" rel="noopener">Crusoe abandons the Boom turbine plan</a></li><li><a href="https://boomsupersonic.com/press-release/superpower-superfactory" target="_blank" rel="noopener">Boom turbine core, superfactory and digital foundry</a></li><li><a href="https://coloradosun.com/2026/10/23/boom-supersonic-data-center-jobs-manufacturing-factory/" target="_blank" rel="noopener">Boom's Colorado factory and 500 jobs</a></li><li><a href="https://investors.bakerhughes.com/news/press-releases/news-details/2026/Baker-Hughes-Secures-1-21-Gigawatt-Generator-Order-to-Power-Boom-Supersonics-AI-Data-Center-Solution/default.aspx" target="_blank" rel="noopener">Baker Hughes generator order for Boom</a></li><li><a href="https://www.gevernova.com/gas-power/resources/case-studies/crusoe-ai-data-centers-lm2500xpress" target="_blank" rel="noopener">Crusoe's GE Vernova LM2500XPRESS units</a></li><li><a href="https://www.power-eng.com/onsite-power/nextera-leans-into-bring-your-own-generation-as-data-centers-chase-firm-power/" target="_blank" rel="noopener">NextEra books 4 GW of GE Vernova slots</a></li><li><a href="https://www.datacenterdynamics.com/en/news/crusoe-orders-19-natural-gas-turbines-from-ge-vernova-to-power-data-centers/" target="_blank" rel="noopener">Crusoe, Engine No. 1 and Chevron, a 4.5 GW procurement venture</a></li><li><a href="https://nodiligence.substack.com/p/the-buyer-kept-the-option-the-supplier" target="_blank" rel="noopener">The buyer kept the option, the supplier had placed the order</a></li></ul>
+    <h2 id="things-i-could-not-pin-down" class="later">Things I could not pin down</h2>
+    <ul><li>Crusoe's deposit and Boom's cancellation terms, and whether the 31 Baker Hughes generators can be reassigned. All private.</li><li>Which seller, and how many megawatts, sit behind SpaceX's $2 billion purchase of mobile turbines. APR Energy fits but is not confirmed.</li><li>The rest of SpaceX's 2027 power plan. Musk called it "highly proprietary." Air permit records in Texas and Mississippi would show turbine counts at any new site.</li><li>Whether the Doosan units ship without blades. Howmet's chief executive named an Asian maker, not a company.</li><li>The 18 month claim is Musk's. The four to six year figure is the casting industry's. The gap between them is the whole bet.</li></ul>
+  </section>
+</article>
+
+<footer>Vito Prasad, November 1, 2026. <a href="../the-power-problem-is-a-casting-problem/">Read part one, <em>The power problem is a casting problem</em></a>. <a href="../">All writing</a>. <a href="../../index.html">See the builds</a>.</footer>
+</main>
+<script>
+/* Behaviour for the essay graphics: tooltips, the grow-in on first view, the
+   turbine-gap slider, the calculator, and keeping the embedded post in the
+   page's theme. Built into each page by build_essay_pages.py. Each part only
+   runs when its graphic is on the page. */
+(function () {
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  function $(id) { return document.getElementById(id); }
+
+  /* ---------- Tooltips: hover, focus, or tap a mark that has a .tipsrc ---------- */
+  document.querySelectorAll(".graphic").forEach(function (fig) {
+    var marks = fig.querySelectorAll("[data-tip]");
+    if (!marks.length) return;
+    var tip = document.createElement("div");
+    tip.className = "g-tip"; tip.hidden = true; tip.setAttribute("role", "tooltip");
+    fig.appendChild(tip);
+    var pinned = null, byMouse = false;
+    function show(mark, x, y) {
+      var src = mark.querySelector(".tipsrc");
+      if (!src) return;
+      tip.replaceChildren.apply(tip, Array.prototype.map.call(src.childNodes, function (n) { return n.cloneNode(true); }));
+      tip.hidden = false;
+      var f = fig.getBoundingClientRect(), m = mark.getBoundingClientRect();
+      if (x === undefined) { x = m.left + Math.min(m.width / 2, 160); y = m.bottom; }
+      var w = tip.offsetWidth, h = tip.offsetHeight;
+      var left = Math.max(0, Math.min(x - f.left + 14, f.width - w));
+      var top = y - f.top + 14;
+      if (y + h + 24 > window.innerHeight) top = m.top - f.top - h - 8;
+      tip.style.left = left + "px"; tip.style.top = top + "px";
+    }
+    function hide() { tip.hidden = true; pinned = null; }
+    marks.forEach(function (mark) {
+      mark.addEventListener("pointermove", function (e) { if (e.pointerType === "mouse") { byMouse = true; show(mark, e.clientX, e.clientY); } });
+      mark.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse" && pinned !== mark) tip.hidden = true; });
+      mark.addEventListener("focus", function () { byMouse = false; show(mark); });
+      mark.addEventListener("blur", function () { if (pinned !== mark) tip.hidden = true; });
+      mark.addEventListener("click", function (e) {
+        if (pinned === mark) { hide(); return; }
+        pinned = mark; show(mark, e.pointerType === "mouse" ? e.clientX : undefined, e.pointerType === "mouse" ? e.clientY : undefined);
+      });
+    });
+    document.addEventListener("click", function (e) { if (pinned && !fig.contains(e.target)) hide(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") hide(); });
+    window.addEventListener("scroll", function () { if (!pinned && byMouse) tip.hidden = true; }, { passive: true });
+  });
+
+  /* ---------- Grow in once, when first seen, unless less motion was asked for ---------- */
+  if (!reduce.matches && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("shown"); io.unobserve(e.target); } });
+    }, { threshold: 0.35 });
+    document.querySelectorAll(".graphic.grows").forEach(function (fig) { fig.classList.add("anim"); io.observe(fig); });
+  }
+
+  /* ---------- Thirteen gigawatts against the fast-turbine market ---------- */
+  var gap = $("turbine-gap");
+  if (gap) {
+    var M = JSON.parse($("turbine-model").textContent);
+    var slider = $("gas-share"), out = $("gas-share-out");
+    var one = function (x) { return (Math.round(x * 10) / 10).toFixed(1).replace(/\.0$/, ""); };
+    var dec = function (x) { return (Math.round(x * 10) / 10).toFixed(1); };
+    function model(share) {
+      // The same sums as the essay's table. Round the need to a tenth first, as the table does.
+      var need = Math.round(M.new_compute_gw * M.firm_per_compute * share / 100 * 10) / 10;
+      var gapLo = Math.max(0, Math.round((need - M.disclosed_gw[1]) * 10) / 10), gapHi = Math.round((need - M.disclosed_gw[0]) * 10) / 10;
+      return { need: need, gapLo: gapLo, gapHi: gapHi,
+               unitsLo: Math.round(gapLo * 1000 / M.machine_mw), unitsHi: Math.round(gapHi * 1000 / M.machine_mw),
+               xLo: need / M.fast_makers_gw[1], xHi: need / M.fast_makers_gw[0] };
+    }
+    function update() {
+      var s = +slider.value, r = model(s);
+      out.textContent = s + "%";
+      $("gap-share").textContent = s + "%";
+      $("gap-need").textContent = one(r.need);
+      $("gap-times").textContent = "between " + dec(r.xLo) + " and " + dec(r.xHi) + " times";
+      $("gap-gap").textContent = one(r.gapLo) + " to " + one(r.gapHi);
+      $("gap-units").textContent = r.unitsLo.toLocaleString("en-US") + " to " + r.unitsHi.toLocaleString("en-US");
+      var bar = $("gap-need-bar");
+      bar.style.setProperty("--hi", r.need);
+      $("gap-need-val").textContent = one(r.need) + " GW";
+      $("gap-need-tip").textContent = M.new_compute_gw + " GW of new compute, times " + M.firm_per_compute + " for firm supply, times " + s +
+        "% gas, is " + one(r.need) + " GW. After what SpaceX has disclosed or been linked to, " + one(r.gapLo) + " to " + one(r.gapHi) +
+        " GW are left, about " + r.unitsLo + " to " + r.unitsHi + " machines of the " + M.machine_mw + " megawatt class.";
+    }
+    slider.addEventListener("input", update);
+    gap.querySelectorAll("[data-share]").forEach(function (b) {
+      b.addEventListener("click", function () { slider.value = b.dataset.share; update(); });
+    });
+    update();
+  }
+
+  /* ---------- The calculator (the same sums as the standalone page) ---------- */
+  var calc = $("calculator");
+  if (calc) {
+    var ids = ["capex", "share", "years", "price", "base", "sc", "cc", "gas", "cf", "rev"];
+    var el = {}; ids.forEach(function (k) { el[k] = $("calc-" + k); });
+    var defaults = {}; ids.forEach(function (k) { defaults[k] = el[k].getAttribute("value"); });
+    var set = function (id, text) { $("calc-" + id).textContent = text; };
+    var money = function (m) { // m in millions of dollars
+      if (Math.abs(m) >= 1000) return "$" + (m / 1000).toFixed(m >= 10000 ? 0 : 1) + " billion";
+      return "$" + Math.round(m) + " million";
+    };
+    var span = function (months) {
+      if (months < 1 / 30) return "about a day";
+      if (months < 0.5) { var d = Math.round(months * 30.4); return d + (d === 1 ? " day" : " days"); }
+      if (months < 2) { var w = Math.round(months * 4.35); return w + (w === 1 ? " week" : " weeks"); }
+      if (months < 24) { var mo = Math.round(months * 10) / 10; return mo + " months"; }
+      return (Math.round(months / 12 * 10) / 10) + " years";
+    };
+    var pct = function (x) { return x + "%"; };
+    var run = function () {
+      var capex = +el.capex.value, share = +el.share.value, years = +el.years.value, price = +el.price.value, base = +el.base.value;
+      var sc = +el.sc.value / 100, cc = +el.cc.value / 100, gas = +el.gas.value, cf = +el.cf.value / 100, rev = +el.rev.value;
+      var chips = capex * share / 100;                          // $B per GW
+      var monthly = chips * 1000 / years / 12;                  // $M per month
+      var premium = Math.max(0, price - base);                  // $M per GW
+      var bought = premium / monthly;                           // months
+      var delta = 3.412 * (1 / sc - 1 / cc) * gas;              // $ per MWh
+      var fuel = delta * 8760 * cf * 1000 / 1e6;                // $M per year
+      var fuelMonths = fuel / monthly;
+      var ceiling = chips * 1000 / years;                       // $ per kW, one year of depreciation over 1e6 kW
+      var revm = rev * 1000 / 12;                               // $M per month per GW at $rev per watt per year
+      var ceilrev = rev * 1000 * 0.8;                           // $ per kW, a year of revenue at an 80% cash margin
+      var ratio = ceiling / price;
+      set("s-monthly", money(monthly)); set("s-chips", "$" + chips.toFixed(1) + " billion"); set("s-years", years + " years");
+      set("s-bought", span(bought)); set("s-bought2", span(bought)); set("s-turbine", money(price)); set("s-base", money(base));
+      set("s-fuel", money(fuel)); set("s-sc", pct(el.sc.value)); set("s-cc", pct(el.cc.value)); set("s-gas", "$" + gas.toFixed(2));
+      set("s-cf", pct(el.cf.value)); set("s-fueldays", span(fuelMonths)); set("s-revm", money(revm)); set("s-rev", "$" + rev);
+      set("s-fuelrev", (100 * fuel / (rev * 1000)).toFixed(1) + "%"); set("s-ceilrev", "$" + Math.round(ceilrev).toLocaleString("en-US"));
+      set("s-ceiling", "$" + Math.round(ceiling).toLocaleString("en-US")); set("s-ratio", (Math.round(ratio * 10) / 10) + " times");
+      set("t-monthly", money(monthly)); set("t-bought", span(bought)); set("t-fuel", money(fuel)); set("t-fueldays", span(fuelMonths) + " of idle chips");
+      set("t-revm", money(revm)); set("t-ceiling", "$" + Math.round(ceiling).toLocaleString("en-US") + "/kW");
+      set("t-ratio", (Math.round(ratio * 10) / 10) + " times today's price");
+      var vals = { revm: revm, monthly: monthly, premium: premium, fuel: fuel, turbine: price };
+      var max = Math.max(revm, monthly, premium, fuel, price, 1);
+      Object.keys(vals).forEach(function (k) {
+        var w = Math.max(0.3, 100 * vals[k] / max), v = $("calc-v-" + k);
+        $("calc-b-" + k).style.width = w + "%"; v.style.setProperty("--w", w + "%"); v.textContent = money(vals[k]);
+        v.classList.toggle("inside", w > 80);
+      });
+      set("r-monthly", money(monthly)); set("r-premium", money(premium)); set("r-bought", span(bought));
+      set("r-delta", "$" + delta.toFixed(1) + " per MWh"); set("r-fuel", money(fuel)); set("r-ceiling", "$" + Math.round(ceiling).toLocaleString("en-US") + " per kW");
+      set("o-capex", "$" + capex.toFixed(1) + "B"); set("o-share", pct(share) + ", $" + chips.toFixed(1) + "B"); set("o-years", years + " yr");
+      set("o-price", "$" + price + "/kW"); set("o-base", "$" + base + "/kW"); set("o-sc", pct(el.sc.value)); set("o-cc", pct(el.cc.value));
+      set("o-gas", "$" + gas.toFixed(2) + "/MMBtu"); set("o-cf", pct(el.cf.value)); set("o-rev", "$" + rev + "/W");
+    };
+    ids.forEach(function (k) { el[k].addEventListener("input", run); });
+    $("calc-reset").addEventListener("click", function () { ids.forEach(function (k) { el[k].value = defaults[k]; }); run(); });
+    run();
+  }
+
+  /* ---------- The embedded post follows the page's theme ---------- */
+  var posts = document.querySelectorAll(".x-post");
+  if (posts.length) {
+    var theme = function () { return document.documentElement.dataset.theme === "dark" ? "dark" : "light"; };
+    var originals = [];
+    posts.forEach(function (box) {
+      var q = box.querySelector("blockquote.twitter-tweet");
+      if (q) { q.setAttribute("data-theme", theme()); originals.push([box, q.cloneNode(true)]); }
+    });
+    new MutationObserver(function () {
+      originals.forEach(function (pair) {
+        var box = pair[0], waiting = box.querySelector("blockquote.twitter-tweet");
+        // Not drawn yet: the platform script reads the theme when it draws.
+        if (waiting) { waiting.setAttribute("data-theme", theme()); return; }
+        // Already drawn: draw it again from the original quote in the new theme.
+        if (!window.twttr || !window.twttr.widgets) return;
+        var fresh = pair[1].cloneNode(true);
+        fresh.setAttribute("data-theme", theme());
+        box.replaceChildren(fresh);
+        window.twttr.widgets.load(box);
+      });
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  }
+})();
+</script>
+<script type="application/json" id="contents">[{"href": "../../index.html", "label": "All builds"}, {"href": "../", "label": "Writing and ideas"}, {"id": "two-foundries", "label": "Two foundries"}, {"id": "thirteen-gigawatts-against-the-fast-turbine-market", "label": "Thirteen gigawatts"}, {"id": "what-turned-out-differently", "label": "What turned out differently"}, {"id": "the-case-against", "label": "The case against"}, {"id": "what-would-change-my-mind", "label": "What would change my mind"}, {"id": "who-waits", "label": "Who waits"}, {"href": "../the-power-problem-is-a-casting-problem/", "label": "Read part one"}, {"id": "sources", "label": "Sources"}]</script>
+<script src="../../site.js" defer></script>
+<script src="https://platform.twitter.com/widgets.js" charset="utf-8" defer></script>
+</body>
+</html>

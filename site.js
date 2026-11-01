@@ -55,6 +55,11 @@
     function current() {
       let best = null, bestTop = -Infinity;
       targets.forEach(t => { const top = t.getBoundingClientRect().top; if (top <= 120 && top > bestTop) { best = t; bestTop = top; } });
+      // At the very bottom a short last section can never reach the top, so the last one in view wins.
+      if (window.scrollY > 0 && window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+        const seen = targets.filter(t => t.getBoundingClientRect().top < window.innerHeight * 0.6);
+        if (seen.length) best = seen[seen.length - 1];
+      }
       if (!best && window.scrollY < 10) best = null;
       document.querySelectorAll(".contents a, .contents-sheet a").forEach(a => {
         const on = best && a.dataset.target === best.id;
