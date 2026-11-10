@@ -1,0 +1,515 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Whose job it is, Vito Prasad</title><link rel="icon" href="data:,"><script>(function(){try{var t=localStorage.getItem("theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=t}catch(e){}})()</script><link rel="stylesheet" href="../../site.css"><style>
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font: 17px/1.6 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
+  main { --page-w: 760px; max-width: 760px; margin: 0 auto; padding: 64px 28px 96px; }
+  a { color: var(--ink); }
+  .back { font: 14px/1 var(--sans); color: var(--muted); text-decoration: none; }
+  .back:hover { color: var(--ink); }
+  .story { max-width: 660px; margin: 0 auto; }
+  .story h1 { font-size: 44px; line-height: 1.12; margin: 28px 0 22px; font-weight: 600; letter-spacing: -.015em; }
+  .story .dek { font-size: 21px; line-height: 1.55; color: var(--muted); margin: 0 0 18px; }
+  .story .byline { font: 14px/1.5 var(--sans); color: var(--faint); margin: 0 0 40px; }
+  .story > p { font-size: 19px; line-height: 1.65; margin: 0 0 20px; }
+  .story > h2 { font-size: 27px; line-height: 1.25; margin: 52px 0 14px; font-weight: 600; }
+  .story a { color: var(--accent); }
+  .story > ol, .story > ul { font-size: 19px; line-height: 1.6; padding-left: 26px; margin: 0 0 20px; }
+  .story > ol > li { margin: 0 0 12px; }
+  .sources { border-top: 1px solid var(--line); padding-top: 28px; margin-top: 56px; font-family: var(--sans); color: var(--muted); }
+  .sources h2 { font: 600 17px/1.3 var(--sans); color: var(--ink); margin: 0 0 6px; }
+  .sources h2 + p.group { margin-top: 14px; }
+  .sources h2.later { margin-top: 30px; }
+  .sources p, .sources ul, .sources li { font-size: 15px; line-height: 1.5; }
+  .sources p.group { font-weight: 600; color: var(--ink); margin: 18px 0 6px; }
+  .sources ul { padding-left: 18px; margin: 0 0 8px; }
+  .sources li { margin: 0 0 6px; }
+  .sources a { word-break: break-word; }
+  footer { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 64px; font: 14px/1.5 var(--sans); color: var(--faint); }
+  footer a { color: var(--muted); }
+  @media (max-width: 860px) {
+    main { padding: 36px 16px 72px; }
+    .story h1 { font-size: 32px; } .story .dek { font-size: 18px; } .story > p, .story > ol, .story > ul { font-size: 17.5px; }
+    .story > h2 { font-size: 24px; margin-top: 44px; }
+  }
+
+/* The graphics, pull quotes and tables of the essay pages. Built into each page by
+   build_essay_pages.py. Colours come only from the variables in site.css, so both
+   themes work. Marks are thin, data ends are rounded 4px, labels wear text colours. */
+
+/* ---------- Shared frame ---------- */
+.story .graphic { margin: 38px 0 30px; font-family: var(--sans); position: relative; }
+.graphic p { margin: 0; }
+.graphic .g-title { font: 600 16px/1.35 var(--sans); color: var(--ink); margin: 0 0 3px; }
+.graphic .g-sub { font: 13.5px/1.45 var(--sans); color: var(--muted); margin: 0 0 18px; }
+.graphic figcaption { font: 14px/1.5 var(--sans); color: var(--muted); margin: 16px 0 0; }
+.graphic .g-src { font: 12.5px/1.5 var(--sans); color: var(--faint); margin: 6px 0 0; }
+.graphic .g-src a { color: var(--muted); }
+.graphic + .table-wrap { margin-top: -6px; }
+
+/* ---------- Tooltip ---------- */
+.g-tip { position: absolute; z-index: 20; max-width: 300px; background: var(--card); color: var(--ink); border: 1px solid var(--line);
+         border-radius: 10px; padding: 10px 12px; box-shadow: 0 8px 26px var(--shadow); font: 13px/1.45 var(--sans); pointer-events: none; }
+.g-tip[hidden] { display: none; }
+.g-tip b { display: block; font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+.g-tip .k { display: block; color: var(--muted); }
+.g-tip .row { display: block; margin-top: 6px; }
+.g-tip .row span { display: block; color: var(--faint); font-size: 12px; }
+.tipsrc { display: none; }
+
+/* ---------- Horizontal bars on one axis (the constraint chain, the turbine gap) ---------- */
+.hplot { position: relative; padding-bottom: 26px; }
+.hgrid { position: absolute; left: 0; right: 0; top: 0; bottom: 26px; pointer-events: none; }
+.hgrid span { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--chart-grid); left: calc(var(--at) / var(--max) * 100%); }
+.hgrid span.zero { background: var(--chart-line); }
+.hrow { position: relative; padding: 8px 0 10px; border-radius: 6px; outline-offset: 2px; }
+.hrow:focus-visible { outline: 2px solid var(--accent); }
+.hlabel { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; font: 14px/1.35 var(--sans); margin: 0 0 6px; position: relative; }
+.hname { color: var(--ink); font-weight: 600; }
+.hval { color: var(--muted); font-variant-numeric: tabular-nums; }
+.htag { color: var(--faint); font-style: italic; }
+.htrack { position: relative; height: 14px; }
+.hbar { position: absolute; top: 0; bottom: 0; left: calc(var(--lo) / var(--max) * 100%); width: calc((var(--hi) - var(--lo)) / var(--max) * 100%);
+        background: var(--accent); border-radius: 4px; transform-origin: left center; }
+.hbar.from-zero { border-radius: 0 4px 4px 0; }
+.hbar.solid-part { border-radius: 0; }
+.hbar.range-part { background: var(--accent-light); border-radius: 0 4px 4px 0; margin-left: 2px; width: calc((var(--hi) - var(--lo)) / var(--max) * 100% - 2px); }
+.hbar.neutral { background: var(--faint); }
+.hbar.ghost { background: var(--info-soft); border: 1.5px dashed var(--faint); }
+.hmark { position: absolute; top: 50%; left: calc(var(--at) / var(--max) * 100%); width: 14px; height: 14px; border-radius: 50%;
+         transform: translate(-50%, -50%); background: var(--paper); border: 3px solid var(--accent); box-shadow: 0 0 0 2px var(--paper); }
+.haxis { position: absolute; left: 0; right: 0; bottom: 0; height: 18px; font: 12px/18px var(--sans); color: var(--faint); font-variant-numeric: tabular-nums; }
+.haxis span { position: absolute; left: calc(var(--at) / var(--max) * 100%); transform: translateX(-50%); white-space: nowrap; }
+.haxis span.first { transform: none; }
+.haxis span.last { transform: translateX(-100%); }
+.hrow:hover .hbar, .hrow:focus-visible .hbar { filter: brightness(1.08); }
+.hrow:hover .hname { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+
+/* ---------- The turbine gap: slider and sentence ---------- */
+.gap-ctl { font: 14px/1.4 var(--sans); margin: 0 0 16px; }
+.gap-ctl label { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; color: var(--ink); }
+.gap-ctl output { font-weight: 600; font-variant-numeric: tabular-nums; }
+.gap-ctl input[type=range] { width: 100%; accent-color: var(--accent); margin: 0; }
+.gap-ctl .marks { position: relative; height: 18px; font: 12px/18px var(--sans); color: var(--faint); margin: 2px 9px 0; }
+.gap-ctl .marks button { position: absolute; left: calc((var(--at) - 40) / 60 * 100%); transform: translateX(-50%); font: inherit; color: inherit;
+                         background: none; border: 0; padding: 0 2px; cursor: pointer; white-space: nowrap; }
+.gap-ctl .marks button:hover { color: var(--ink); text-decoration: underline; }
+.gap-ctl .marks button:first-child { transform: translateX(-20%); }
+.gap-ctl .marks button:last-child { transform: translateX(-85%); }
+.gap-ctl .note { color: var(--faint); font-size: 12.5px; margin: 6px 0 0; }
+.story .graphic .gap-sentence { font: 17.5px/1.55 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; color: var(--ink); margin: 0 0 18px; }
+.gap-sentence b { font-weight: 600; }
+
+/* ---------- Vertical columns (the backlog) ---------- */
+.backlog-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.vplot { --h: 128px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: end; height: calc(var(--h) + 22px);
+         border-bottom: 1px solid var(--chart-line); }
+.vcol { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; border-radius: 6px; outline-offset: 2px; }
+.vcol:focus-visible { outline: 2px solid var(--accent); }
+.vval { font: 600 13px/1 var(--sans); color: var(--ink); margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.vbar { width: 24px; height: calc(var(--v) / var(--max) * var(--h)); background: var(--accent); border-radius: 4px 4px 0 0; transform-origin: bottom center; }
+.vcol:hover .vbar, .vcol:focus-visible .vbar { filter: brightness(1.08); }
+.vlabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); font: 12px/1.3 var(--sans); color: var(--muted); text-align: center; margin-top: 6px; }
+.wait { border-left: 1px solid var(--line); padding-left: 22px; }
+.wait dl { margin: 10px 0 0; font: 14px/1.4 var(--sans); }
+.wait dt { color: var(--ink); font-weight: 600; margin: 12px 0 1px; }
+.wait dt:first-child { margin-top: 0; }
+.wait dd { margin: 0; color: var(--ink); }
+.wait dd a { display: block; color: var(--faint); font-size: 12px; margin-top: 1px; }
+
+/* ---------- Table views ---------- */
+.table-wrap { margin: 10px 0 30px; }
+.story table { width: 100%; border-collapse: collapse; font: 14px/1.45 var(--sans); }
+.story th { text-align: left; font-weight: 600; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: bottom; }
+.story td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; font-variant-numeric: tabular-nums; }
+.story th:first-child, .story td:first-child { padding-left: 0; }
+.story td:first-child { color: var(--ink); font-weight: 600; }
+details.table-view { margin: 18px 0 0; font: 13.5px/1.45 var(--sans); }
+details.table-view summary { cursor: pointer; color: var(--muted); }
+details.table-view summary:hover { color: var(--ink); }
+details.table-view table { margin-top: 10px; font-size: 13.5px; }
+details.table-view td:first-child { font-weight: 400; }
+
+/* ---------- The calculator ---------- */
+.calc { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 28px 0 30px; }
+.story .graphic .calc-sentences p { font: 17.5px/1.55 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; color: var(--ink); margin: 0 0 12px; }
+.calc-sentences b { font-weight: 600; }
+/* Five tiles, three over two. */
+.tiles { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin: 22px 0 6px; }
+.tile { grid-column: span 2; }
+.tile:nth-child(n+4) { grid-column: span 3; }
+.tile { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 13px; }
+.story .graphic .tile .label { font: 12.5px/1.35 var(--sans); color: var(--muted); margin: 0 0 6px; }
+.story .graphic .tile .value { font: 600 22px/1.15 var(--sans); letter-spacing: -.01em; margin: 0; }
+.story .graphic .tile .sub { font: 12px/1.4 var(--sans); color: var(--faint); margin: 4px 0 0; }
+.calc-bars { margin: 28px 0 0; }
+.cbars { display: grid; gap: 10px; }
+.cbar { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 12px; align-items: center; font: 13.5px/1.3 var(--sans); }
+.cbar .name { color: var(--ink); }
+.cbar .track { position: relative; height: 16px; }
+.cbar .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 0 4px 4px 0; min-width: 2px; transition: width .25s ease; }
+.cbar .val { position: absolute; left: calc(var(--w) + 8px); top: 0; line-height: 16px; font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+.cbar .val.inside { left: auto; right: calc(100% - var(--w) + 8px); color: var(--paper); font-weight: 600; }
+.calc-inputs { border-top: 1px solid var(--line); margin-top: 30px; padding-top: 24px; }
+.story .graphic .calc-inputs h3 { font: 600 16px/1.3 var(--sans); margin: 0 0 4px; }
+.story .graphic .calc-inputs .intro { font: 13.5px/1.5 var(--sans); color: var(--muted); margin: 0 0 18px; }
+.cgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 30px; }
+.ctl { font: 14px/1.4 var(--sans); }
+.ctl label { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.ctl label span:last-child { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; white-space: nowrap; }
+.ctl input[type=range] { width: 100%; accent-color: var(--accent); margin: 0; }
+.ctl small { display: block; color: var(--faint); font-size: 12px; line-height: 1.45; margin-top: 3px; }
+.ctl small .essay { color: var(--muted); }
+.calc-reset { font: 600 14px/1 var(--sans); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+              cursor: pointer; margin-top: 20px; }
+.calc-reset:hover { border-color: var(--ink); }
+.calc table { margin-top: 24px; }
+.calc td:first-child { font-weight: 400; }
+.calc td:nth-child(2) { white-space: nowrap; }
+.story .graphic .calc-open { font: 14px/1.5 var(--sans); margin: 18px 0 0; }
+.calc-open a { color: var(--accent); }
+@media (min-width: 900px) {
+  /* The inputs may use the page's full width, 50px past the story column on each side. */
+  .calc-inputs { margin-left: -50px; margin-right: -50px; }
+}
+
+/* ---------- Pull quote and the embedded post ---------- */
+.pull { margin: 34px 0 36px; padding: 2px 0 2px 24px; border-left: 3px solid var(--accent); }
+.pull blockquote { margin: 0; }
+.story .pull blockquote p { font-size: 25px; line-height: 1.38; letter-spacing: -.005em; color: var(--ink); margin: 0 0 12px; }
+.pull figcaption { font: 14px/1.5 var(--sans); color: var(--muted); }
+.pull figcaption a { color: var(--muted); }
+.x-post { margin: 30px 0 34px; display: flex; justify-content: center; }
+.x-post > * { margin-left: auto !important; margin-right: auto !important; }
+/* The post's frame declares no colour scheme. Matching it keeps the browser from painting a white backdrop behind it in the dark theme. */
+.x-post iframe { color-scheme: normal; }
+.story blockquote.twitter-tweet { margin: 0; max-width: 550px; width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+                                  padding: 16px 20px; font: 15px/1.5 var(--sans); color: var(--muted); }
+.story blockquote.twitter-tweet p { font: 17px/1.5 var(--sans); color: var(--ink); margin: 0 0 10px; }
+.story blockquote.twitter-tweet a { color: var(--accent); }
+
+/* ---------- Motion, only for people who have not asked for less ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .graphic.anim .hbar, .graphic.anim .hmark { transition: transform .6s cubic-bezier(.2, .7, .2, 1), opacity .4s ease; }
+  .graphic.anim .vbar { transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+  .graphic.anim:not(.shown) .hbar { transform: scaleX(0); }
+  .graphic.anim:not(.shown) .hmark { opacity: 0; }
+  .graphic.anim:not(.shown) .vbar { transform: scaleY(0); }
+  .gap .hbar { transition: width .25s ease, transform .6s cubic-bezier(.2, .7, .2, 1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cbar .fill { transition: none; }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 640px) {
+  .backlog-grid { grid-template-columns: 1fr; gap: 22px; }
+  .wait { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 16px; }
+  .cgrid { grid-template-columns: 1fr; }
+  .tiles { grid-template-columns: 1fr 1fr; }
+  .tile, .tile:nth-child(n+4) { grid-column: auto; }
+  .tile:last-child { grid-column: span 2; }
+  .haxis span.odd { display: none; }
+  .cbar { grid-template-columns: 1fr; gap: 4px; }
+  .story .pull blockquote p { font-size: 21px; }
+  .pull { padding-left: 18px; }
+  /* Tables become one card per row, each cell keeping its column name. */
+  .story .table-wrap table, .story .table-wrap tbody, .story .table-wrap tr, .story .table-wrap td { display: block; width: 100%; }
+  .story .table-wrap thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .story .table-wrap tr { border-bottom: 1px solid var(--line); padding: 10px 0 8px; }
+  .story .table-wrap tr:first-child { border-top: 1px solid var(--line); }
+  .story .table-wrap td { border: 0; padding: 2px 0; }
+  .story .table-wrap td::before { content: attr(data-label); display: block; font-size: 12px; font-weight: 400; color: var(--faint); }
+  .story .table-wrap td:first-child::before { display: none; }
+  .story .table-wrap td:first-child { font-size: 15px; padding-bottom: 4px; }
+}
+@media print { .g-tip { display: none !important; } }
+
+/* ---------- Singapore graphics ---------- */
+.prev-note { font: 14px/1.5 var(--sans); color: var(--faint); margin: 0 0 30px; }
+.story .graphic + h2 { margin-top: 56px; }
+:root { --wash: #b4532a; --beij: #1f6fae; }
+[data-theme="dark"] { --wash: #d46d43; --beij: #5693cc; }
+
+/* layers */
+.lkey { display: flex; flex-wrap: wrap; gap: 6px 16px; font: 13px/1.4 var(--sans); color: var(--muted); margin: 0 0 14px; }
+.lkey > span { display: inline-flex; align-items: center; gap: 6px; }
+.lbody { position: relative; padding-bottom: 24px; }
+.lgrid { position: absolute; left: 168px; right: 8px; top: 0; bottom: 24px; pointer-events: none; }
+.lgrid span { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--chart-grid); }
+.lrow { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 8px; border-top: 1px solid var(--line); padding: 8px 8px 8px 0; }
+.lrow:first-of-type { border-top: 0; }
+.lname { font: 14px/1.3 var(--sans); }
+.lname b { display: block; color: var(--ink); font-weight: 600; }
+.lname span { display: block; color: var(--faint); font-size: 12.5px; }
+.ltrack { position: relative; }
+.llane { position: relative; height: 18px; }
+.lmark { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; outline-offset: 1px; cursor: default; }
+.lmark:focus-visible { outline: 2px solid var(--ink); }
+.lglyph { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 2px var(--paper); }
+.wash { --c: var(--wash); } .beij { --c: var(--beij); } .other { --c: var(--faint); }
+.beij .lglyph, .lglyph.beij { border-radius: 2px; transform: rotate(45deg) scale(.9); }
+.other .lglyph, .lglyph.other { border-radius: 2px; }
+.hollow .lglyph, .lglyph.hollow { background: var(--paper); border: 2.5px solid var(--c); }
+.x .lglyph, .lglyph.x { background: none; box-shadow: none; position: relative; }
+.x .lglyph::before, .x .lglyph::after, .lglyph.x::before, .lglyph.x::after { content: ""; position: absolute; left: 5px; top: -1px; width: 2.5px; height: 14px; background: var(--c); border-radius: 1px; }
+.x .lglyph::before, .lglyph.x::before { transform: rotate(45deg); } .x .lglyph::after, .lglyph.x::after { transform: rotate(-45deg); }
+.lglyph.sw { flex: none; }
+.lmark:hover .lglyph { filter: brightness(1.1); transform-origin: center; }
+.laxis { position: absolute; left: 168px; right: 8px; bottom: 0; height: 18px; font: 12px/18px var(--sans); color: var(--faint); }
+.laxis span { position: absolute; transform: translateX(4px); }
+.cases { margin-top: 26px; border-top: 1px solid var(--line); padding-top: 18px; }
+.ctitle { font: 600 15px/1.35 var(--sans); color: var(--ink); margin: 0 0 10px !important; }
+.ctabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+.ctabs button { font: 13.5px/1 var(--sans); color: var(--muted); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 8px 13px; cursor: pointer; }
+.ctabs button[aria-selected="true"] { color: var(--ink); border-color: var(--ink); font-weight: 600; }
+.ctabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.csub { font: 13.5px/1.45 var(--sans); color: var(--muted); margin: 0 0 10px !important; }
+.ctable { width: 100%; border-collapse: collapse; font: 13.5px/1.45 var(--sans); }
+.ctable th, .ctable td { text-align: left; vertical-align: top; padding: 8px 8px 8px 0; border-top: 1px solid var(--line); }
+.ctable thead th { font-weight: 600; color: var(--faint); font-size: 12px; border-top: 0; }
+.ctable tbody th { color: var(--ink); font-weight: 600; width: 64px; }
+.ctable td { color: var(--ink); } .ctable td.csrc { color: var(--faint); font-size: 12.5px; width: 24%; }
+.cverdict { font: 17px/1.5 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; color: var(--ink); margin: 12px 0 0 !important; }
+
+/* billed vs shipped */
+.bgrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 30px; align-items: start; }
+.bplot { --h: 170px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; height: calc(var(--h) + 44px); border-bottom: 1px solid var(--chart-line); padding-bottom: 0; }
+.bcol { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; border-radius: 6px; outline-offset: 2px; position: relative; padding-bottom: 22px; }
+.bcol:focus-visible { outline: 2px solid var(--accent); }
+.bval { font: 600 13px/1 var(--sans); color: var(--ink); margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.bbar { position: relative; width: 30px; height: calc(var(--v) / var(--max) * var(--h)); background: var(--accent); border-radius: 4px 4px 0 0; transform-origin: bottom center; overflow: hidden; }
+.bship { position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--s) / var(--v) * 100%); border-top: 2px solid var(--paper);
+         background: repeating-linear-gradient(135deg, var(--paper) 0 2px, var(--accent-light) 2px 5px); }
+.bfy { position: absolute; bottom: 2px; font: 12px/1 var(--sans); color: var(--faint); }
+.bcol:hover .bbar, .bcol:focus-visible .bbar { filter: brightness(1.08); }
+.bnote { font: 12.5px/1.4 var(--sans); color: var(--muted); margin: 10px 0 0 !important; display: flex; align-items: center; gap: 6px; }
+.sw-ship { display: inline-block; width: 14px; height: 10px; border-radius: 2px; background: repeating-linear-gradient(135deg, var(--paper) 0 2px, var(--accent-light) 2px 5px); border: 1px solid var(--accent-light); }
+.graphic.anim:not(.shown) .bbar { transform: scaleY(0); }
+.graphic.anim .bbar { transition: transform .6s cubic-bezier(.2, .7, .2, 1); }
+
+/* map */
+.mwrap { position: relative; }
+.mmap { display: block; width: 100%; height: auto; border-radius: 8px; }
+.mmap .sea { fill: var(--card); }
+.mmap .land { fill: var(--info-soft); stroke: var(--chart-line); stroke-width: .8; }
+.mmap .land.sg { fill: var(--ink); }
+.mmap .mline { fill: none; stroke: var(--muted); stroke-width: 2; }
+.mmap .mline.money { stroke: var(--accent); }
+.mmap .mline.dotted { stroke-dasharray: 2 5; stroke-linecap: round; }
+.mmap .arrhead { fill: var(--muted); }
+.mmap .mbox rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+.mmap .mbox path { fill: none; stroke: var(--accent); stroke-width: 1.5; }
+.mmap .mpin { fill: var(--accent); stroke: var(--paper); stroke-width: 2.5; }
+.mhot { position: absolute; transform: translate(14px, -50%); outline-offset: 2px; border-radius: 4px; }
+.mhot:focus-visible { outline: 2px solid var(--accent); }
+.mhot.money { transform: translate(-100%, 0); }
+.mhot.china { transform: translate(8px, -20%); }
+.mlabel { font: 600 13px/1.2 var(--sans); color: var(--ink); background: var(--paper); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--line); white-space: nowrap; }
+.mhot:hover .mlabel { border-color: var(--ink); }
+
+/* Swiss ladder */
+.sgrid { font: 13.5px/1.45 var(--sans); }
+.shead, .srow { display: grid; grid-template-columns: 150px minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.shead { margin-bottom: 6px; }
+.sside { font: 600 13px/1.3 var(--sans); color: var(--ink); }
+.srow { border-top: 1px solid var(--line); padding: 10px 0; }
+.sstage { color: var(--muted); font-weight: 600; margin: 0 !important; }
+.scell { border-radius: 6px; padding: 8px 10px; background: var(--card); border: 1px solid var(--line); outline-offset: 2px; }
+.scell:focus-visible { outline: 2px solid var(--accent); }
+.scell.sg { border-left: 3px solid var(--accent); }
+.scell.ch { border-left: 3px solid var(--faint); }
+.scell.stopped { background: var(--accent-soft); }
+.scell.open, .scell.pending { border-style: dashed; border-left-style: solid; }
+.swhen { display: block; font-size: 12px; color: var(--faint); font-variant-numeric: tabular-nums; }
+.stext { display: block; color: var(--ink); }
+
+/* cover */
+.cover svg { display: block; width: 100%; height: auto; border-radius: 10px; }
+.cv-bg { fill: var(--accent-soft); }
+.cv-shadow { fill: var(--shadow); }
+.cv-top { fill: #d8b48a; } .cv-left { fill: #c49a6c; } .cv-right { fill: #b3895c; }
+[data-theme="dark"] .cv-top { fill: #8a6a48; } [data-theme="dark"] .cv-left { fill: #77593a; } [data-theme="dark"] .cv-right { fill: #684d32; }
+.cv-tape { fill: rgba(255, 255, 255, .28); }
+.cv-label, .cv-paper { fill: #fbfaf6; stroke: rgba(0, 0, 0, .12); }
+.cv-cap { font: 700 10px/1 var(--sans); letter-spacing: .08em; fill: #8b867d; }
+.cv-big { font: 600 17px/1 var(--sans); fill: #1c1b19; }
+.cv-big.accent { fill: #b4532a; }
+.cv-barcode rect { fill: #1c1b19; }
+.cv-rule { fill: #e4dfd6; }
+.cv-stick { fill: rgba(255, 255, 255, .55); stroke: rgba(0, 0, 0, .06); }
+
+@media (max-width: 860px) {
+  .bgrid { grid-template-columns: 1fr; }
+  .lrow { grid-template-columns: 96px minmax(0, 1fr); } .lgrid, .laxis { left: 104px; }
+  .lname span { display: none; }
+  .shead, .srow { grid-template-columns: 1fr 1fr; } .shead span:first-child { display: none; } .sstage { grid-column: 1 / -1; }
+  .ctable td.csrc { display: none; } .ctable thead th:last-child { display: none; }
+}
+
+/* part two */
+.dkey { display: flex; flex-wrap: wrap; gap: 6px 16px; font: 13px/1.4 var(--sans); color: var(--muted); margin: 0 0 12px !important; }
+.dkey > span { display: inline-flex; align-items: center; gap: 6px; }
+.dkey .sw { width: 14px; height: 10px; border-radius: 2px; display: inline-block; }
+.r125 { --c: var(--accent); } .r10 { --c: var(--faint); }
+.dkey .sw { background: var(--c); }
+.dplot { position: relative; padding-bottom: 24px; }
+.dgrid { position: absolute; inset: 0 0 24px 0; pointer-events: none; }
+.dgrid span { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--chart-grid); }
+.dgrid span.zero { background: var(--ink); width: 1.5px; }
+.drow { position: relative; padding: 7px 0 9px; border-radius: 6px; outline-offset: 2px; }
+.drow:focus-visible { outline: 2px solid var(--accent); }
+.dlabel { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; font: 14px/1.35 var(--sans); margin: 0 0 5px !important; }
+.drate { font-size: 12.5px; font-weight: 600; color: var(--ink); padding: 1px 7px; border-radius: 999px; border: 1.5px solid var(--c); }
+.dtrack { position: relative; height: 14px; }
+.dbar { position: absolute; top: 0; bottom: 0; background: var(--c); }
+.dbar.neg { border-radius: 4px 0 0 4px; } .dbar.pos { border-radius: 0 4px 4px 0; }
+.drow:hover .dbar, .drow:focus-visible .dbar { filter: brightness(1.08); }
+.daxis { position: absolute; left: 0; right: 0; bottom: 0; height: 18px; font: 12px/18px var(--sans); color: var(--faint); font-variant-numeric: tabular-nums; }
+.daxis span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.daxis span:first-child { transform: none; }
+.graphic.anim:not(.shown) .dbar { transform: scaleX(0); }
+.graphic.anim .dbar { transition: transform .6s cubic-bezier(.2, .7, .2, 1); transform-origin: right center; }
+.graphic.anim .dbar.pos { transform-origin: left center; }
+.tboard { border-top: 1px solid var(--line); }
+.trow { display: grid; grid-template-columns: 170px minmax(0, 1fr) minmax(0, 1.25fr); gap: 4px 14px; padding: 11px 0; border-bottom: 1px solid var(--line); font: 13.5px/1.45 var(--sans); outline-offset: 2px; border-radius: 4px; }
+.trow:focus-visible { outline: 2px solid var(--accent); }
+.tname { font-weight: 600; color: var(--ink); }
+.tdoes { color: var(--muted); }
+.tstat { color: var(--ink); }
+.chip { display: inline-block; font: 600 12px/1 var(--sans); color: var(--warn); background: var(--warn-soft); border-radius: 999px; padding: 4px 9px; margin: 0 8px 4px 0; }
+.tdet { color: var(--ink); }
+.ttiles { margin-top: 18px; }
+.ttiles .tile { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.ttiles .tile .label { font: 12.5px/1.35 var(--sans); color: var(--muted); margin: 0 0 6px; }
+.ttiles .tile .value { font: 600 22px/1.15 var(--sans); color: var(--ink); margin: 0; }
+.ttiles .tile .sub { font: 12px/1.4 var(--sans); color: var(--faint); margin: 4px 0 0; }
+.cv2-dome rect, .cv2-dome path { fill: #e9ddd0; } .cv2-dome .cv2-col { fill: #d9c9b8; }
+.cv2-lawn { fill: #8fa86a; } .cv2-grass { fill: none; stroke: #7a955a; stroke-width: 2; stroke-linecap: round; }
+.cv2-radio { fill: #3b3a37; } .cv2-handle { fill: #2a2927; } .cv2-spk { fill: #55534e; stroke: #2a2927; stroke-width: 3; }
+.cv2-hub { fill: #2a2927; } .cv2-dial { fill: #d9906a; } .cv2-crack { fill: none; stroke: #f4e6dc; stroke-width: 3; stroke-linejoin: round; }
+.cv2-bit { fill: #3b3a37; } .cv2-bin { fill: #9aa0a3; } .cv2-rim { fill: #b8bdc0; } .cv2-ridge { fill: #858b8e; }
+.cv2-sign { fill: #fbfaf6; } .cv2-signtext { font: 700 15px/1 var(--sans); fill: #1c1b19; letter-spacing: .04em; }
+.cv2-strike { stroke: #b4532a; stroke-width: 4; stroke-linecap: round; } .cv2-ring { fill: none; stroke: #b4532a; stroke-width: 3; }
+.cv2-swish { fill: none; stroke: #8b867d; stroke-width: 2.5; stroke-linecap: round; }
+.getty { text-align: center; } .getty figcaption { text-align: left; }
+.cover figcaption a { color: var(--accent); } .cv2-shaft { fill: #a77b4f; } .cv2-head { fill: #5f5b54; }
+[data-theme="dark"] .cv2-dome rect, [data-theme="dark"] .cv2-dome path { fill: #4a3b30; } [data-theme="dark"] .cv2-dome .cv2-col { fill: #3d3128; }
+[data-theme="dark"] .cv2-lawn { fill: #4f6138; } [data-theme="dark"] .cv2-grass { stroke: #5f7343; }
+@media (max-width: 860px) {
+  .trow { grid-template-columns: 1fr; }
+}
+.mock-note { font: 13.5px/1.5 var(--sans); color: var(--warn); background: var(--warn-soft); border-radius: 8px; padding: 8px 12px; margin: 0 0 26px; }.story .series { font: 14px/1.5 var(--sans); color: var(--faint); margin: 0 0 6px; }.story .next { border-top: 1px solid var(--line); margin-top: 48px; padding-top: 18px; font: 15px/1.5 var(--sans); }</style></head><body><main><a class="back" href="../">&larr; Writing and ideas</a><article class="story"><p class="series">Part two of two</p><h1>Whose job it is</h1><p class="dek">Washington blames Singapore for leaks it has stopped trying to close at home. The last two times it stopped a leak like this one, it fixed its own side first and asked its partners to sign second, and Congress did it over a president&#x27;s objection. Part two of two.</p><p class="byline">By Vito Prasad. Draft, not published.</p><p class="mock-note">Working draft. The text and graphics are still changing.</p><figure class="graphic cover" id="cover-two" aria-label="A smashed Toshiba radio on a metal bin, with a sledgehammer, in front of the Capitol dome"><svg viewBox="0 0 660 380" role="img" aria-labelledby="cover2-t"><title id="cover2-t">A smashed radio on a metal bin on the Capitol lawn, with a sledgehammer</title><rect class="cv-bg" width="660" height="380"/><g class="cv2-dome" transform="translate(490 62)"><rect x="-74" y="160" width="148" height="80"/><rect x="-54" y="112" width="108" height="50"/><rect class="cv2-col" x="-48.0" y="118" width="4" height="40"/><rect class="cv2-col" x="-35.5" y="118" width="4" height="40"/><rect class="cv2-col" x="-23.0" y="118" width="4" height="40"/><rect class="cv2-col" x="-10.5" y="118" width="4" height="40"/><rect class="cv2-col" x="2.0" y="118" width="4" height="40"/><rect class="cv2-col" x="14.5" y="118" width="4" height="40"/><rect class="cv2-col" x="27.0" y="118" width="4" height="40"/><rect class="cv2-col" x="39.5" y="118" width="4" height="40"/><path d="M-50 114 A50 60 0 0 1 50 114 Z"/><rect x="-7" y="36" width="14" height="22"/><path d="M-9 36 L0 24 L9 36 Z"/></g><path class="cv2-lawn" d="M0 280 Q330 252 660 278 L660 380 L0 380 Z"/><path class="cv2-grass" d="M14 312 q6 -14 2 -22"/><path class="cv2-grass" d="M37 312 q-6 -21 -2 -27"/><path class="cv2-grass" d="M60 312 q6 -16 2 -32"/><path class="cv2-grass" d="M83 312 q-6 -23 -2 -23"/><path class="cv2-grass" d="M106 312 q6 -18 2 -28"/><path class="cv2-grass" d="M129 312 q-6 -25 -2 -33"/><path class="cv2-grass" d="M152 312 q6 -20 2 -24"/><path class="cv2-grass" d="M175 312 q-6 -15 -2 -29"/><path class="cv2-grass" d="M198 312 q6 -22 2 -34"/><path class="cv2-grass" d="M221 312 q-6 -17 -2 -25"/><path class="cv2-grass" d="M244 312 q6 -24 2 -30"/><path class="cv2-grass" d="M267 312 q-6 -19 -2 -35"/><path class="cv2-grass" d="M290 312 q6 -14 2 -26"/><path class="cv2-grass" d="M313 312 q-6 -21 -2 -31"/><path class="cv2-grass" d="M336 312 q6 -16 2 -22"/><path class="cv2-grass" d="M359 312 q-6 -23 -2 -27"/><path class="cv2-grass" d="M382 312 q6 -18 2 -32"/><path class="cv2-grass" d="M405 312 q-6 -25 -2 -23"/><path class="cv2-grass" d="M428 312 q6 -20 2 -28"/><path class="cv2-grass" d="M451 312 q-6 -15 -2 -33"/><path class="cv2-grass" d="M474 312 q6 -22 2 -24"/><path class="cv2-grass" d="M497 312 q-6 -17 -2 -29"/><path class="cv2-grass" d="M520 312 q6 -24 2 -34"/><path class="cv2-grass" d="M543 312 q-6 -19 -2 -25"/><path class="cv2-grass" d="M566 312 q6 -14 2 -30"/><path class="cv2-grass" d="M589 312 q-6 -21 -2 -35"/><path class="cv2-grass" d="M612 312 q6 -16 2 -26"/><path class="cv2-grass" d="M635 312 q-6 -23 -2 -31"/><path class="cv2-grass" d="M658 312 q6 -18 2 -22"/><g transform="translate(250 196)"><path class="cv2-bin" d="M-62 10 L62 10 L52 128 L-52 128 Z"/><rect class="cv2-rim" x="-66" y="2" width="132" height="12" rx="4"/><rect class="cv2-ridge" x="-58" y="20" width="116" height="4" rx="2"/><rect class="cv2-ridge" x="-56" y="42" width="112" height="4" rx="2"/><rect class="cv2-ridge" x="-54" y="64" width="108" height="4" rx="2"/><rect class="cv2-ridge" x="-52" y="86" width="104" height="4" rx="2"/><g transform="translate(-44 46)"><rect class="cv2-sign" width="88" height="40" rx="3"/><text class="cv2-signtext" x="44" y="26" text-anchor="middle">TOSHIBA</text><path class="cv2-strike" d="M6 34 L82 6"/><circle class="cv2-ring" cx="44" cy="20" r="17"/></g></g><g transform="translate(176 120) rotate(-4)"><rect class="cv2-radio" width="150" height="80" rx="9"/><rect class="cv2-handle" x="32" y="-18" width="86" height="22" rx="9"/><rect class="cv2-radio" x="38" y="-13" width="74" height="13" rx="5"/><circle class="cv2-spk" cx="38" cy="46" r="23"/><circle class="cv2-spk" cx="112" cy="46" r="23"/><circle class="cv2-hub" cx="38" cy="46" r="7"/><circle class="cv2-hub" cx="112" cy="46" r="7"/><rect class="cv2-dial" x="62" y="12" width="26" height="10" rx="2"/><path class="cv2-crack" d="M80 0 L72 24 L86 38 L76 58 L82 80"/></g><path class="cv2-bit" d="M330 300 l14 -6 l6 10 z"/><path class="cv2-bit" d="M150 318 l10 4 l-8 8 z"/><path class="cv2-bit" d="M352 286 l8 -2 l2 8 l-9 1 z"/><g transform="translate(420 300) rotate(-128)"><rect class="cv2-shaft" x="0" y="-5" width="200" height="10" rx="4"/><rect class="cv2-head" x="196" y="-24" width="40" height="48" rx="4"/></g><path class="cv2-swish" d="M318 70 q-30 6 -46 30"/><path class="cv2-swish" d="M334 84 q-26 6 -38 26"/></svg><figcaption>Drawn from the <a href="https://www.gettyimages.com/detail/514886822">press photo of July 1, 1987</a>, when members of Congress smashed a Toshiba radio on the Capitol lawn. In the photo, from left, Representatives Don Ritter, Helen Bentley and Elton Gallegly. Photo by Bettmann, on Getty Images.</figcaption></figure><p>Part one ended on a question. If a Singapore address in 2026 is a Swiss account in 2008, someone has to finish the job, and this year Washington started and stopped. The easy answer is that the job is Singapore&#x27;s. Megaspeed is registered there, the invoices said Singapore, and Singapore has said in Parliament and in writing that it will not enforce American rules.</p>
+<p>The easy answer skips two things. Singapore is already paying for its position, in a currency Washington chose. And Washington&#x27;s own side of the leak is open, by its own choices, in ways no partner can fix.</p>
+<h2 id="what-singapore-pays">What Singapore pays</h2>
+<p><strong>The United States runs a trade surplus with Singapore and a deficit of nearly $191 billion with Vietnam, and charges both 12.5%.</strong></p>
+<figure class="graphic grows" id="tariff-trade" aria-label="US goods trade balance against the tariff rate for five Southeast Asian economies"><p class="g-title">Same tariff, opposite trade</p><p class="g-sub">US goods trade balance with each economy, January to September 2026, and its tariff under the July 2026 forced-labour action. Hover or tap a row for the figures.</p><p class="dkey"><span><span class="sw r125"></span>12.5%, no forced-labour import ban</span><span><span class="sw r10"></span>10%, a ban or a promise of one</span></p><div class="dplot"><div class="dgrid" aria-hidden="true"><span class="" style="left:0.00%"></span><span class="" style="left:22.73%"></span><span class="" style="left:45.45%"></span><span class="" style="left:68.18%"></span><span class="zero" style="left:90.91%"></span></div><div class="drow" tabindex="0" data-tip><p class="dlabel"><span class="hname">Singapore</span><span class="drate r125">12.5% tariff</span><span class="hval">+$14.4B</span></p><div class="dtrack"><span class="dbar r125 pos" style="left:90.91%;width:6.53%"></span></div><span class="tipsrc"><b>Singapore</b><span class="k">US surplus of $14.4 billion in goods, January to September 2026, and a 12.5% tariff from July 24, 2026</span><span class="row"><span>Trade</span>US exports $40.3B, US imports $25.9B</span><span class="row"><span>Where it comes from</span>US Census Bureau, trade in goods by country. Rate from 91 FR 47318</span></span></div><div class="drow" tabindex="0" data-tip><p class="dlabel"><span class="hname">Indonesia</span><span class="drate r10">10% tariff</span><span class="hval">−$15.8B</span></p><div class="dtrack"><span class="dbar r10 neg" style="left:83.71%;width:7.20%"></span></div><span class="tipsrc"><b>Indonesia</b><span class="k">US deficit of $15.8 billion in goods, January to September 2026, and a 10% tariff from July 24, 2026</span><span class="row"><span>Trade</span>US exports $9.2B, US imports $25.0B</span><span class="row"><span>Where it comes from</span>US Census Bureau, trade in goods by country. Rate from 91 FR 47318</span></span></div><div class="drow" tabindex="0" data-tip><p class="dlabel"><span class="hname">Malaysia</span><span class="drate r10">10% tariff</span><span class="hval">−$38.0B</span></p><div class="dtrack"><span class="dbar r10 neg" style="left:73.62%;width:17.29%"></span></div><span class="tipsrc"><b>Malaysia</b><span class="k">US deficit of $38.0 billion in goods, January to September 2026, and a 10% tariff from July 24, 2026</span><span class="row"><span>Trade</span>US exports $27.0B, US imports $65.1B</span><span class="row"><span>Where it comes from</span>US Census Bureau, trade in goods by country. Rate from 91 FR 47318</span></span></div><div class="drow" tabindex="0" data-tip><p class="dlabel"><span class="hname">Thailand</span><span class="drate r125">12.5% tariff</span><span class="hval">−$84.9B</span></p><div class="dtrack"><span class="dbar r125 neg" style="left:52.32%;width:38.58%"></span></div><span class="tipsrc"><b>Thailand</b><span class="k">US deficit of $84.9 billion in goods, January to September 2026, and a 12.5% tariff from July 24, 2026</span><span class="row"><span>Trade</span>US exports $21.6B, US imports $106.5B</span><span class="row"><span>Where it comes from</span>US Census Bureau, trade in goods by country. Rate from 91 FR 47318</span></span></div><div class="drow" tabindex="0" data-tip><p class="dlabel"><span class="hname">Vietnam</span><span class="drate r125">12.5% tariff</span><span class="hval">−$190.9B</span></p><div class="dtrack"><span class="dbar r125 neg" style="left:4.12%;width:86.79%"></span></div><span class="tipsrc"><b>Vietnam</b><span class="k">US deficit of $190.9 billion in goods, January to September 2026, and a 12.5% tariff from July 24, 2026</span><span class="row"><span>Trade</span>US exports $13.9B, US imports $204.8B</span><span class="row"><span>Where it comes from</span>US Census Bureau, trade in goods by country. Rate from 91 FR 47318</span></span></div><div class="daxis" aria-hidden="true"><span style="left:0.00%">−$200B</span><span style="left:22.73%">−$150B</span><span style="left:45.45%">−$100B</span><span style="left:68.18%">−$50B</span><span style="left:90.91%">$0B</span></div></div><figcaption>Singapore is the only one where the US sells more than it buys, and it pays the higher rate. The rate follows a law, not the trade.</figcaption><p class="g-src">US Census Bureau, trade in goods by country, January to September 2026. USTR, Section 301 forced-labour action, 91 FR 47318, July 28, 2026.</p></figure>
+<p>The rate does not follow the trade. It follows a law. The tariff comes from a US action against goods made with forced labour. Economies that ban imports made with forced labour, or have promised to in a trade deal, pay 10%. Malaysia and Indonesia made that promise in their agreements, and Canada, Mexico, the UK and India get 10% too. Singapore has no such ban, and the notice lists it among the economies that &quot;have failed to impose and effectively enforce&quot; one.</p>
+<p>The price is small and Singapore pays it in public. The rate leaves out pharmaceuticals, chips, computers and most of what Singapore actually sends, so it lands on about a third of its exports to the US, according to reporting on Singapore&#x27;s trade ministry. Gan Kim Yong, the trade minister, said in September that a ban &quot;would have significant implications for Singapore&#x27;s trade.&quot; Singapore would rather pay 2.5 points on a third of its exports than pass one law that someone else asked for.</p>
+<p>The next step is my inference, and no Singapore official has made it. The two refusals have the same shape. For a port where most containers are only passing through, a forced-labour import ban means checking where goods came from, much of it China. Enforcing America&#x27;s chip rules means checking where chips go next. Either way Singapore would be policing origin and destination on Washington&#x27;s behalf, and the product it sells is the promise that it only polices its own. Part one called that accepting every obligation it signs and none it is handed. The tariff is what the second half costs.</p>
+<h2 id="what-washington-chose-not-to-do">What Washington chose not to do</h2>
+<p><strong>Washington has the tools to look past a Singapore address, and in the past year it has put most of them down.</strong></p>
+<figure class="graphic" id="washington-tools" aria-label="Washington's tools for looking past an address, and where each one stands"><p class="g-title">The tools Washington put down</p><p class="g-sub">Each could reach past a Singapore address. Where each stands in November 2026.</p><div class="tboard"><div class="trow" tabindex="0" data-tip><p class="tname">The blacklist</p><p class="tdoes">Cuts a buyer off from American technology, wherever it is registered</p><p class="tstat"><span class="chip">Unused</span><span class="tdet">No company added in more than a year, the longest gap in 18 years</span></p><span class="tipsrc"><b>The blacklist</b><span class="k">No company added in more than a year, the longest gap in 18 years</span><span class="row"><span>What it would do</span>Cuts a buyer off from American technology, wherever it is registered</span><span class="row"><span>Where it comes from</span>New York Times, Nov 9, 2026</span></span></div><div class="trow" tabindex="0" data-tip><p class="tname">The affiliates rule</p><p class="tdoes">Extends the blacklist to any firm half-owned by a listed one</p><p class="tstat"><span class="chip">Suspended</span><span class="tdet">Paused in the truce with Beijing, Nov 2025, and again to Jan 10, 2027</span></p><span class="tipsrc"><b>The affiliates rule</b><span class="k">Paused in the truce with Beijing, Nov 2025, and again to Jan 10, 2027</span><span class="row"><span>What it would do</span>Extends the blacklist to any firm half-owned by a listed one</span><span class="row"><span>Where it comes from</span>90 FR 50857, 91 FR 70789</span></span></div><div class="trow" tabindex="0" data-tip><p class="tname">The remote access bill</p><p class="tdoes">Makes renting an American chip abroad an export</p><p class="tstat"><span class="chip">Stalled</span><span class="tdet">Passed the House 369 to 22 on Jan 12, 2026, in a Senate committee since Jan 13</span></p><span class="tipsrc"><b>The remote access bill</b><span class="k">Passed the House 369 to 22 on Jan 12, 2026, in a Senate committee since Jan 13</span><span class="row"><span>What it would do</span>Makes renting an American chip abroad an export</span><span class="row"><span>Where it comes from</span>H.R. 2683, House roll call 13</span></span></div><div class="trow" tabindex="0" data-tip><p class="tname">The shipment caps</p><p class="tdoes">Capped chip exports to Singapore, Malaysia and most of the world</p><p class="tstat"><span class="chip">Dropped</span><span class="tdet">Dropped by press release in May 2025. GAO ruled that has no effect until Congress receives it</span></p><span class="tipsrc"><b>The shipment caps</b><span class="k">Dropped by press release in May 2025. GAO ruled that has no effect until Congress receives it</span><span class="row"><span>What it would do</span>Capped chip exports to Singapore, Malaysia and most of the world</span><span class="row"><span>Where it comes from</span>GAO decision B-337935</span></span></div><div class="trow" tabindex="0" data-tip><p class="tname">The 15% of China sales</p><p class="tdoes">A share of Nvidia&#x27;s licensed sales of one chip to China</p><p class="tstat"><span class="chip">Never written</span><span class="tdet">No regulation was published. The sales it covered came to about $60 million</span></p><span class="tipsrc"><b>The 15% of China sales</b><span class="k">No regulation was published. The sales it covered came to about $60 million</span><span class="row"><span>What it would do</span>A share of Nvidia&#x27;s licensed sales of one chip to China</span><span class="row"><span>Where it comes from</span>Nvidia 10-K for fiscal 2026</span></span></div></div><div class="tiles ttiles"><div class="tile"><p class="label">Announced</p><p class="value">15%</p><p class="sub">of licensed China sales of one chip</p></div><div class="tile"><p class="label">Sales it covered</p><p class="value">about $60M</p><p class="sub">Nvidia 10-K</p></div><div class="tile"><p class="label">So at most</p><p class="value">about $9M</p><p class="sub">my arithmetic</p></div></div><figcaption>None of these needs Singapore's help. Each is a choice Washington made at home.</figcaption><p class="g-src">New York Times (Nov 9, 2026), Federal Register, Congress.gov, GAO, Nvidia filings.</p></figure>
+<p>The blacklist is the strongest. A company on the Commerce Department&#x27;s entity list is cut off from American technology wherever it is registered. Commerce has not added a single company in more than a year, the longest gap in 18 years, according to the Times, and other agencies proposed adding Megaspeed. The rule that would extend the blacklist to any firm half-owned by a listed one, wherever it is registered, was suspended in the truce with Beijing last November and extended on Monday to January 10.</p>
+<p>The trade-off shows in the money. The White House announced it would take 15% of Nvidia&#x27;s licensed China sales of one chip. Nvidia&#x27;s filing says the government &quot;did not publish a regulation codifying such requirement,&quot; and the sales it covered came to about $60 million. I read these facts as one policy. Export rules have become a bargaining chip in trade talks with Beijing, and a blacklisting would cost the chip. That connection is mine, and no official has said it.</p>
+<p>Then there is the gap the rules were not built for. They mostly govern where a chip is shipped, not who rents its time. On October 1 the FT reported that Tencent had signed a five-year lease, worth about $7 billion, for access to around 100,000 advanced chips in Oracle data centres in Southeast Asia. No rule stood in the way. On November 4 the FT reported that Oracle had cancelled it after US officials raised concerns, and that officials in Guangdong had separately asked Tencent to support Chinese chips. Neither company has confirmed either report. If the FT is right, Washington stopped the deal the way it stopped Super Micro, by leaning on an American company within reach. It worked once, for one deal, and it is not a rule. The House voted 369 to 22 in January to make remote access an export in law. The bill has sat in a Senate committee since.</p>
+<p>Even the rules Washington did write have not held still. The caps on chip shipments to Malaysia, Singapore and most of the world, written in January 2025, were dropped by the next administration in May before they took effect. It dropped them by press release, which the Government Accountability Office ruled this May &quot;must be submitted to Congress and the Comptroller General before it can take effect.&quot; Singapore watched American chip policy reverse within four months. A careful government obeys a rule like that to the letter and waits it out.</p>
+<h2 id="it-has-been-fixed-twice-before">It has been fixed twice before</h2>
+<p><strong>Both times, Washington fixed its own side first and asked its partners to sign second.</strong></p>
+<p>The first time was the Cold War. American rules on selling technology to the Soviet bloc were never only American. From 1949 the United States and its allies kept one list through a committee in Paris called CoCom. In 1987 it came out that Toshiba Machine and Norway&#x27;s Kongsberg had sold the Soviets milling machines able to cut quieter submarine propellers. On June 30 the Senate voted 92 to 5 for mandatory sanctions on both companies. The next day members of Congress smashed a Toshiba radio with sledgehammers on the Capitol lawn. Two weeks later Representative Helen Bentley, one of them, told the House, &quot;Treachery by any other name is still treachery. But, if it had another name, it would be Toshiba.&quot; The fix came from Tokyo and Oslo. Toshiba&#x27;s chairman and president resigned, and Japan and Norway punished the companies involved. They did it because the list they had broken was a list they had signed.</p>
+<p>The second time was the Swiss account in part one. Washington did not wait for Bern to change its law. It enforced its own on a bank with a large American business, and UBS paid $780 million in 2009. Only then did the demand become FATCA, and then a reporting standard other countries signed, Singapore among them. Both countries have exchanged account data under it since 2018.</p>
+<p>Singapore and Malaysia are not members of the Wassenaar Arrangement, CoCom&#x27;s looser successor. Singapore&#x27;s own control list does copy the four multilateral regimes, and its new order, in force December 1, adds none of the American-only chip thresholds. It enforces what it has signed. That is the opening, and Singapore has said so in its own words.</p>
+<h2 id="what-would-fix-it">What would fix it</h2>
+<p>The fix runs in the same order as 1987 and 2009.</p>
+<ol><li><strong>Washington uses the tools at home.</strong> It decides blacklist cases on the evidence, not the trade calendar, closes the rental gap in law rather than by pressing one company at a time, and keeps charging the people it can arrest.</li><li><strong>It turns a unilateral rule into a shared one.</strong> Southeast Asia&#x27;s data centre boom runs on American chips, which gives Washington something to offer as well as something to withhold. Guarantee the region&#x27;s supply in exchange for joint checks on who the end customers are and shared customs records, written at a table where Singapore, Malaysia, Indonesia and Thailand have seats. Singapore takes the ASEAN chair on January 1, 2027.</li><li><strong>Only then, it names the partners that sign and cheat.</strong></li></ol>
+<p>For Singapore the same deal is a new product. It has spent three years selling distance, and part one showed the big powers pricing distance down. It could sell checking instead, a place where an invoice is lawful because someone verified where the chip went. Balakrishnan has already written the sales line. Singapore wants &quot;to be useful to big and middle powers, but we will not be made use of.&quot; A rule Singapore signed would let it be useful without being used.</p>
+<p>The White House may not do any of this. In 1987 it did not want to either. Reagan threatened to veto the whole trade bill if the Toshiba sanctions stayed in, UPI reported in April 1988. Congress kept them. When he did veto the bill in May, his message objected to a plant-closing rule and five other provisions, and did not mention Toshiba. Congress passed it again with a softened version of the sanctions, and he signed it in August 1988.</p>
+<figure class="graphic" id="congress-ladder" aria-label="Congress and the Toshiba sanctions, and Congress and chips in 2026"><p class="g-title">Congress did it once over the president's objection</p><p class="g-sub">The same four stages, side by side. The rows line up by stage, not by date.</p><div class="sgrid" role="table" aria-label="Congress in 1987 and 1988, and in 2026, stage by stage"><div class="shead" role="row"><span role="columnheader"></span><span role="columnheader" class="sside ch">Toshiba, 1987 to 1988</span><span role="columnheader" class="sside sg">Megaspeed, 2026</span></div><div class="srow" role="row"><p class="sstage" role="rowheader">The leak becomes public</p><div class="scell ch" role="cell" tabindex="0" data-tip><span class="swhen">1987, the radio on Jul 1</span><span class="stext">Toshiba Machine and Kongsberg&#x27;s sales to the Soviets come out. Members of Congress smash a Toshiba radio on the Capitol lawn</span><span class="tipsrc"><b>The leak becomes public</b><span class="k">Toshiba Machine and Kongsberg&#x27;s sales to the Soviets come out. Members of Congress smash a Toshiba radio on the Capitol lawn</span><span class="row"><span>When</span>1987, the radio on Jul 1</span><span class="row"><span>Where it comes from</span>UPI, Jul 1, 1987</span></span></div><div class="scell sg" role="cell" tabindex="0" data-tip><span class="swhen">Nov 2026</span><span class="stext">The Megaspeed inquiry is reported halted after Nvidia&#x27;s lawyer stepped in</span><span class="tipsrc"><b>The leak becomes public</b><span class="k">The Megaspeed inquiry is reported halted after Nvidia&#x27;s lawyer stepped in</span><span class="row"><span>When</span>Nov 2026</span><span class="row"><span>Where it comes from</span>New York Times, Nov 9, 2026</span></span></div></div><div class="srow" role="row"><p class="sstage" role="rowheader">Congress writes it down</p><div class="scell ch" role="cell" tabindex="0" data-tip><span class="swhen">Jun 30, 1987</span><span class="stext">The Senate votes 92 to 5 for mandatory sanctions, the day before the sledgehammers</span><span class="tipsrc"><b>Congress writes it down</b><span class="k">The Senate votes 92 to 5 for mandatory sanctions, the day before the sledgehammers</span><span class="row"><span>When</span>Jun 30, 1987</span><span class="row"><span>Where it comes from</span>Congressional Record, Daily Digest, Jun 30, 1987</span></span></div><div class="scell sg" role="cell" tabindex="0" data-tip><span class="swhen">Jan 12, 2026, 369 to 22</span><span class="stext">The House passes the remote access bill, before the scandal</span><span class="tipsrc"><b>Congress writes it down</b><span class="k">The House passes the remote access bill, before the scandal</span><span class="row"><span>When</span>Jan 12, 2026, 369 to 22</span><span class="row"><span>Where it comes from</span>House roll call 13</span></span></div></div><div class="srow" role="row"><p class="sstage" role="rowheader">The president objects</p><div class="scell ch" role="cell" tabindex="0" data-tip><span class="swhen">Apr to May 1988</span><span class="stext">Reagan threatens to veto the whole bill over the sanctions. His May veto names a plant-closing rule instead</span><span class="tipsrc"><b>The president objects</b><span class="k">Reagan threatens to veto the whole bill over the sanctions. His May veto names a plant-closing rule instead</span><span class="row"><span>When</span>Apr to May 1988</span><span class="row"><span>Where it comes from</span>UPI, Apr 1, 1988. Veto message, May 24, 1988</span></span></div><div class="scell sg open" role="cell" tabindex="0" data-tip><span class="swhen">open</span><span class="stext">Not tested yet. The bill has not reached the White House</span><span class="tipsrc"><b>The president objects</b><span class="k">Not tested yet. The bill has not reached the White House</span><span class="row"><span>When</span>open</span><span class="row"><span>Where it comes from</span>Congress.gov</span></span></div></div><div class="srow" role="row"><p class="sstage" role="rowheader">The law</p><div class="scell ch" role="cell" tabindex="0" data-tip><span class="swhen">Aug 23, 1988</span><span class="stext">Signed with softened sanctions, three-year bans on purchases and imports</span><span class="tipsrc"><b>The law</b><span class="k">Signed with softened sanctions, three-year bans on purchases and imports</span><span class="row"><span>When</span>Aug 23, 1988</span><span class="row"><span>Where it comes from</span>Omnibus Trade and Competitiveness Act, Executive Order 12661</span></span></div><div class="scell sg open" role="cell" tabindex="0" data-tip><span class="swhen">open</span><span class="stext">In a Senate committee. A new Congress takes its seats in January</span><span class="tipsrc"><b>The law</b><span class="k">In a Senate committee. A new Congress takes its seats in January</span><span class="row"><span>When</span>open</span><span class="row"><span>Where it comes from</span>Congress.gov, Variety</span></span></div></div></div><figcaption>In 1988 the sanctions survived a veto threat because Congress kept them in a bill the president wanted. In 2026 the bill has passed one chamber and is waiting.</figcaption><p class="g-src">Congressional Record (Jun 30, 1987), UPI (Jul 1, 1987 and Apr 1, 1988), Reagan Library, Congress.gov, New York Times.</p></figure>
+<p>On November 3 Democrats won both chambers, and the House has already passed the rental bill 369 to 22. A rule passed by both parties would be the first American chip rule likely to outlast an election, and the first a careful government would find worth signing.</p>
+<p>None of this requires Megaspeed to be guilty. It may well be innocent, as it says. The problem is that under the current arrangement nobody can tell, and the one agency that was trying stopped.</p>
+<p>In 1987 the sledgehammers made the news. What fixed the leak was a list Tokyo had signed and a law Congress passed over a president&#x27;s objection. Singapore has said in one word what it would take to sign this one.</p>
+<div class="sources"><h2>Sources</h2>
+<p class="group">Primary documents</p>
+<ul><li>USTR, Section 301 action on forced labour, 91 FR 47318, Jul 28, 2026.</li><li>US Census Bureau, trade in goods by country, January to September 2026.</li><li>BIS affiliates rule, 90 FR 47201, its suspension, 90 FR 50857, and the extension to Jan 10, 2027, 91 FR 70789.</li><li>Nvidia 10-K for fiscal 2026 (the 15% expectation, never codified).</li><li>GAO decision B-337935, May 12, 2026. <a href="https://www.gao.gov/products/b-337935">https://www.gao.gov/products/b-337935</a></li><li>H.R. 2683, Remote Access Security Act, House roll call 13, Jan 12, 2026. <a href="https://www.govtrack.us/congress/votes/119-2026/h13">https://www.govtrack.us/congress/votes/119-2026/h13</a> and <a href="https://www.congress.gov/bill/119th-congress/house-bill/2683/all-actions">https://www.congress.gov/bill/119th-congress/house-bill/2683/all-actions</a></li><li>Strategic Goods (Control) Order 2026, S 741/2026.</li><li>Singapore Parliament, Feb 18, 2025, ministry transcript of Balakrishnan.</li><li>Reagan&#x27;s veto message on H.R. 3, May 24, 1988. <a href="https://www.reaganlibrary.gov/archives/speech/message-house-representatives-returning-without-approval-omnibus-trade-and">https://www.reaganlibrary.gov/archives/speech/message-house-representatives-returning-without-approval-omnibus-trade-and</a></li><li>Omnibus Trade and Competitiveness Act of 1988, and Executive Order 12661. <a href="https://www.congress.gov/bill/100th-congress/house-bill/4848">https://www.congress.gov/bill/100th-congress/house-bill/4848</a></li><li>IRAS, Common Reporting Standard overview. <a href="https://www.iras.gov.sg/taxes/international-tax/common-reporting-standard-(crs)/crs-overview-and-latest-developments">https://www.iras.gov.sg/taxes/international-tax/common-reporting-standard-(crs)/crs-overview-and-latest-developments</a></li></ul>
+<p class="group">Reporting</p>
+<ul><li>New York Times via the Inquirer, Commerce inquiry halted, and the entity list gap, Nov 9, 2026. <a href="https://www.inquirer.com/news/nation-world/nvidia-investigation-commerce-justice-ai-chinese-spy-megaspeed-jensen-huang-trump-jeff-kessler-lutnick-20261109.html">https://www.inquirer.com/news/nation-world/nvidia-investigation-commerce-justice-ai-chinese-spy-megaspeed-jensen-huang-trump-jeff-kessler-lutnick-20261109.html</a></li><li>Financial Times on Tencent&#x27;s Oracle lease, Oct 1, 2026, as summarised by TrendForce. <a href="https://www.trendforce.com/news/2026/10/01/news-tencent-reportedly-signs-7b-deal-to-lease-100000-ai-chips-from-oracle-in-southeast-asia/">https://www.trendforce.com/news/2026/10/01/news-tencent-reportedly-signs-7b-deal-to-lease-100000-ai-chips-from-oracle-in-southeast-asia/</a></li><li>Financial Times on Oracle cancelling it, Nov 4, 2026, as summarised by TechNode. <a href="https://technode.com/2026/11/05/oracle-reportedly-cancels-7-billion-tencent-ai-chip-lease-under-us-pressure/">https://technode.com/2026/11/05/oracle-reportedly-cancels-7-billion-tencent-ai-chip-lease-under-us-pressure/</a></li><li>Gan Kim Yong&#x27;s written reply on a forced-labour ban, Sep 8, 2026, as reported.</li><li>Variety, midterm results, Nov 2026. <a href="https://variety.com/2026/politics/news/midterm-election-results-democrats-win-house-senate-1236938473/">https://variety.com/2026/politics/news/midterm-election-results-democrats-win-house-senate-1236938473/</a></li><li>Singapore&#x27;s ASEAN chair from Jan 1, 2027. <a href="https://www.asiaone.com/singapore/48th-asean-summit-lawrence-wong-singapore-chairmanship">https://www.asiaone.com/singapore/48th-asean-summit-lawrence-wong-singapore-chairmanship</a></li></ul>
+<p class="group">History</p>
+<ul><li>Congressional Record, Daily Digest, Jun 30, 1987, Senate vote 172, 92 to 5 on the Garn amendment. <a href="https://www.congress.gov/crecb/1987/GPO-CRECB-1987-pt28-Pages475-481.pdf">https://www.congress.gov/crecb/1987/GPO-CRECB-1987-pt28-Pages475-481.pdf</a></li><li>Congressional Record, House, Jul 15, 1987, Representative Bentley. <a href="https://www.govinfo.gov/content/pkg/GPO-CRECB-1987-pt14/pdf/GPO-CRECB-1987-pt14-8-1.pdf">https://www.govinfo.gov/content/pkg/GPO-CRECB-1987-pt14/pdf/GPO-CRECB-1987-pt14-8-1.pdf</a></li><li>UPI, Lawmakers hammer Toshiba, Jul 1, 1987. <a href="https://www.upi.com/Archives/1987/07/01/Lawmakers-hammer-Toshiba/3984552110400/">https://www.upi.com/Archives/1987/07/01/Lawmakers-hammer-Toshiba/3984552110400/</a></li><li>UPI, Toshiba officials protest proposed sanctions, Apr 1, 1988 (the veto threat). <a href="https://www.upi.com/Archives/1988/04/01/Toshiba-officials-protest-proposed-sanctions/2000575874000/">https://www.upi.com/Archives/1988/04/01/Toshiba-officials-protest-proposed-sanctions/2000575874000/</a></li><li>UBS deferred prosecution agreement, Feb 18, 2009.</li></ul>
+</div><p class="next"><a href="../singapore-part-one/">Part one. A Singapore address is the new Swiss account</a></p></article></main><script>
+/* Behaviour for the essay graphics: tooltips, the grow-in on first view, the
+   turbine-gap slider, the calculator, and keeping the embedded post in the
+   page's theme. Built into each page by build_essay_pages.py. Each part only
+   runs when its graphic is on the page. */
+(function () {
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  function $(id) { return document.getElementById(id); }
+
+  /* ---------- Tooltips: hover, focus, or tap a mark that has a .tipsrc ---------- */
+  document.querySelectorAll(".graphic").forEach(function (fig) {
+    var marks = fig.querySelectorAll("[data-tip]");
+    if (!marks.length) return;
+    var tip = document.createElement("div");
+    tip.className = "g-tip"; tip.hidden = true; tip.setAttribute("role", "tooltip");
+    fig.appendChild(tip);
+    var pinned = null, byMouse = false;
+    function show(mark, x, y) {
+      var src = mark.querySelector(".tipsrc");
+      if (!src) return;
+      tip.replaceChildren.apply(tip, Array.prototype.map.call(src.childNodes, function (n) { return n.cloneNode(true); }));
+      tip.hidden = false;
+      var f = fig.getBoundingClientRect(), m = mark.getBoundingClientRect();
+      if (x === undefined) { x = m.left + Math.min(m.width / 2, 160); y = m.bottom; }
+      var w = tip.offsetWidth, h = tip.offsetHeight;
+      var left = Math.max(0, Math.min(x - f.left + 14, f.width - w));
+      var top = y - f.top + 14;
+      if (y + h + 24 > window.innerHeight) top = m.top - f.top - h - 8;
+      tip.style.left = left + "px"; tip.style.top = top + "px";
+    }
+    function hide() { tip.hidden = true; pinned = null; }
+    marks.forEach(function (mark) {
+      mark.addEventListener("pointermove", function (e) { if (e.pointerType === "mouse") { byMouse = true; show(mark, e.clientX, e.clientY); } });
+      mark.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse" && pinned !== mark) tip.hidden = true; });
+      mark.addEventListener("focus", function () { byMouse = false; show(mark); });
+      mark.addEventListener("blur", function () { if (pinned !== mark) tip.hidden = true; });
+      mark.addEventListener("click", function (e) {
+        if (pinned === mark) { hide(); return; }
+        pinned = mark; show(mark, e.pointerType === "mouse" ? e.clientX : undefined, e.pointerType === "mouse" ? e.clientY : undefined);
+      });
+    });
+    document.addEventListener("click", function (e) { if (pinned && !fig.contains(e.target)) hide(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") hide(); });
+    window.addEventListener("scroll", function () { if (!pinned && byMouse) tip.hidden = true; }, { passive: true });
+  });
+
+  /* ---------- Grow in once, when first seen, unless less motion was asked for ---------- */
+  if (!reduce.matches && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("shown"); io.unobserve(e.target); } });
+    }, { threshold: 0.35 });
+    document.querySelectorAll(".graphic.grows").forEach(function (fig) { fig.classList.add("anim"); io.observe(fig); });
+  }
+
+  })();
+</script><script>
+(function () {
+  var tabs = document.querySelectorAll('.ctabs [role="tab"]');
+  function pick(t) {
+    tabs.forEach(function (o) {
+      var on = o === t;
+      o.setAttribute("aria-selected", on ? "true" : "false");
+      o.tabIndex = on ? 0 : -1;
+      document.getElementById(o.getAttribute("aria-controls")).hidden = !on;
+    });
+  }
+  tabs.forEach(function (t, i) {
+    t.tabIndex = i === 0 ? 0 : -1;
+    t.addEventListener("click", function () { pick(t); });
+    t.addEventListener("keydown", function (e) {
+      var d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (!d) return;
+      var n = tabs[(i + d + tabs.length) % tabs.length]; pick(n); n.focus(); e.preventDefault();
+    });
+  });
+})();
+</script><script src="../../site.js" defer></script></body></html>
