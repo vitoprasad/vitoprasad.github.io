@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>新婚旅行 札幌⇄ロンドン（往復）をマイルで：やることリスト</title>
+<style>
+  :root { --ink:#1d2330; --muted:#5b6475; --line:#dfe3ea; --bg:#f6f7f9; --card:#fff; --accent:#1f4e9c; --good:#1d7a46; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic",system-ui,sans-serif; color:var(--ink); background:var(--bg); line-height:1.65; }
+  main { max-width:860px; margin:0 auto; padding:22px 16px 80px; }
+  header { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+  h1 { font-size:1.4rem; line-height:1.4; margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:.9rem; margin:0; }
+  .lang { display:flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; flex-shrink:0; }
+  .lang button { border:0; background:var(--card); padding:6px 12px; cursor:pointer; font:inherit; font-size:.85rem; }
+  .lang button.on { background:var(--accent); color:#fff; }
+  body.en [lang="ja"], body:not(.en) [lang="en"] { display:none; }
+  .plan { background:var(--card); border:1px solid var(--line); border-left:5px solid var(--accent); border-radius:10px; padding:14px 18px; margin:18px 0; }
+  .plan p { margin:5px 0; }
+  .progress { position:sticky; top:0; background:var(--bg); padding:10px 0; z-index:2; }
+  .bar { height:12px; background:#e3e7ee; border-radius:6px; overflow:hidden; }
+  .bar > div { height:100%; background:var(--good); transition:width .2s; }
+  .ptext { font-size:.85rem; color:var(--muted); margin-top:4px; display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+  .ptext button { font:inherit; font-size:.8rem; border:1px solid var(--line); background:var(--card); border-radius:6px; padding:2px 8px; cursor:pointer; }
+  h2 { font-size:1.08rem; margin:30px 0 8px; }
+  .phase-note { color:var(--muted); font-size:.88rem; margin:0 0 8px; }
+  .step { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin:8px 0; display:grid; grid-template-columns:28px 1fr; gap:4px 10px; }
+  .step.done { opacity:.6; }
+  .step.done .title { text-decoration:line-through; }
+  .step input[type=checkbox] { width:20px; height:20px; margin-top:3px; cursor:pointer; }
+  .num { font-weight:700; color:var(--accent); margin-right:6px; }
+  .title { font-weight:600; }
+  .meta { font-size:.82rem; color:var(--muted); }
+  .check { font-size:.88rem; margin-top:4px; }
+  .check b { color:var(--good); }
+  .how { font-size:.88rem; margin-top:4px; color:#333; }
+  .row2 { grid-column:2; display:flex; gap:8px; align-items:flex-start; flex-wrap:wrap; margin-top:6px; }
+  textarea { flex:1; min-width:200px; min-height:34px; font:inherit; font-size:.85rem; border:1px solid var(--line); border-radius:6px; padding:5px 8px; resize:vertical; }
+  .copy { font:inherit; font-size:.8rem; border:1px solid var(--line); background:#f3f5f9; border-radius:6px; padding:5px 10px; cursor:pointer; white-space:nowrap; }
+  a { color:var(--accent); }
+  .toast { position:fixed; bottom:18px; left:50%; transform:translateX(-50%); background:#1d2330; color:#fff; padding:8px 14px; border-radius:8px; font-size:.85rem; display:none; }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div>
+    <h1><span lang="ja">新婚旅行：札幌⇄ロンドン往復（2027年4月出発）をマイルで行くためのやることリスト</span>
+        <span lang="en">Honeymoon: Sapporo to London and back (leaving April 2027) on miles, step by step</span></h1>
+    <p class="sub"><span lang="ja">1ステップ30分以内。チェックとメモはこの端末のブラウザに保存されます。2026年11月16日作成。</span>
+       <span lang="en">Each step takes under 30 minutes. Ticks and notes are saved in this browser. Made November 16, 2026.</span></p>
+  </div>
+  <div class="lang"><button id="b-ja" class="on" onclick="setLang('ja')">日本語</button><button id="b-en" onclick="setLang('en')">English</button></div>
+</header>
+
+<div class="plan">
+  <p><strong><span lang="ja">基本プラン（調べた結果、ステップ16〜26で確認・修正します）</span><span lang="en">The working plan (steps 16 to 26 confirm or change it)</span></strong></p>
+  <p><span lang="ja">・プログラムはANAマイレージクラブ。4月1日〜28日の日本発ヨーロッパ行きはレギュラーシーズンで、片道1人エコノミー27,500／ビジネス57,500マイル。4月29日からは高くなります。</span>
+     <span lang="en">- Program: ANA Mileage Club. Japan to Europe is regular season April 1 to 28: 27,500 economy or 57,500 business per person, one-way. Prices rise from April 29.</span></p>
+  <p><span lang="ja">・二人ともANAアメックス・ゴールドを作る。3カ月で150万円ずつ使えば約80,000マイルずつ、合計約160,000マイル。結婚式や新婚旅行の支払いをカードにまとめるのが近道です。</span>
+     <span lang="en">- Both open the ANA Amex Gold. 1.5 million yen each in 3 months gives about 80,000 miles each, about 160,000 together. Putting wedding and honeymoon bills on the cards is the fastest way there.</span></p>
+  <p><span lang="ja">・二人分の往復に必要なマイル（レギュラーシーズン）：エコノミー110,000／プレミアムエコノミー154,000／行きビジネス・帰りエコノミー170,000／ビジネス230,000。約160,000マイルならプレミアムエコノミー往復まで届き、ビジネス往復にはマリオットのポイントなどで約70,000マイル足す必要があります。帰りは4月29日〜5月9日（ハイシーズン）を避けます。</span>
+     <span lang="en">- Miles for two, round trip, regular season: economy 110,000; premium economy 154,000; business out and economy back 170,000; business both ways 230,000. About 160,000 miles covers premium economy both ways. Business both ways needs about 70,000 more, for example from Marriott points. Avoid returning April 29 to May 9 (high season).</span></p>
+  <p><span lang="ja">・マリオットのポイントは、ロンドンのホテル代に使うか、ANAマイルに移す（3ポイント＝1マイル、60,000ポイントで25,000マイル）かを比べて決めます。</span>
+     <span lang="en">- Marriott points: compare using them for London hotel nights against moving them to ANA (3 points = 1 mile; 60,000 points = 25,000 miles).</span></p>
+  <p><span lang="ja">・JALカードは特典マイルが2027年5月末に付くため、今回は間に合いません。</span>
+     <span lang="en">- The JAL card pays its bonus at the end of May 2027, too late for this trip.</span></p>
+</div>
+
+<div class="progress">
+  <div class="bar"><div id="pbar" style="width:0"></div></div>
+  <div class="ptext"><span id="ptext"></span>
+    <span><button onclick="exportData()"><span lang="ja">保存用に書き出す</span><span lang="en">Export backup</span></button>
+          <button onclick="document.getElementById('imp').click()"><span lang="ja">読み込む</span><span lang="en">Import</span></button>
+          <input type="file" id="imp" accept=".json" style="display:none" onchange="importData(this)"></span>
+  </div>
+</div>
+
+<div id="list"></div>
+
+<p class="meta" style="margin-top:28px"><span lang="ja">止まったステップは「このステップをコピー」で貼り付けて送ってください。23a、23bのように細かく分けます。</span>
+<span lang="en">If a step stalls, use "Copy this step" and paste it back. It will be split into 23a, 23b and so on.</span></p>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+// Each step: id, phase, minutes, ja/en title, ja/en how, ja/en done-check. Split steps get ids like "23a".
+const PHASES = {
+  A: ["今の状況を確認する", "Gather the facts", "最初の1週間で。ここが分からないと、どのカードを作るかが決まりません。", "First week. Without these, the card choice can't be made."],
+  B: ["席を先に探す", "Find the seats first", "カードより先に、4月に二人分の特典席がある日を探します。", "Before any card, find April days with two award seats."],
+  C: ["プログラムと使い道を決める", "Decide program and what the points pay for", "", ""],
+  D: ["公式の条件を確認する", "Read the official terms", "まとめサイトではなく、カード会社の公式ページで確認し、スクリーンショットを残します。", "On the card company's own pages, not summaries. Keep screenshots."],
+  E: ["カードを申し込む", "Apply for the cards", "妻が先、夫が後。紹介やマイ友を使うため、この順番にします。", "Wife first, then husband, so the referral works."],
+  F: ["決済額を達成する", "Hit the spend", "期限は承認日から3カ月。12月中に達成できればボーナスは3月までに付く見込みです。", "Deadline is 3 months from approval. Hitting it in December should bring the bonus by March."],
+  G: ["マイルを移して予約する", "Move the miles and book", "", ""],
+};
+const STEPS = [
+  {id:"1", p:"A", m:15, t:["旅行の条件を二人で決める", "Agree the trip basics"],
+   h:["片道か往復か、エコノミーかビジネスか、出発できる日（4月1〜28日のどこまでOKか）、帰りの予定。", "One-way or return, economy or business, which April 1-28 days work, return plans."],
+   c:["4つの答えがメモ欄に書いてある", "Four answers written in the note box"]},
+  {id:"2", p:"A", m:15, t:["妻：持っている・過去5年に持っていたカードを書き出す", "Wife: list every card held now or in the last 5 years"],
+   h:["特にアメックス、ANA、JAL、マリオットの各カード。財布、アプリ、メールの「カード発行」で確認。", "Especially any Amex, ANA, JAL or Marriott card. Check wallet, apps, and card-issued emails."],
+   c:["カード名と作った年の一覧がある", "A list of card names and years"]},
+  {id:"3", p:"A", m:15, t:["夫：同じくカードを書き出す", "Husband: the same card list"], h:["", ""],
+   c:["カード名と作った年の一覧がある", "A list of card names and years"]},
+  {id:"4", p:"A", m:20, t:["マリオットのカードを特定する", "Pin down the Marriott card"],
+   h:["アメックスのアプリで、カード名（プレミアムか通常か）、入会日、今のマリオットポイント、入会特典の達成状況を確認。", "In the Amex app: which card (Premium or standard), open date, Marriott points now, progress on its sign-up bonus."],
+   c:["4つの数字がメモ欄にある", "Four facts in the note box"]},
+  {id:"5", p:"A", m:15, t:["二人のANAマイレージクラブ番号と残高を確認", "Both ANA Mileage Club numbers and balances"],
+   h:["なければ無料で作る（ANAのサイトかアプリ）。", "Open one free on ANA's site or app if missing."],
+   c:["二人分の会員番号と残高がある", "Two member numbers and balances noted"]},
+  {id:"6", p:"A", m:10, t:["JALマイルやアメックスのポイントが残っていないか確認", "Check for leftover JAL miles or Amex points"], h:["", ""],
+   c:["二人分の残高（0でも可）がある", "Both balances noted, even if zero"]},
+  {id:"7", p:"A", m:25, t:["12月〜2月にカードで払えるものを書き出す", "List what can go on a card from December to February"],
+   h:["結婚式場、指輪、新婚旅行、家電、保険、携帯、公共料金など。月ごとの金額と、カード払いできるかを確認。", "Wedding venue, rings, honeymoon, appliances, insurance, phone, utilities. Amount per month and whether a card is accepted."],
+   c:["月ごとの合計額の表がある", "A table with a total per month"]},
+  {id:"8", p:"A", m:10, t:["入籍日と同居の状況を確認", "Note the marriage date and living situation"],
+   h:["ANAで夫婦のマイルを合算するには、入籍して同居している必要があります。", "ANA's couple pooling needs a registered marriage and a shared home."],
+   c:["入籍日（予定日）と同居開始日がある", "Marriage date and move-in date noted"]},
+
+  {id:"9", p:"B", m:25, t:["ユナイテッド航空のサイトで4月の特典席を探す（札幌→ロンドン）", "Search April award seats on United's site (Sapporo to London)"],
+   h:["united.com で「マイルで予約」、片道、2名、新千歳(CTS)→ロンドン(LHR)、カレンダー表示。ANA便の席が出ます。ログイン不要。", "united.com, Book with miles, one-way, 2 travelers, CTS to LHR, calendar view. Shows ANA seats. No account needed."],
+   c:["二人分の席がある日の一覧（エコノミーとビジネス別）", "A list of days with two seats, by cabin"]},
+  {id:"10", p:"B", m:20, t:["羽田→ロンドンでも同じように探す", "Repeat for Haneda to London"],
+   h:["札幌→東京は国内線なので後から足せます。羽田(HND)発のほうが席が見つかりやすい。", "Sapporo to Tokyo can be added; Haneda departures have more seats."],
+   c:["羽田発の一覧がある", "A Haneda list"]},
+  {id:"11", p:"B", m:25, t:["帰りの特典席を探す（ロンドン→札幌）", "Search return award seats (London to Sapporo)"],
+   h:["ユナイテッドで片道、2名、ロンドン(LHR)→羽田(HND)／新千歳(CTS)。4月29日〜5月9日（ゴールデンウィーク）はハイシーズンで必要マイルが増えるので避けるのが無難。", "United, one-way, 2 travelers, LHR to HND or CTS. April 29 to May 9 (Golden Week) is high season with higher prices, so avoid it if possible."],
+   c:["帰りの候補日の一覧（エコノミーとビジネス別）", "A list of return days with two seats, by cabin"]},
+  {id:"12", p:"B", m:25, t:["ANAのサイトで上位5日の空席を確認", "Check the top 5 days on ANA's own site"],
+   h:["妻のANAアカウントでログインし、国際線特典航空券で2名、往復（または行きと帰りを別々に）で検索。", "Sign in to the wife's ANA account and search international award, 2 passengers, round trip (or each way separately)."],
+   c:["5日分の結果（○△×）がメモにある", "Results for 5 days in the note box"]},
+  {id:"13", p:"B", m:15, t:["特典の空席待ちができるか確認", "Check whether the award waitlist is open"],
+   h:["ANAは特典航空券の空席待ちを受け付けることがあります。", "ANA sometimes takes award waitlists."],
+   c:["第1希望日で空席待ちが可能か分かった", "Know if the top date can be waitlisted"]},
+  {id:"14", p:"B", m:20, t:["同じ便の現金の値段を調べる", "Get the cash price for the same flights"],
+   h:["Googleフライトの日付グリッドで2名、往復と片道の両方。", "Google Flights date grid, 2 people, both round trip and one-way."],
+   c:["候補日ごとの現金価格がある", "A cash price per candidate date"]},
+  {id:"15", p:"B", m:15, t:["特典航空券の燃油サーチャージと税金を確認", "Find the fuel surcharge and taxes on the award"],
+   h:["ANAの予約画面の最終確認まで進めると表示されます（予約は確定しない）。", "Shown near the end of ANA's booking flow; stop before confirming."],
+   c:["往復1人あたりの現金負担額がある", "Round-trip cash due per person noted"]},
+  {id:"16", p:"B", m:10, t:["行きと帰りの日程を決める（予備も）", "Pick outbound and return dates, with backups"], h:["行き：第1希望＋予備2つ。帰り：第1希望＋予備2つ。", "Outbound: first choice plus two backups. Return: the same."],
+   c:["行き3つ・帰り3つの日付が決まった", "Three outbound and three return dates chosen"]},
+  {id:"17", p:"B", m:15, t:["空席の通知を設定する", "Set seat alerts"],
+   h:["seats.aero（月額約10〜13ドル、2月以降は無料版でも4月を検索可）か、ユナイテッドを週1回確認する予定を入れる。", "seats.aero (about $10-13 a month; its free version reaches April from February), or a weekly United check in the calendar."],
+   c:["通知か週1回の予定が入った", "An alert or weekly reminder exists"]},
+
+  {id:"18", p:"C", m:10, t:["必要マイル数を計算", "Work out the miles needed"],
+   h:["（行きの必要マイル＋帰りの必要マイル）×2人。行きと帰りで座席を変えることもできます（例：行きビジネス、帰りエコノミー）。", "(Outbound miles + return miles) x 2 people. Cabins can differ each way, e.g. business out, economy back."],
+   c:["合計マイル数が決まった", "A total miles figure"]},
+  {id:"19", p:"C", m:15, t:["1マイルあたりの価値を計算", "Work out the value per mile"],
+   h:["（現金の値段 − 燃油・税金）÷ 必要マイル。2円以上なら良い使い方。", "(Cash price minus surcharges and taxes) / miles. Over 2 yen per mile is a good use."],
+   c:["円／マイルの数字がある", "A yen-per-mile figure"]},
+  {id:"20", p:"C", m:10, t:["ANAで行くか最終決定", "Confirm ANA as the program"],
+   h:["席がない場合は、JAL・フィンエアー経由なども検討。", "If no ANA seats, consider JAL or Finnair via Helsinki."],
+   c:["使うプログラムが決まった", "Program decided"]},
+  {id:"21", p:"C", m:25, t:["マリオットのポイントの使い道を決める", "Decide what the Marriott points pay for"],
+   h:["ロンドンのマリオット系ホテル（例：ウエストミンスター周辺）の1泊のポイント数と現金料金を比べ、1ポイントの価値をANAマイル移行（3:1）と比べる。", "Compare points per night and cash rate at a London Marriott hotel against moving points to ANA at 3:1."],
+   c:["「ホテル」か「マイル」か決まった", "Hotel or miles decided"]},
+
+  {id:"22", p:"D", m:20, t:["ANAアメックス・ゴールドの公式ページで入会特典と対象外条件を確認", "Read the ANA Amex Gold official offer and exclusions"],
+   h:["マリオットのアメックスを持っていても対象か確認（対象外はANAアメックスを持ったことがある人のみのはず）。", "Confirm a Marriott Amex holder still qualifies (only past ANA Amex holders should be excluded)."],
+   c:["条件のスクリーンショットを保存した", "Screenshot of the terms saved"]},
+  {id:"23", p:"D", m:15, t:["マリオットのカードの入会特典の残り条件を確認", "Check what's left on the Marriott card's bonus"],
+   h:["まだ達成期間中なら、決済をどちらに回すか決める材料になります。", "If still in its window, it competes for the same spending."],
+   c:["残りの金額と期限が分かった", "Amount left and deadline known"]},
+  {id:"24", p:"D", m:25, t:["一番お得な申込方法を比べる", "Compare ways to apply"],
+   h:["公式サイト、アメックスの紹介、ポイントサイト（ハピタス、モッピー等）の上乗せを比べる。", "Public offer vs Amex referral vs points-site payouts (Hapitas, Moppy)."],
+   c:["申込ルートを1つ選んだ", "One route chosen"]},
+  {id:"25", p:"D", m:15, t:["ANAマイ友プログラムの登録条件を確認", "Check ANA's My-tomo referral"],
+   h:["ANAカードを持つ知人の紹介で、初めてのANAカードなら+2,000マイル。申込前に登録が必要。", "+2,000 miles for a first ANA card via a friend who has one; register before applying."],
+   c:["使えるかどうか分かった", "Know whether it applies"]},
+  {id:"26", p:"D", m:15, t:["特典の対象外になる支払いを確認", "List payments that don't count toward the bonus"],
+   h:["電子マネーへのチャージ、税金の一部、年会費など。規約で確認。", "E-money top-ups, some taxes, annual fees. Check the terms."],
+   c:["対象外リストがある", "An exclusions list"]},
+
+  {id:"27", p:"E", m:25, t:["妻がANAアメックス・ゴールドを申し込む", "Wife applies for the ANA Amex Gold"],
+   h:["ステップ24で選んだルートで。マイ友を使う場合は先に登録。", "Through the route from step 24. Register My-tomo first if using it."],
+   c:["承認メールが来て、承認日をメモした", "Approval email received, date noted"]},
+  {id:"28", p:"E", m:10, t:["妻のカードとANA番号を紐付ける", "Link the wife's card to her ANA number"], h:["", ""],
+   c:["アメックスのアプリにANA番号が表示される", "The Amex app shows her ANA number"]},
+  {id:"29", p:"E", m:10, t:["妻から夫へ紹介リンクを送る", "Wife sends the husband her referral link"], h:["", ""],
+   c:["夫がリンクを受け取った", "Husband has the link"]},
+  {id:"30", p:"E", m:25, t:["夫がANAアメックス・ゴールドを申し込む", "Husband applies for the ANA Amex Gold"], h:["", ""],
+   c:["承認メールが来て、承認日をメモした", "Approval email received, date noted"]},
+  {id:"31", p:"E", m:10, t:["二人の3カ月期限をカレンダーに入れる", "Put both 3-month deadlines in the calendar"],
+   h:["75万円と150万円の2段階、12月31日の100万円（+5,000マイル）も。", "Both the 750k and 1.5M marks, and 1M by December 31 (+5,000 miles)."],
+   c:["カレンダーに4つ以上の予定が入った", "Four or more calendar entries"]},
+
+  {id:"32", p:"F", m:25, t:["どの支払いをどのカードで払うか表にする", "Assign each payment to a card"],
+   h:["ステップ7の表を使い、二人とも期限内に150万円に届くよう振り分ける。", "Use the step 7 table so both reach 1.5M yen in time."],
+   c:["二人分の月別計画がある", "A monthly plan for both"]},
+  {id:"33", p:"F", m:25, t:["毎月の支払いを新しいカードに切り替える", "Move monthly bills to the new cards"],
+   h:["携帯、電気・ガス、保険、サブスク。", "Phone, power and gas, insurance, subscriptions."],
+   c:["切り替えた支払いの一覧がある", "A list of moved bills"]},
+  {id:"34", p:"F", m:20, t:["結婚式・新婚旅行の支払いをカードで行う", "Pay wedding and honeymoon bills by card"],
+   h:["式場にカード払いが可能か、分割の請求日も確認。", "Ask the venue about card payment and billing dates."],
+   c:["支払い予定日と金額がメモにある", "Payment dates and amounts noted"]},
+  {id:"35", p:"F", m:10, t:["毎週：二人の利用額を確認", "Weekly: check both spend totals"],
+   h:["アメックスのアプリで。期限まで毎週繰り返す。", "In the Amex app, weekly until the deadline."],
+   c:["最新の利用額をメモした（毎週更新）", "Latest totals noted (update weekly)"]},
+  {id:"36", p:"F", m:10, t:["12月31日までに100万円に届いたか確認", "Check 1M yen reached by December 31"], h:["", ""],
+   c:["二人とも達成か未達か分かった", "Know if each hit it"]},
+  {id:"37", p:"F", m:10, t:["ボーナスポイントが付いたか確認", "Check the bonus points posted"],
+   h:["条件達成から最大3カ月ほど。届かなければアメックスに問い合わせ。", "Up to about 3 months after the spend. Call Amex if missing."],
+   c:["二人のポイント残高に反映された", "Both balances show the bonus"]},
+
+  {id:"38", p:"G", m:15, t:["二人ともポイントをANAマイルに移す", "Both move points to ANA"],
+   h:["1ポイント＝1マイル、約5営業日。席を確認してから移す。", "1 point = 1 mile, about 5 business days. Move once seats are confirmed."],
+   c:["ANAの口座にマイルが入った", "Miles show in ANA accounts"]},
+  {id:"39", p:"G", m:15, t:["夫を妻のANA口座の「特典利用者」に登録（逆でも可）", "Register the husband as an award user on the wife's ANA account (or the reverse)"],
+   h:["配偶者は登録できます。続柄の証明を求められることがあります。", "Spouses qualify; proof may be asked for."],
+   c:["登録完了画面が出た", "Registration confirmed"]},
+  {id:"40", p:"G", m:20, t:["必要なら「ANAカードファミリーマイル」で合算", "Pool miles with ANA Card Family Mile if needed"],
+   h:["片方の口座だけで足りない場合のみ。入籍・同居・二人ともANAカード会員が条件。", "Only if one account alone is short. Needs marriage, a shared home, and both holding ANA cards."],
+   c:["合算後のマイルが二人分の必要数以上", "Pooled miles cover both seats"]},
+  {id:"41", p:"G", m:15, t:["予約直前に空席を再確認", "Recheck seats just before booking"], h:["", ""],
+   c:["予約したい便に2席ある", "Two seats on the chosen flight"]},
+  {id:"42", p:"G", m:25, t:["二人分の特典航空券を予約", "Book both award seats"],
+   h:["燃油・税金はANAアメックスで払う。", "Pay surcharges and taxes with the ANA Amex."],
+   c:["二人分の航空券番号がメールで届いた", "Two ticket numbers emailed"]},
+  {id:"43", p:"G", m:20, t:["ロンドンのホテルを予約", "Book the London hotel"],
+   h:["ステップ21で「ホテル」に決めた場合はマリオットのポイントで。", "With Marriott points if step 21 chose hotel."],
+   c:["予約確認メールが届いた", "Confirmation email received"]},
+  {id:"44", p:"G", m:10, t:["2年目の年会費の前に続けるか決める予定を入れる", "Calendar a keep-or-cancel decision before year-two fees"],
+   h:["ANAアメックス・ゴールドは年42,900円。", "ANA Amex Gold is 42,900 yen a year."],
+   c:["カレンダーに予定が入った", "Calendar entry made"]},
+];
+
+const KEY = "honeymoon-sapporo-london-checklist-v1";
+let state = JSON.parse(localStorage.getItem(KEY) || '{"done":{},"notes":{}}');
+const save = () => localStorage.setItem(KEY, JSON.stringify(state));
+const T = (ja, en) => `<span lang="ja">${ja}</span><span lang="en">${en}</span>`;
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function setLang(l) {
+  document.body.classList.toggle("en", l === "en");
+  document.documentElement.lang = l;
+  document.getElementById("b-ja").classList.toggle("on", l === "ja");
+  document.getElementById("b-en").classList.toggle("on", l === "en");
+  localStorage.setItem(KEY + "-lang", l);
+}
+
+function render() {
+  let html = "", last = "";
+  for (const s of STEPS) {
+    if (s.p !== last) {
+      const ph = PHASES[s.p];
+      html += `<h2>${T(ph[0], ph[1])}</h2>` + (ph[2] ? `<p class="phase-note">${T(ph[2], ph[3])}</p>` : "");
+      last = s.p;
+    }
+    const done = !!state.done[s.id];
+    html += `<div class="step ${done ? "done" : ""}" id="s-${s.id}">
+      <input type="checkbox" ${done ? "checked" : ""} onchange="tick('${s.id}', this.checked)">
+      <div>
+        <div class="title"><span class="num">${s.id}</span>${T(s.t[0], s.t[1])}</div>
+        <div class="meta">${T(`約${s.m}分`, `About ${s.m} min`)}</div>
+        ${s.h[0] ? `<div class="how">${T(s.h[0], s.h[1])}</div>` : ""}
+        <div class="check">${T("<b>完了の目安：</b>" + s.c[0], "<b>Done when:</b> " + s.c[1])}</div>
+      </div>
+      <div class="row2">
+        <textarea placeholder="メモ / notes" oninput="note('${s.id}', this.value)">${esc(state.notes[s.id] || "")}</textarea>
+        <button class="copy" onclick="copyStep('${s.id}')">${T("このステップをコピー", "Copy this step")}</button>
+      </div>
+    </div>`;
+  }
+  document.getElementById("list").innerHTML = html;
+  progress();
+}
+
+function progress() {
+  const n = STEPS.filter(s => state.done[s.id]).length;
+  document.getElementById("pbar").style.width = (n / STEPS.length * 100) + "%";
+  const next = STEPS.find(s => !state.done[s.id]);
+  document.getElementById("ptext").innerHTML = T(`${STEPS.length}ステップ中 ${n} 完了`, `${n} of ${STEPS.length} done`) +
+    (next ? " ・ " + T(`次：${next.id}. ${next.t[0]}`, `Next: ${next.id}. ${next.t[1]}`) : "");
+}
+
+function tick(id, v) {
+  if (v) state.done[id] = new Date().toISOString().slice(0, 10); else delete state.done[id];
+  save();
+  document.getElementById("s-" + id).classList.toggle("done", v);
+  progress();
+}
+function note(id, v) { state.notes[id] = v; save(); }
+
+function copyStep(id) {
+  const s = STEPS.find(x => x.id === id);
+  const text = `Step ${s.id}: ${s.t[1]} / ${s.t[0]}\nHow: ${s.h[1] || "-"}\nDone when: ${s.c[1]}\nNotes: ${state.notes[id] || "-"}\nWhere it stalled: `;
+  navigator.clipboard.writeText(text).then(() => toast("コピーしました / Copied"), () => toast(text));
+}
+function toast(msg) {
+  const t = document.getElementById("toast"); t.textContent = msg; t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 1800);
+}
+function exportData() {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], {type: "application/json"}));
+  a.download = "honeymoon-checklist-backup.json"; a.click();
+}
+function importData(input) {
+  const f = input.files[0]; if (!f) return;
+  f.text().then(t => { state = JSON.parse(t); save(); render(); toast("読み込みました / Imported"); });
+}
+
+render();
+if (localStorage.getItem(KEY + "-lang") === "en") setLang("en");
+</script>
+</body>
+</html>
